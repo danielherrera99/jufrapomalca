@@ -47,7 +47,7 @@ const DashboardView = ({ loading, data, user, formatSafeDate, setActiveTab, hand
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '2rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
          
          {/* Próximo Evento / Actividad */}
          <div className="glass-card" style={{ padding: '2rem', border: '1px solid rgba(139, 90, 43, 0.1)', position: 'relative', overflow: 'hidden' }}>

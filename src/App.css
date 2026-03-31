@@ -207,7 +207,26 @@ input:focus {
   box-shadow: 2px 0 10px rgba(0,0,0,0.02);
   display: flex;
   flex-direction: column;
-  z-index: 10;
+  z-index: 1001;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (max-width: 768px) {
+  .sidebar { 
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 280px;
+    max-width: 85%;
+    transform: translateX(-100%);
+    border-radius: 0 24px 24px 0;
+    box-shadow: none;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 20px 0 60px rgba(0,0,0,0.2);
+  }
 }
 
 .sidebar-brand {
@@ -220,6 +239,13 @@ input:focus {
   -webkit-text-fill-color: transparent;
   border-bottom: 1px solid rgba(139, 90, 43, 0.1);
   font-family: var(--font-heading);
+}
+
+@media (max-width: 768px) {
+  .sidebar-brand {
+    padding: 1.2rem 1.5rem;
+    font-size: 1.1rem;
+  }
 }
 
 .nav-menu {
@@ -276,6 +302,36 @@ input:focus {
   position: relative;
 }
 
+@media (max-width: 768px) {
+  .dashboard-content {
+    padding: 1.5rem;
+  }
+}
+
+.mobile-header {
+  display: none;
+  background: var(--surface);
+  padding: 0.8rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (max-width: 768px) {
+  .mobile-header {
+    display: flex;
+  }
+}
+
+.hamburger {
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--primary);
+}
+
 .content-header {
   display: flex;
   justify-content: space-between;
@@ -283,12 +339,30 @@ input:focus {
   padding-bottom: 1rem;
   border-bottom: 2px solid rgba(139, 90, 43, 0.1);
   margin-bottom: 2rem;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .content-header {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+  }
 }
 
 .content-header h1 {
   font-size: 2rem;
   color: var(--primary);
   margin: 0;
+}
+
+@media (max-width: 768px) {
+  .content-header h1 {
+    font-size: 1.4rem;
+  }
+  .content-header p {
+    font-size: 0.8rem !important;
+  }
 }
 
 /* Modal Styling */
@@ -311,8 +385,16 @@ input:focus {
   padding: 2.5rem;
   width: 90%;
   max-width: 550px;
+  max-height: 90vh;
+  overflow-y: auto;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 768px) {
+  .modal-content {
+    padding: 1.5rem;
+  }
 }
 
 .modal-content h2 {

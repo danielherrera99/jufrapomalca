@@ -198,6 +198,7 @@ const Dashboard = ({ user, onLogout }) => {
   const [exportDates, setExportDates] = useState({ start: '', end: '' });
   const [espirituTab, setEspirituTab] = useState('oracion');
   const [readItem, setReadItem] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const formatSafeDate = (dateStr, fmt = 'dd MMM yyyy') => {
     if (!dateStr) return 'Sin fecha';
@@ -1047,14 +1048,28 @@ const Dashboard = ({ user, onLogout }) => {
 
   return (
     <div className="dashboard-layout">
-      <aside className="sidebar">
+      {isSidebarOpen && (
+        <div 
+          className="modal-overlay" 
+          style={{ zIndex: 1000 }} 
+          onClick={() => setIsSidebarOpen(false)}
+        ></div>
+      )}
+      <aside className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-brand">JUFRA Admin</div>
         <nav className="nav-menu">
           {modules.map((mod) => (
              <a
               key={mod.id}
               href="#"
-              onClick={(e) => { e.preventDefault(); setData([]); setActiveTab(mod.id); setSelectedAsistenciaDate(null); setSearchTerm(''); }}
+              onClick={(e) => { 
+                e.preventDefault(); 
+                setData([]); 
+                setActiveTab(mod.id); 
+                setSelectedAsistenciaDate(null); 
+                setSearchTerm(''); 
+                setIsSidebarOpen(false); 
+              }}
               className={`nav-link ${activeTab === mod.id ? 'active' : ''}`}
             >
               <span style={{ marginRight: '8px' }}>{mod.icon}</span>
@@ -1068,6 +1083,10 @@ const Dashboard = ({ user, onLogout }) => {
         </div>
       </aside>
       <main className="dashboard-content">
+        <div className="mobile-header">
+          <div className="sidebar-brand" style={{ padding: 0, border: 'none', fontSize: '1.2rem' }}>JUFRA Admin</div>
+          <button className="hamburger" onClick={() => setIsSidebarOpen(true)}>☰</button>
+        </div>
         <header className="content-header" style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
             <div>
               <h1 style={{ marginBottom: '0.4rem' }}>Gestión de {activeTab}</h1>
