@@ -36,6 +36,8 @@ import DashboardView from './components/views/DashboardView';
 import PerfilView from './components/views/PerfilView';
 import MapaView from './components/views/MapaView';
 import ComunicacionView from './components/views/ComunicacionView';
+import LandingView from './components/views/LandingView';
+import WebConfigView from './components/views/WebConfigView';
 import MisMensajesView from './components/views/MisMensajesView';
 import MensajesAdminView from './components/views/MensajesAdminView';
 import ItemReadModal from './components/ItemReadModal';
@@ -938,6 +940,7 @@ const Dashboard = ({ user, onLogout }) => {
     { id: 'Chat', label: 'Mis Mensajes', icon: '💬' },
     { id: 'Cantos', label: 'Cancionero', icon: '🎵' },
     { id: 'Comunicacion', label: 'Comunicación', icon: '📢' },
+    { id: 'WebConfig', label: 'Web Institucional', icon: '🌐' },
     { id: 'Perfil', label: 'Mi Perfil', icon: '👤' },
   ];
 
@@ -999,6 +1002,7 @@ const Dashboard = ({ user, onLogout }) => {
       case 'Chat':
         return renderMisMensajes();
       case 'Perfil': return <PerfilView data={data} loading={loading} ActivityIndicator={ActivityIndicator} SafeImage={SafeImage} isProfileEditing={isProfileEditing} setIsProfileEditing={setIsProfileEditing} profileData={profileData} setProfileData={setProfileData} handleUpdatePerfil={handleUpdatePerfil} getSafeDateForInput={getSafeDateForInput} formatSafeDate={formatSafeDate} />;
+      case 'WebConfig': return <WebConfigView loading={loading} setLoading={setLoading} />;
       case 'Comunicacion': return <ComunicacionView loading={loading} setLoading={setLoading} hermanos={data.hermanos || []} />;
       case 'Mensajes': return <MensajesAdminView loading={loading} ActivityIndicator={ActivityIndicator} data={data} openChatAdmin={openChatAdmin} formatSafeDate={formatSafeDate} />;
       case 'Espiritu': return <EspirituList filteredData={filteredData} espirituTab={espirituTab} setEspirituTab={setEspirituTab} openEditModal={openEditModal} handleDelete={handleDelete} />;
@@ -1527,8 +1531,15 @@ function App() {
     <BrowserRouter>
       <ErrorBoundary>
         <Routes>
-          <Route path="/" element={!user ? <Login onLogin={setUser} /> : <Navigate to="/dashboard" />} />
-          <Route path="/dashboard" element={user ? <Dashboard user={user} onLogout={handleLogout} /> : <Navigate to="/" />} />
+          {/* Cara Pública */}
+          <Route path="/" element={<LandingView />} />
+          
+          {/* Panel de Administración (Privado) */}
+          <Route path="/admin" element={!user ? <Login onLogin={setUser} /> : <Navigate to="/dashboard" />} />
+          <Route path="/dashboard" element={user ? <Dashboard user={user} onLogout={handleLogout} /> : <Navigate to="/admin" />} />
+          
+          {/* Redirección por defecto */}
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </ErrorBoundary>
     </BrowserRouter>
