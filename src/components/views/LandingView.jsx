@@ -4,7 +4,7 @@ import api from '../../config/api';
 
 const LandingView = () => {
   const [config, setConfig] = useState({
-    heroTitle: 'Juventud Franciscana en el Perú',
+    heroTitle: 'JUFRA Pomalca',
     heroSubtitle: 'Siguiendo los pasos de San Francisco de Asís y Santa Clara...',
     mision: 'Cargando misión...',
     vision: 'Cargando visión...',
@@ -33,7 +33,7 @@ const LandingView = () => {
     <div className="landing-page animate-fade">
       {/* Navegación Pública */}
       <nav className="landing-nav">
-        <Link to="/" className="logo">JUFRA EN EL PERÚ</Link>
+        <Link to="/" className="logo">JUFRA POMALCA</Link>
         <div style={{ display: 'flex', gap: '2rem' }}>
           <a href="#inicio" style={{ textDecoration: 'none', color: 'var(--primary)', fontWeight: '600' }}>Inicio</a>
           <a href="#mision" style={{ textDecoration: 'none', color: 'var(--primary)', fontWeight: '600' }}>Misión</a>
@@ -89,8 +89,8 @@ const LandingView = () => {
       <footer id="contacto" className="landing-footer">
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '3rem', textAlign: 'left' }}>
           <div>
-            <h3 style={{ marginBottom: '1rem' }}>JUFRA EN EL PERÚ</h3>
-            <p style={{ opacity: 0.8, fontSize: '0.9rem' }}>Paz y Bien en cada rincón de nuestra patria.</p>
+            <h3 style={{ marginBottom: '1rem' }}>JUFRA POMALCA</h3>
+            <p style={{ opacity: 0.8, fontSize: '0.9rem' }}>Paz y Bien en nuestra fraternidad.</p>
           </div>
           <div>
             <h4 style={{ marginBottom: '1rem' }}>Contacto</h4>
