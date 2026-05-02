@@ -1,21 +1,32 @@
 import React, { useState } from 'react';
 import api from '../../config/api';
 
-const ComunicacionView = ({ loading, setLoading }) => {
+const ComunicacionView = ({ loading, setLoading, hermanos = [] }) => {
   const [formData, setFormData] = useState({
     filtro: 'todos',
     asunto: '',
-    mensaje: ''
+    mensaje: '',
+    correoManual: '',
+    usuarioId: ''
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (formData.filtro === 'manual' && !formData.correoManual) {
+      alert('Por favor escribe el correo de destino.');
+      return;
+    }
+    if (formData.filtro === 'individual' && !formData.usuarioId) {
+      alert('Por favor selecciona un hermano.');
+      return;
+    }
     if (!formData.asunto || !formData.mensaje) {
       alert('Por favor completa el asunto y el mensaje.');
       return;
     }
 
-    if (!window.confirm('¿Estás seguro de que deseas enviar este correo masivo a todos los hermanos seleccionados?')) {
+    if (!window.confirm('¿Estás seguro de que deseas enviar este comunicado?')) {
       return;
     }
 
@@ -24,7 +35,7 @@ const ComunicacionView = ({ loading, setLoading }) => {
       const response = await api.post('/hermanos/comunicacion/masivo', formData);
       if (response.data.success) {
         alert(response.data.message);
-        setFormData({ filtro: 'todos', asunto: '', mensaje: '' });
+        setFormData({ filtro: 'todos', asunto: '', mensaje: '', correoManual: '', usuarioId: '' });
       }
     } catch (err) {
       alert('Error al enviar comunicado: ' + (err.response?.data?.message || err.message));
@@ -33,17 +44,20 @@ const ComunicacionView = ({ loading, setLoading }) => {
     }
   };
 
+  // Filtrar solo hermanos que tengan correo para la lista individual
+  const hermanosConCorreo = hermanos.filter(h => h.email);
+
   return (
     <div className="animate-fade" style={{ maxWidth: '800px', margin: '0 auto' }}>
       <div className="glass-card" style={{ padding: '2.5rem' }}>
-        <h2 style={{ fontSize: '1.8rem', color: 'var(--primary)', marginBottom: '0.5rem' }}>📢 Comunicados Masivos</h2>
+        <h2 style={{ fontSize: '1.8rem', color: 'var(--primary)', marginBottom: '0.5rem' }}>📢 Centro de Comunicación</h2>
         <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>
-          Envía correos electrónicos oficiales a los hermanos de la fraternidad a través de la API de Brevo.
+          Envía correos electrónicos oficiales a la fraternidad o a contactos externos.
         </p>
 
         <form onSubmit={handleSubmit}>
           <div className="input-group">
-            <label>Enviar a:</label>
+            <label>Tipo de Envío:</label>
             <select 
               value={formData.filtro} 
               onChange={e => setFormData({...formData, filtro: e.target.value})}
@@ -51,6 +65,10 @@ const ComunicacionView = ({ loading, setLoading }) => {
             >
               <optgroup label="General">
                 <option value="todos">Todos los Hermanos Activos</option>
+              </optgroup>
+              <optgroup label="Personalizado">
+                <option value="individual">🎯 Un solo hermano específico</option>
+                <option value="manual">✍️ Escribir correo manualmente (Externo)</option>
               </optgroup>
               <optgroup label="Por Rol">
                 <option value="admin">Solo Administradores</option>
@@ -66,6 +84,38 @@ const ComunicacionView = ({ loading, setLoading }) => {
             </select>
           </div>
 
+          {/* Campo condicional para un solo hermano */}
+          {formData.filtro === 'individual' && (
+            <div className="input-group animate-fade" style={{ marginTop: '1.5rem' }}>
+              <label>Seleccionar Hermano:</label>
+              <select 
+                value={formData.usuarioId} 
+                onChange={e => setFormData({...formData, usuarioId: e.target.value})}
+                style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid var(--border)', width: '100%' }}
+                required
+              >
+                <option value="">-- Elige un hermano --</option>
+                {hermanosConCorreo.map(h => (
+                  <option key={h._id} value={h._id}>{h.nombre} {h.apellido} ({h.email})</option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* Campo condicional para correo manual */}
+          {formData.filtro === 'manual' && (
+            <div className="input-group animate-fade" style={{ marginTop: '1.5rem' }}>
+              <label>Correo Electrónico de Destino:</label>
+              <input 
+                type="email" 
+                value={formData.correoManual} 
+                onChange={e => setFormData({...formData, correoManual: e.target.value})} 
+                placeholder="ejemplo@correo.com"
+                required 
+              />
+            </div>
+          )}
+
           <div className="input-group" style={{ marginTop: '1.5rem' }}>
             <label>Asunto del Correo</label>
             <input 
@@ -78,14 +128,14 @@ const ComunicacionView = ({ loading, setLoading }) => {
           </div>
 
           <div className="input-group" style={{ marginTop: '1.5rem' }}>
-            <label>Mensaje (Contenido del correo)</label>
+            <label>Mensaje</label>
             <textarea 
               value={formData.mensaje} 
               onChange={e => setFormData({...formData, mensaje: e.target.value})} 
-              placeholder="Escribe aquí el comunicado oficial..."
+              placeholder="Escribe aquí el contenido del mensaje..."
               style={{ 
                 width: '100%', 
-                minHeight: '250px', 
+                minHeight: '200px', 
                 padding: '1rem', 
                 borderRadius: '8px', 
                 border: '1px solid var(--border)',
@@ -103,15 +153,15 @@ const ComunicacionView = ({ loading, setLoading }) => {
               style={{ padding: '1rem 3rem', fontSize: '1.1rem' }}
               disabled={loading}
             >
-              {loading ? 'Enviando...' : '🚀 Enviar Comunicado Masivo'}
+              {loading ? 'Enviando...' : '🚀 Enviar Correo'}
             </button>
           </div>
         </form>
       </div>
 
-      <div style={{ marginTop: '2rem', padding: '1.5rem', background: '#FFFBEB', borderRadius: '12px', border: '1px solid #FEF3C7', color: '#92400E' }}>
-        <p style={{ fontSize: '0.9rem', margin: 0 }}>
-          <b>Nota:</b> Los correos se enviarán solo a los hermanos que tengan una dirección de correo electrónico válida registrada en su perfil.
+      <div style={{ marginTop: '2rem', padding: '1.5rem', background: '#F0FDFA', borderRadius: '12px', border: '1px solid #CCFBF1', color: '#115E59' }}>
+        <p style={{ fontSize: '0.85rem', margin: 0 }}>
+          <b>Sugerencia:</b> Puedes usar esta herramienta para enviar invitaciones personalizadas a personas que aún no descargan la app usando la opción "Escribir correo manualmente".
         </p>
       </div>
     </div>

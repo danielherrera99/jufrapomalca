@@ -999,7 +999,7 @@ const Dashboard = ({ user, onLogout }) => {
       case 'Chat':
         return renderMisMensajes();
       case 'Perfil': return <PerfilView data={data} loading={loading} ActivityIndicator={ActivityIndicator} SafeImage={SafeImage} isProfileEditing={isProfileEditing} setIsProfileEditing={setIsProfileEditing} profileData={profileData} setProfileData={setProfileData} handleUpdatePerfil={handleUpdatePerfil} getSafeDateForInput={getSafeDateForInput} formatSafeDate={formatSafeDate} />;
-      case 'Comunicacion': return <ComunicacionView loading={loading} setLoading={setLoading} />;
+      case 'Comunicacion': return <ComunicacionView loading={loading} setLoading={setLoading} hermanos={data.hermanos || []} />;
       case 'Mensajes': return <MensajesAdminView loading={loading} ActivityIndicator={ActivityIndicator} data={data} openChatAdmin={openChatAdmin} formatSafeDate={formatSafeDate} />;
       case 'Espiritu': return <EspirituList filteredData={filteredData} espirituTab={espirituTab} setEspirituTab={setEspirituTab} openEditModal={openEditModal} handleDelete={handleDelete} />;
       case 'Consejo':
