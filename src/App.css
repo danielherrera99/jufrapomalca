@@ -430,9 +430,9 @@ input:focus {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba(255, 248, 220, 0.8);
-  backdrop-filter: blur(10px);
-  padding: 1rem 5%;
+  background: rgba(255, 248, 220, 0.85);
+  backdrop-filter: blur(12px);
+  padding: 1.2rem 8%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -460,7 +460,8 @@ input:focus {
 }
 
 .hero-section {
-  padding: 12rem 5% 10rem;
+  width: 100%;
+  padding: 14rem 8% 12rem;
   text-align: center;
   position: relative;
   background-size: cover;
@@ -614,7 +615,8 @@ input:focus {
 }
 
 .landing-footer {
-  padding: 4rem 5%;
+  width: 100%;
+  padding: 6rem 8%;
   background: var(--primary);
   color: white;
   text-align: center;
