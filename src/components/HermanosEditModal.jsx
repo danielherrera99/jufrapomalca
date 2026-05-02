@@ -24,13 +24,35 @@ const HermanosEditModal = ({ selectedItem, setSelectedItem }) => {
         </div>
       </div>
 
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <div className="input-group">
+          <label>Nombre de Usuario</label>
+          <input 
+            type="text" 
+            value={selectedItem.username || ''} 
+            onChange={e => setSelectedItem({...selectedItem, username: e.target.value})} 
+            required 
+            placeholder="ej: francisco7"
+          />
+        </div>
+        <div className="input-group">
+          <label>Correo Electrónico</label>
+          <input 
+            type="email" 
+            value={selectedItem.email || ''} 
+            onChange={e => setSelectedItem({...selectedItem, email: e.target.value})} 
+            placeholder="ej: nombre@gmail.com"
+          />
+        </div>
+      </div>
+
       <div className="input-group">
-        <label>Usuario / Correo</label>
+        <label>Nueva Contraseña (Opcional)</label>
         <input 
-          type="text" 
-          value={selectedItem.username || ''} 
-          onChange={e => setSelectedItem({...selectedItem, username: e.target.value})} 
-          required 
+          type="password" 
+          value={selectedItem.password || ''} 
+          onChange={e => setSelectedItem({...selectedItem, password: e.target.value})} 
+          placeholder="Mínimo 6 caracteres para cambiarla"
         />
       </div>
 

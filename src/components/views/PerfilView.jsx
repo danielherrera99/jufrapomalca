@@ -59,7 +59,7 @@ const PerfilView = ({
                  </div>
                  <div className="input-group">
                     <label>Correo Electrónico</label>
-                    <input type="email" value={profileData.email || ''} readOnly style={{ background: '#f5f5f5' }} />
+                    <input type="email" value={profileData.email || ''} onChange={e => setProfileData({...profileData, email: e.target.value})} placeholder="ej: nombre@gmail.com" />
                  </div>
                  <div className="input-group">
                     <label>Teléfono de Contacto</label>

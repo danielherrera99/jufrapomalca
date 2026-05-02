@@ -35,6 +35,7 @@ import AsistenciaView from './components/views/AsistenciaView';
 import DashboardView from './components/views/DashboardView';
 import PerfilView from './components/views/PerfilView';
 import MapaView from './components/views/MapaView';
+import ComunicacionView from './components/views/ComunicacionView';
 import MisMensajesView from './components/views/MisMensajesView';
 import MensajesAdminView from './components/views/MensajesAdminView';
 import ItemReadModal from './components/ItemReadModal';
@@ -790,7 +791,9 @@ const Dashboard = ({ user, onLogout }) => {
           rol: selectedItem.rol,
           cargo: selectedItem.cargo,
           etapaFormacion: selectedItem.etapaFormacion,
-          activo: selectedItem.activo
+          activo: selectedItem.activo,
+          email: selectedItem.email,
+          password: selectedItem.password
         });
         setIsEditModalOpen(false);
         fetchData();
@@ -934,6 +937,7 @@ const Dashboard = ({ user, onLogout }) => {
     { id: 'Mensajes', label: 'Mensajes (Control)', icon: '🕵️' },
     { id: 'Chat', label: 'Mis Mensajes', icon: '💬' },
     { id: 'Cantos', label: 'Cancionero', icon: '🎵' },
+    { id: 'Comunicacion', label: 'Comunicación', icon: '📢' },
     { id: 'Perfil', label: 'Mi Perfil', icon: '👤' },
   ];
 
@@ -995,6 +999,7 @@ const Dashboard = ({ user, onLogout }) => {
       case 'Chat':
         return renderMisMensajes();
       case 'Perfil': return <PerfilView data={data} loading={loading} ActivityIndicator={ActivityIndicator} SafeImage={SafeImage} isProfileEditing={isProfileEditing} setIsProfileEditing={setIsProfileEditing} profileData={profileData} setProfileData={setProfileData} handleUpdatePerfil={handleUpdatePerfil} getSafeDateForInput={getSafeDateForInput} formatSafeDate={formatSafeDate} />;
+      case 'Comunicacion': return <ComunicacionView loading={loading} setLoading={setLoading} />;
       case 'Mensajes': return <MensajesAdminView loading={loading} ActivityIndicator={ActivityIndicator} data={data} openChatAdmin={openChatAdmin} formatSafeDate={formatSafeDate} />;
       case 'Espiritu': return <EspirituList filteredData={filteredData} espirituTab={espirituTab} setEspirituTab={setEspirituTab} openEditModal={openEditModal} handleDelete={handleDelete} />;
       case 'Consejo':
