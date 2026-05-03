@@ -39,7 +39,7 @@ const OfsView = () => {
       </nav>
 
       {/* Hero Section OFS */}
-      <header className="hero-section" style={{ backgroundImage: `url('/hero_ofs_background.png')` }}>
+      <header className="hero-section" style={{ backgroundImage: `url('/hero_ofs_san_damian.png')` }}>
         <div className="hero-overlay"></div>
         <div className="hero-content">
           <h1 className="hero-title">{config.familiaTitulo}</h1>
