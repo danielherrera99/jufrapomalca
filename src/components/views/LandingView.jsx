@@ -135,7 +135,7 @@ const LandingView = () => {
                left: '0', 
                zIndex: 1 
              }}></div>
-             <div style={{ position: 'relative', zIndex: 2, fontSize: '8rem' }}>🕊️</div>
+              <img src="/escudo_ofs.jpg" alt="Escudo OFS" style={{ position: 'relative', zIndex: 2, width: '280px', height: 'auto', filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.1))' }} />
           </div>
         </div>
       </section>
