@@ -117,7 +117,9 @@ const LandingView = () => {
               {config.familiaDescripcion}
             </p>
             <div style={{ marginTop: '2rem' }}>
-              <button className="btn btn-ghost" style={{ padding: '0.8rem 2rem' }}>Conocer más de la OFS</button>
+              <Link to="/familia-ofs" target="_blank" className="btn btn-ghost" style={{ padding: '0.8rem 2rem', textDecoration: 'none', display: 'inline-block' }}>
+                Conocer más de la OFS
+              </Link>
             </div>
           </div>
           <div style={{ flex: '0.8', minWidth: '300px', textAlign: 'center', position: 'relative' }}>

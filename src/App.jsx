@@ -37,6 +37,7 @@ import PerfilView from './components/views/PerfilView';
 import MapaView from './components/views/MapaView';
 import ComunicacionView from './components/views/ComunicacionView';
 import LandingView from './components/views/LandingView';
+import OfsView from './components/views/OfsView';
 import WebConfigView from './components/views/WebConfigView';
 import MisMensajesView from './components/views/MisMensajesView';
 import MensajesAdminView from './components/views/MensajesAdminView';
@@ -1533,6 +1534,7 @@ function App() {
         <Routes>
           {/* Cara Pública */}
           <Route path="/" element={<LandingView />} />
+          <Route path="/familia-ofs" element={<OfsView />} />
           
           {/* Panel de Administración (Privado) */}
           <Route path="/admin" element={!user ? <Login onLogin={setUser} /> : <Navigate to="/dashboard" />} />
