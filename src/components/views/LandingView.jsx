@@ -12,7 +12,8 @@ const LandingView = () => {
     fraseInspiradora: '...',
     autorFrase: '...',
     emailContacto: '...',
-    telefonoContacto: '...'
+    telefonoContacto: '...',
+    mapQuery: 'Pomalca'
   });
   const [eventos, setEventos] = useState([]);
 
@@ -154,7 +155,7 @@ const LandingView = () => {
         </p>
         <div className="map-container zoom-hover">
           <iframe 
-            src="https://www.google.com/maps?q=Pomalca%20Chiclayo%20Peru&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+            src={`https://www.google.com/maps?q=${encodeURIComponent(config.mapQuery)}&t=&z=16&ie=UTF8&iwloc=&output=embed`} 
             width="100%" 
             height="450" 
             style={{ border: 0, borderRadius: '24px' }} 
@@ -165,7 +166,7 @@ const LandingView = () => {
         </div>
         <div style={{ marginTop: '2rem' }}>
           <a 
-            href="https://goo.gl/maps/Pomalca" 
+            href={`https://www.google.com/maps/search/${encodeURIComponent(config.mapQuery)}`} 
             target="_blank" 
             rel="noopener noreferrer"
             className="btn btn-ghost"

@@ -12,6 +12,7 @@ const WebConfigView = ({ loading, setLoading }) => {
     autorFrase: '',
     emailContacto: '',
     telefonoContacto: '',
+    mapQuery: '',
     facebookUrl: '',
     instagramUrl: ''
   });
@@ -150,6 +151,16 @@ const WebConfigView = ({ loading, setLoading }) => {
                   />
                 </div>
               </div>
+            </div>
+            <div className="input-group" style={{ marginTop: '1rem' }}>
+              <label>Ubicación exacta en Mapa (Pin):</label>
+              <input 
+                type="text" 
+                value={config.mapQuery} 
+                onChange={e => setConfig({...config, mapQuery: e.target.value})} 
+                placeholder="Ej: Parroquia San Juan Maria Vianney, Pomalca"
+              />
+              <small style={{ color: 'var(--text-muted)' }}>Tip: Escribe el nombre del lugar o coordenadas para mover el pin.</small>
             </div>
           </section>
 
