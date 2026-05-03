@@ -5,7 +5,11 @@ const OfsConfigView = ({ loading, setLoading }) => {
   const [config, setConfig] = useState({
     heroTitle: '',
     heroSubtitle: '',
-    mapQuery: ''
+    mapQuery: '',
+    quienesSomos: '',
+    footerDireccion: '',
+    footerEmail: '',
+    footerTelefono: ''
   });
 
   useEffect(() => {
@@ -79,21 +83,62 @@ const OfsConfigView = ({ loading, setLoading }) => {
             </div>
           </section>
 
+            <div className="input-group" style={{ marginTop: '1.5rem' }}>
+              <label>Sección "¿Quiénes somos?":</label>
+              <textarea 
+                value={config.quienesSomos} 
+                onChange={e => setConfig({...config, quienesSomos: e.target.value})} 
+                style={{ minHeight: '120px' }}
+                placeholder="Describe la identidad de la fraternidad..."
+                required
+              />
+            </div>
+          </section>
+
           <section style={{ marginBottom: '2.5rem', padding: '1.5rem', background: '#F5F5F5', borderRadius: '12px' }}>
-            <h3 style={{ color: 'var(--text-main)', marginBottom: '1.5rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>Ubicación y Mapa</h3>
+            <h3 style={{ color: 'var(--text-main)', marginBottom: '1.5rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>Información de Pie de Página (Footer)</h3>
             
             <div className="input-group">
-              <label>Punto en el Mapa (Nombre del lugar o dirección):</label>
+              <label>Dirección física:</label>
+              <input 
+                type="text" 
+                value={config.footerDireccion} 
+                onChange={e => setConfig({...config, footerDireccion: e.target.value})} 
+                placeholder="Ej: Convento San Antonio de Padua, Chiclayo"
+              />
+            </div>
+
+            <div className="row" style={{ gap: '1rem', marginTop: '1.5rem' }}>
+               <div className="col">
+                  <div className="input-group">
+                    <label>Email de contacto:</label>
+                    <input 
+                      type="email" 
+                      value={config.footerEmail} 
+                      onChange={e => setConfig({...config, footerEmail: e.target.value})} 
+                    />
+                  </div>
+               </div>
+               <div className="col">
+                  <div className="input-group">
+                    <label>Teléfono / WhatsApp:</label>
+                    <input 
+                      type="text" 
+                      value={config.footerTelefono} 
+                      onChange={e => setConfig({...config, footerTelefono: e.target.value})} 
+                    />
+                  </div>
+               </div>
+            </div>
+
+            <div className="input-group" style={{ marginTop: '1.5rem' }}>
+              <label>Ubicación en Mapa (Query):</label>
               <input 
                 type="text" 
                 value={config.mapQuery} 
                 onChange={e => setConfig({...config, mapQuery: e.target.value})} 
                 placeholder="Ej: Convento San Antonio de Padua, Chiclayo"
-                required
               />
-              <small style={{ color: 'var(--text-muted)', display: 'block', marginTop: '5px' }}>
-                Esto actualizará el mapa interactivo en la página de la OFS.
-              </small>
             </div>
           </section>
 

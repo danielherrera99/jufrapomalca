@@ -11,7 +11,11 @@ const OfsView = () => {
     mapQuery: 'Pomalca',
     ofsHeroTitle: 'Fraternidad OFS Santa Isabel de Hungría',
     ofsHeroSubtitle: 'Orden Franciscana Seglar: Viviendo el Evangelio en medio del mundo.',
-    ofsMapQuery: 'Convento San Antonio de Padua, Chiclayo, Perú'
+    ofsMapQuery: 'Convento San Antonio de Padua, Chiclayo, Perú',
+    quienesSomos: 'Caminamos junto a nuestros hermanos mayores de la Orden Franciscana Seglar...',
+    footerDireccion: 'Convento San Antonio de Padua, Chiclayo, Perú',
+    footerEmail: 'jufrapomalca@gmail.com',
+    footerTelefono: '+51 979 948 528'
   });
 
   useEffect(() => {
@@ -32,6 +36,10 @@ const OfsView = () => {
           newConfig.ofsHeroTitle = ofsData.heroTitle;
           newConfig.ofsHeroSubtitle = ofsData.heroSubtitle;
           newConfig.ofsMapQuery = ofsData.mapQuery;
+          newConfig.quienesSomos = ofsData.quienesSomos;
+          newConfig.footerDireccion = ofsData.footerDireccion;
+          newConfig.footerEmail = ofsData.footerEmail;
+          newConfig.footerTelefono = ofsData.footerTelefono;
         }
         setConfig(newConfig);
       } catch (err) {
@@ -80,7 +88,7 @@ const OfsView = () => {
         <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
           <h2 className="section-title">¿Quiénes somos?</h2>
           <p style={{ fontSize: '1.25rem', lineHeight: '1.8', color: 'var(--text-muted)' }}>
-            {config.familiaDescripcion}
+            {config.quienesSomos}
           </p>
         </div>
       </section>
@@ -211,11 +219,11 @@ const OfsView = () => {
           </div>
           <div>
             <h4 style={{ marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.9rem' }}>Ubicación</h4>
-            <p style={{ opacity: 0.8 }}>Convento San Antonio de Padua<br/>Chiclayo, Perú</p>
+            <p style={{ opacity: 0.8 }}>{config.footerDireccion}</p>
           </div>
           <div>
             <h4 style={{ marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.9rem' }}>Contacto</h4>
-            <p style={{ opacity: 0.8 }}>📧 {config.emailContacto}<br/>📱 {config.telefonoContacto}</p>
+            <p style={{ opacity: 0.8 }}>📧 {config.footerEmail}<br/>📱 {config.footerTelefono}</p>
           </div>
         </div>
         
