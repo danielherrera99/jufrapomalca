@@ -7,7 +7,7 @@ const OfsView = () => {
     familiaTitulo: 'Fraternidad OFS Santa Isabel de Hungría',
     familiaDescripcion: 'Caminamos junto a nuestros hermanos mayores...',
     emailContacto: 'jufrapomalca@gmail.com',
-    telefonoContacto: '+51 981 574 685',
+    telefonoContacto: '+51 979 948 528',
     mapQuery: 'Pomalca'
   });
 
@@ -114,7 +114,7 @@ const OfsView = () => {
           </p>
           <div style={{ marginTop: '1rem' }}>
             <a 
-              href={`https://wa.me/${config.telefonoContacto?.replace(/\D/g, '') || '51981574685'}?text=Paz%20y%20Bien.%20Quisiera%20pedirles%20una%20intenci%C3%B3n%20de%20oraci%C3%B3n.`}
+              href={`https://wa.me/51979948528?text=Paz%20y%20Bien.%20Quisiera%20pedirles%20una%20intenci%C3%B3n%20de%20oraci%C3%B3n.`}
               target="_blank" 
               rel="noreferrer"
               className="btn btn-primary zoom-hover"
