@@ -154,7 +154,7 @@ const LandingView = () => {
         </p>
         <div className="map-container zoom-hover">
           <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15846.596669634027!2d-79.78280625!3d-6.7725916!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x904bef0910074f1d%3A0x88981f148972e38c!2sPomalca%2C%20Chiclayo!5e0!3m2!1ses!2spe!4v1714690000000!5m2!1ses!2spe" 
+            src="https://www.google.com/maps?q=Pomalca%20Chiclayo%20Peru&t=&z=16&ie=UTF8&iwloc=&output=embed" 
             width="100%" 
             height="450" 
             style={{ border: 0, borderRadius: '24px' }} 
