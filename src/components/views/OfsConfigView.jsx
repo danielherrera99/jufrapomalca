@@ -82,9 +82,10 @@ const OfsConfigView = ({ loading, setLoading }) => {
               />
             </div>
           </section>
-
-            <div className="input-group" style={{ marginTop: '1.5rem' }}>
-              <label>Sección "¿Quiénes somos?":</label>
+          <section style={{ marginBottom: '2rem', padding: '1.5rem', background: '#FFF9F2', borderRadius: '12px' }}>
+            <h3 style={{ color: 'var(--secondary)', marginBottom: '1.5rem', borderBottom: '1px solid #FFE0B2', paddingBottom: '0.5rem' }}>Identidad (¿Quiénes somos?)</h3>
+            <div className="input-group">
+              <label>Descripción de Identidad:</label>
               <textarea 
                 value={config.quienesSomos} 
                 onChange={e => setConfig({...config, quienesSomos: e.target.value})} 
