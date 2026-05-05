@@ -13,6 +13,7 @@ const OfsConfigView = ({ loading, setLoading }) => {
     bannerTitle: '',
     bannerDescription: '',
     bannerImage: '',
+    bannerLink: '',
     bannerActive: false
   });
   const [selectedFile, setSelectedFile] = useState(null);
@@ -149,6 +150,19 @@ const OfsConfigView = ({ loading, setLoading }) => {
                   placeholder="O pega una URL de imagen aquí..."
                 />
               </div>
+            </div>
+
+            <div className="input-group" style={{ marginTop: '1.5rem' }}>
+              <label>Enlace del Banner (Opcional):</label>
+              <input 
+                type="text" 
+                value={config.bannerLink || ''} 
+                onChange={e => setConfig({...config, bannerLink: e.target.value})} 
+                placeholder="Ej: https://docs.google.com/forms/..."
+              />
+              <p style={{ fontSize: '0.8rem', color: '#666', marginTop: '5px' }}>
+                🔗 Si pones un link, la gente podrá hacer clic en el banner para ir a esa página.
+              </p>
             </div>
           </section>
 

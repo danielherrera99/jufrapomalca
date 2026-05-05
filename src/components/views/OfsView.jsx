@@ -117,7 +117,9 @@ const OfsView = () => {
       {/* NUEVO BANNER ESPECIAL (DINÁMICO) */}
       {config.bannerActive && (
         <section style={{ padding: '3rem 1rem', background: '#FFF9F2' }}>
-            <div className="glass-card zoom-hover" style={{ 
+            <div 
+              className="glass-card zoom-hover" 
+              style={{ 
                 maxWidth: '1100px', 
                 margin: '0 auto', 
                 padding: 0, 
@@ -125,8 +127,11 @@ const OfsView = () => {
                 display: 'flex',
                 flexDirection: window.innerWidth < 768 ? 'column' : 'row',
                 boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
-                border: '1px solid #FFE0B2'
-            }}>
+                border: '1px solid #FFE0B2',
+                cursor: config.bannerLink ? 'pointer' : 'default'
+              }}
+              onClick={() => config.bannerLink && window.open(config.bannerLink, '_blank')}
+            >
                 {config.bannerImage && (
                     <div style={{ flex: 1, minHeight: '300px' }}>
                         <img 
