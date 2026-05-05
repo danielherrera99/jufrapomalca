@@ -18,6 +18,7 @@ const LandingView = () => {
     familiaDescripcion: '...'
   });
   const [eventos, setEventos] = useState([]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,15 +56,20 @@ const LandingView = () => {
       {/* Navegación Pública */}
       <nav className="landing-nav">
         <Link to="/" className="logo">JUFRA POMALCA</Link>
-        <div style={{ display: 'flex', gap: '2.5rem', alignItems: 'center' }}>
-          <a href="#inicio">Inicio</a>
-          <a href="#mision">Misión</a>
-          <a href="#eventos">Eventos</a>
-          <a href="#contacto">Contacto</a>
+        
+        <button className="nav-toggle" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          {isMenuOpen ? '✕' : '☰'}
+        </button>
+
+        <div className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
+          <a href="#inicio" onClick={() => setIsMenuOpen(false)}>Inicio</a>
+          <a href="#mision" onClick={() => setIsMenuOpen(false)}>Misión</a>
+          <a href="#eventos" onClick={() => setIsMenuOpen(false)}>Eventos</a>
+          <a href="#contacto" onClick={() => setIsMenuOpen(false)}>Contacto</a>
         </div>
       </nav>
 
-      {/* Hero Section con Imagen de Fondo Real (Generada) */}
+      {/* Hero Section */}
       <header id="inicio" className="hero-section" style={{ backgroundImage: `url('/hero_jufra_background.png')` }}>
         <div className="hero-overlay"></div>
         <div className="hero-content">
@@ -71,19 +77,19 @@ const LandingView = () => {
           <p className="hero-subtitle">
             {config.heroSubtitle}
           </p>
-          <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center' }}>
-            <button className="btn btn-primary" style={{ padding: '1rem 3rem', fontSize: '1.1rem' }}>
+          <div className="flex-responsive" style={{ justifyContent: 'center' }}>
+            <button className="btn btn-primary" style={{ padding: '1rem 3rem' }}>
               Únete a nuestra fraternidad
             </button>
-            <button className="btn btn-ghost" style={{ padding: '1rem 3rem', fontSize: '1.1rem' }}>
+            <button className="btn btn-ghost" style={{ padding: '1rem 3rem' }}>
               Ver actividades
             </button>
           </div>
         </div>
       </header>
 
-      {/* Pilares Section con Iconos Unificados */}
-      <section id="mision" className="features-grid">
+      {/* Pilares Section */}
+      <section id="mision" className="features-grid section-padding">
         <div className="feature-card">
           <div className="feature-icon-wrapper">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -107,23 +113,22 @@ const LandingView = () => {
         </div>
       </section>
 
-      {/* Nueva Sección: Familia Franciscana (OFS) */}
-      <section id="familia" style={{ padding: '8rem 10%', background: 'linear-gradient(to right, rgba(139, 69, 19, 0.05), rgba(139, 69, 19, 0.02))', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', alignItems: 'center', gap: '4rem', flexWrap: 'wrap' }}>
-          <div style={{ flex: '1', minWidth: '300px' }}>
+      {/* Familia Franciscana Section */}
+      <section id="familia" className="section-padding" style={{ background: 'linear-gradient(to right, rgba(139, 69, 19, 0.05), rgba(139, 69, 19, 0.02))', position: 'relative', overflow: 'hidden' }}>
+        <div className="flex-responsive" style={{ maxWidth: '1000px', margin: '0 auto', alignItems: 'center' }}>
+          <div style={{ flex: '1', minWidth: '280px' }}>
             <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '1.5rem' }}>Nuestra Familia Franciscana</h2>
-            <h4 style={{ color: 'var(--secondary)', fontSize: '1.4rem', marginBottom: '1rem', fontFamily: 'var(--font-serif)' }}>{config.familiaTitulo}</h4>
+            <h4 style={{ color: 'var(--secondary)', marginBottom: '1rem', fontFamily: 'var(--font-serif)' }}>{config.familiaTitulo}</h4>
             <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.8' }}>
               {config.familiaDescripcion}
             </p>
             <div style={{ marginTop: '2rem' }}>
-              <Link to="/familia-ofs" target="_blank" className="btn btn-ghost" style={{ padding: '0.8rem 2rem', textDecoration: 'none', display: 'inline-block' }}>
+              <Link to="/familia-ofs" target="_blank" className="btn btn-ghost" style={{ padding: '0.8rem 2rem', textDecoration: 'none' }}>
                 Conocer más de la OFS
               </Link>
             </div>
           </div>
-          <div style={{ flex: '0.8', minWidth: '300px', textAlign: 'center', position: 'relative' }}>
-             {/* Un elemento decorativo que simula una foto o sello */}
+          <div style={{ flex: '0.8', minWidth: '280px', textAlign: 'center', position: 'relative' }}>
              <div style={{ 
                width: '100%', 
                aspectRatio: '1/1', 
@@ -135,13 +140,13 @@ const LandingView = () => {
                left: '0', 
                zIndex: 1 
              }}></div>
-              <img src="/escudo_ofs.jpg" alt="Escudo OFS" style={{ position: 'relative', zIndex: 2, width: '280px', height: 'auto', filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.1))' }} />
+              <img src="/escudo_ofs.jpg" alt="Escudo OFS" style={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: '280px', height: 'auto', filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.1))' }} />
           </div>
         </div>
       </section>
 
-      {/* Quote Section (Testimonio) */}
-      <section className="testimonial-section">
+      {/* Quote Section */}
+      <section className="testimonial-section section-padding">
         <div className="testimonial-card">
           <p className="testimonial-text">
             {config.fraseInspiradora}
@@ -157,7 +162,7 @@ const LandingView = () => {
       </section>
 
       {/* Próximos Eventos Section */}
-      <section id="eventos" className="events-section">
+      <section id="eventos" className="events-section section-padding">
         <h2 className="section-title">Próximos Encuentros</h2>
         <div style={{ maxWidth: '900px', margin: '0 auto' }}>
           {eventos.length > 0 ? (
@@ -170,7 +175,7 @@ const LandingView = () => {
                     <div className="event-date-month">{month}</div>
                   </div>
                   <div>
-                    <h4 style={{ fontSize: '1.2rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>{event.titulo}</h4>
+                    <h4 style={{ color: 'var(--primary)', marginBottom: '0.2rem' }}>{event.titulo}</h4>
                     <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>📍 {event.lugar || 'Fraternidad'}</p>
                   </div>
                 </div>
@@ -183,7 +188,7 @@ const LandingView = () => {
       </section>
 
       {/* Sección Ubicación / Mapa */}
-      <section id="ubicacion" style={{ padding: '6rem 8%', textAlign: 'center', background: 'white' }}>
+      <section id="ubicacion" className="section-padding" style={{ textAlign: 'center', background: 'white' }}>
         <h2 className="section-title">Encuéntranos</h2>
         <p style={{ color: 'var(--text-muted)', marginBottom: '3rem', maxWidth: '600px', margin: '0 auto 3rem' }}>
           Te esperamos en nuestra fraternidad en Pomalca. ¡Ven a compartir con nosotros!
@@ -205,16 +210,16 @@ const LandingView = () => {
             target="_blank" 
             rel="noopener noreferrer"
             className="btn btn-ghost"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}
           >
             <span>📍</span> Abrir en Google Maps
           </a>
         </div>
       </section>
 
-      {/* Footer mejorado */}
-      <footer id="contacto" className="landing-footer">
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '4rem', textAlign: 'left' }}>
+      {/* Footer */}
+      <footer id="contacto" className="landing-footer section-padding">
+        <div className="responsive-grid" style={{ maxWidth: '1200px', margin: '0 auto', textAlign: 'left', '--grid-min': '250px' }}>
           <div>
             <h3 style={{ marginBottom: '1.5rem', fontFamily: 'var(--font-serif)' }}>JUFRA POMALCA</h3>
             <p style={{ opacity: 0.7, fontSize: '0.95rem', lineHeight: '1.6' }}>
@@ -223,7 +228,7 @@ const LandingView = () => {
           </div>
           <div>
             <h4 style={{ marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.9rem' }}>Contáctanos</h4>
-            <ul style={{ listStyle: 'none', opacity: 0.8, fontSize: '0.95rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <ul style={{ listStyle: 'none', opacity: 0.8, fontSize: '0.95rem', display: 'flex', flexDirection: 'column', gap: '1rem', padding: 0 }}>
               <li style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                 <span style={{ fontSize: '1.2rem' }}>📧</span> {config.emailContacto}
               </li>
@@ -238,8 +243,8 @@ const LandingView = () => {
           <div>
             <h4 style={{ marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.9rem' }}>Síguenos</h4>
             <div style={{ display: 'flex', gap: '1.5rem' }}>
-              <a href="#" style={{ color: 'white', fontSize: '1.5rem' }}>🔵</a>
-              <a href="#" style={{ color: 'white', fontSize: '1.5rem' }}>📸</a>
+              <a href="#" style={{ color: 'white', fontSize: '1.5rem', textDecoration: 'none' }}>🔵</a>
+              <a href="#" style={{ color: 'white', fontSize: '1.5rem', textDecoration: 'none' }}>📸</a>
             </div>
           </div>
         </div>

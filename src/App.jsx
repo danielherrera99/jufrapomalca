@@ -1119,7 +1119,7 @@ const Dashboard = ({ user, onLogout }) => {
           <div className="sidebar-brand" style={{ padding: 0, border: 'none', fontSize: '1.2rem' }}>JUFRA Admin</div>
           <button className="hamburger" onClick={() => setIsSidebarOpen(true)}>☰</button>
         </div>
-        <header className="content-header" style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+        <header className="content-header flex-responsive" style={{ marginBottom: '1.5rem' }}>
             <div>
               <h1 style={{ marginBottom: '0.4rem' }}>Gestión de {activeTab}</h1>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
@@ -1130,8 +1130,8 @@ const Dashboard = ({ user, onLogout }) => {
                 })()}
               </p>
             </div>
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <div style={{ position: 'relative', minWidth: '280px' }}>
+          <div className="flex-responsive" style={{ gap: '1rem', alignItems: 'center', flex: 1, justifyContent: 'flex-end' }}>
+              <div style={{ position: 'relative', flex: '1', minWidth: '200px', maxWidth: '400px' }}>
                 <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>🔍</span>
                 <input 
                   type="text" 
@@ -1142,36 +1142,38 @@ const Dashboard = ({ user, onLogout }) => {
                 />
               </div>
 
-            {activeTab === 'Asistencia' ? (
-              <div style={{ display: 'flex', gap: '0.8rem' }}>
-                <button 
-                  className="btn zoom-hover" 
-                  style={{ background: '#1D6F42', color: 'white', border: 'none', fontWeight: 'bold' }} 
-                  onClick={() => setIsExportModalOpen(true)}
-                >
-                  📊 Descargar Excel
+            <div className="flex-responsive" style={{ gap: '0.8rem' }}>
+              {activeTab === 'Asistencia' ? (
+                <>
+                  <button 
+                    className="btn zoom-hover" 
+                    style={{ background: '#1D6F42', color: 'white', border: 'none', fontWeight: 'bold' }} 
+                    onClick={() => setIsExportModalOpen(true)}
+                  >
+                    📊 <span className="desktop-only">Descargar Excel</span>
+                  </button>
+                  <button 
+                    onClick={() => {
+                      const hActivos = (Array.isArray(data.hermanos) ? data.hermanos : []).filter(h => h.activo);
+                      setBulkList(hActivos.map(h => ({ ...h, presente: false })));
+                      setShowBulkAsistencia(true);
+                    }}
+                    className="btn btn-primary zoom-hover" 
+                    style={{ background: 'var(--primary)', boxShadow: '0 4px 15px rgba(139, 90, 43, 0.4)', fontWeight: 'bold', whiteSpace: 'nowrap' }}
+                  >
+                    📝 Tomar Asistencia
+                  </button>
+                </>
+              ) : activeTab === 'Actas' ? (
+                <button className="btn btn-primary zoom-hover" onClick={() => setIsModalOpen(true)} style={{ background: '#795548', whiteSpace: 'nowrap', boxShadow: '0 4px 15px rgba(139, 90, 43, 0.4)' }}>
+                  📝 Redactar Acta
                 </button>
-                <button 
-                  onClick={() => {
-                    const hActivos = (Array.isArray(data.hermanos) ? data.hermanos : []).filter(h => h.activo);
-                    setBulkList(hActivos.map(h => ({ ...h, presente: false })));
-                    setShowBulkAsistencia(true);
-                  }}
-                  className="btn btn-primary zoom-hover" 
-                  style={{ background: 'var(--primary)', boxShadow: '0 4px 15px rgba(139, 90, 43, 0.4)', fontWeight: 'bold', whiteSpace: 'nowrap' }}
-                >
-                  📝 Tomar Asistencia Hoy
+              ) : activeTab !== 'Hermanos' && (
+                <button className="btn btn-primary zoom-hover" onClick={() => setIsModalOpen(true)} style={{ whiteSpace: 'nowrap', boxShadow: '0 4px 15px rgba(139, 90, 43, 0.4)' }}>
+                  + Nuevo
                 </button>
-              </div>
-            ) : activeTab === 'Actas' ? (
-              <button className="btn btn-primary zoom-hover" onClick={() => setIsModalOpen(true)} style={{ background: '#795548', whiteSpace: 'nowrap', boxShadow: '0 4px 15px rgba(139, 90, 43, 0.4)' }}>
-                📝 Redactar Acta
-              </button>
-            ) : activeTab !== 'Hermanos' && (
-              <button className="btn btn-primary zoom-hover" onClick={() => setIsModalOpen(true)} style={{ whiteSpace: 'nowrap', boxShadow: '0 4px 15px rgba(139, 90, 43, 0.4)' }}>
-                + Nuevo {activeTab}
-              </button>
-            )}
+              )}
+            </div>
           </div>
         </header>
 

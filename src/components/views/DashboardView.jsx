@@ -56,9 +56,9 @@ const DashboardView = ({ loading, data, user, formatSafeDate, setActiveTab, hand
 
   return (
     <div className="animate-fade">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+      <div className="flex-responsive" style={{ justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <div>
-          <h2 style={{ fontSize: '2rem', color: 'var(--primary)', margin: 0 }}>Paz y Bien, {user?.nombre || 'Hermano'} 👋</h2>
+          <h2 style={{ color: 'var(--primary)', margin: 0 }}>Paz y Bien, {user?.nombre || 'Hermano'} 👋</h2>
           <p style={{ color: 'var(--text-muted)', margin: '5px 0 0 0' }}>Aquí tienes el resumen actual de la fraternidad.</p>
         </div>
         <div style={{ textAlign: 'right' }}>
@@ -67,7 +67,7 @@ const DashboardView = ({ loading, data, user, formatSafeDate, setActiveTab, hand
       </div>
       
       {/* Estadísticas Rápidas */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
+      <div className="stats-grid">
         {[
           { label: 'HERMANOS TOTALES', value: totalHermanos, icon: '👥', color: 'var(--text-main)', bg: 'linear-gradient(135deg, #EFF6FF, #DBEAFE)' },
           { label: 'ACTIVOS', value: activos, icon: '✅', color: '#10B981', border: '#10B981' },
@@ -92,7 +92,7 @@ const DashboardView = ({ loading, data, user, formatSafeDate, setActiveTab, hand
       </div>
 
       {/* SECCIÓN DE GRÁFICOS */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '2rem', marginBottom: '2.5rem' }}>
+      <div className="charts-grid">
         
         {/* Gráfico de Tendencia de Asistencia */}
         <div className="glass-card" style={{ padding: '1.5rem', minHeight: '350px' }}>
@@ -153,7 +153,7 @@ const DashboardView = ({ loading, data, user, formatSafeDate, setActiveTab, hand
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+      <div className="responsive-grid" style={{ '--grid-min': '300px' }}>
          
          {/* Próximo Evento / Actividad */}
          <div className="glass-card" style={{ padding: '2rem', border: '1px solid rgba(139, 90, 43, 0.1)', position: 'relative', overflow: 'hidden' }}>
@@ -208,7 +208,7 @@ const DashboardView = ({ loading, data, user, formatSafeDate, setActiveTab, hand
             </div>
             <button onClick={() => setActiveTab('Hermanos')} style={{ background: '#B45309', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '10px', fontSize: '0.8rem', cursor: 'pointer' }}>Ver Todos</button>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+          <div className="responsive-grid" style={{ '--grid-min': '280px' }}>
             {data.hermanos.filter(h => !h.activo).slice(0, 4).map(h => (
               <div key={h._id} style={{ background: 'white', padding: '1rem', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
                 <div>
