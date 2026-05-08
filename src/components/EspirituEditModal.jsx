@@ -25,6 +25,16 @@ const EspirituEditModal = ({ selectedItem, setSelectedItem }) => {
         </select>
       </div>
       <div className="input-group" style={{ marginTop: '1rem' }}>
+        <label>Categoría (Solo para Oraciones)</label>
+        <input 
+          type="text" 
+          value={selectedItem.categoria || ''} 
+          onChange={e => setSelectedItem({...selectedItem, categoria: e.target.value})} 
+          placeholder="Ej: Franciscanas, Marianas, Básicas..." 
+          disabled={selectedItem.tipo === 'carisma'}
+        />
+      </div>
+      <div className="input-group" style={{ marginTop: '1rem' }}>
         <label>Contenido</label>
         <textarea 
           rows="10" 

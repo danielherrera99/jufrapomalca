@@ -720,7 +720,8 @@ const Dashboard = ({ user, onLogout }) => {
         await api.post('/espiritualidad', {
           titulo: newItem.titulo,
           contenido: newItem.contenido,
-          tipo: newItem.tipo || 'oracion'
+          tipo: newItem.tipo || 'oracion',
+          categoria: newItem.categoria || ''
         });
         setIsModalOpen(false);
         setNewItem({ titulo: '', contenido: '', tipo: 'oracion' });
@@ -1045,7 +1046,8 @@ const Dashboard = ({ user, onLogout }) => {
         await api.put(`/espiritualidad/${selectedItem._id}`, {
           titulo: selectedItem.titulo,
           contenido: selectedItem.contenido,
-          tipo: selectedItem.tipo || 'oracion'
+          tipo: selectedItem.tipo || 'oracion',
+          categoria: selectedItem.categoria || ''
         });
         setIsEditModalOpen(false);
         fetchData();

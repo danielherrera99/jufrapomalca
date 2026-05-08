@@ -25,6 +25,16 @@ const EspirituNewModal = ({ newItem, setNewItem }) => {
         </select>
       </div>
       <div className="input-group" style={{ marginTop: '1rem' }}>
+        <label>Categoría (Solo para Oraciones)</label>
+        <input 
+          type="text" 
+          value={newItem.categoria || ''} 
+          onChange={e => setNewItem({...newItem, categoria: e.target.value})} 
+          placeholder="Ej: Franciscanas, Marianas, Básicas..." 
+          disabled={newItem.tipo === 'carisma'}
+        />
+      </div>
+      <div className="input-group" style={{ marginTop: '1rem' }}>
         <label>Contenido</label>
         <textarea 
           rows="8" 
