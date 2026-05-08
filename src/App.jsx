@@ -803,10 +803,8 @@ const Dashboard = ({ user, onLogout }) => {
       let asistenciasToExport = sourceData;
       
       if (exportDates.start && exportDates.end) {
-        // Asegurar que abarque todo el día ajustando la hora local
         const startT = new Date(`${exportDates.start}T00:00:00`).getTime();
         const endT = new Date(`${exportDates.end}T23:59:59`).getTime();
-        
         asistenciasToExport = sourceData.filter(item => {
            if (!item.fecha) return false;
            const itemT = new Date(item.fecha).getTime();
@@ -822,26 +820,73 @@ const Dashboard = ({ user, onLogout }) => {
         return;
       }
 
-      // Convertir a CSV nativo con separador de punto y coma (;) para que Excel en Español lo divida en columnas correctamente
-      const header = "Fecha;Hermano;Tipo Reunión;Estado;Método;Observaciones\n";
+      // Diseño del Excel (Formato HTML Excel para permitir estilos)
+      const excelStyle = `
+        <style>
+          table { border-collapse: collapse; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+          th { background-color: #8B4513; color: #FFFFFF; font-weight: bold; padding: 10px; border: 1px solid #70360F; text-align: center; }
+          td { border: 1px solid #E5E7EB; padding: 8px; text-align: left; }
+          tr:nth-child(even) { background-color: #F9FAFB; }
+          .presente { color: #065F46; font-weight: bold; }
+          .falta { color: #991B1B; }
+          .permiso { color: #92400E; }
+        </style>
+      `;
+
+      const header = `
+        <tr>
+          <th>FECHA</th>
+          <th>HERMANO / INVITADO</th>
+          <th>TIPO DE REUNIÓN</th>
+          <th>ESTADO</th>
+          <th>MÉTODO DE REGISTRO</th>
+          <th>OBSERVACIONES</th>
+        </tr>
+      `;
+
       const rows = asistenciasToExport.map(a => {
         const fechaFull = a.fecha ? new Date(a.fecha) : new Date();
         const fechaStr = fechaFull.toLocaleDateString('es-ES');
         const hermano = a.usuario ? `${a.usuario.nombre} ${a.usuario.apellido}` : (a.nombreInvitado ? `Invitado: ${a.nombreInvitado}` : 'Usuario Desconocido');
-        const tipo = a.tipoReunion || 'semanal';
-        const estado = a.estado ? (a.estado.charAt(0).toUpperCase() + a.estado.slice(1)) : (a.presente ? 'Presente' : 'Falta');
-        const metodo = a.metodoRegistro || 'qr';
-        const obs = a.observaciones ? a.observaciones.replace(/;/g, '') : '';
-        return `${fechaStr};"${hermano}";"${tipo}";"${estado}";"${metodo}";"${obs}"`;
-      }).join("\n");
+        const tipo = (a.tipoReunion || 'semanal').toUpperCase();
+        const estadoRaw = a.estado || (a.presente ? 'presente' : 'falta');
+        const estado = estadoRaw.charAt(0).toUpperCase() + estadoRaw.slice(1);
+        const metodo = (a.metodoRegistro || 'qr').toUpperCase();
+        const obs = a.observaciones || '';
+        
+        return `
+          <tr>
+            <td>${fechaStr}</td>
+            <td>${hermano}</td>
+            <td>${tipo}</td>
+            <td class="${estadoRaw}">${estado}</td>
+            <td>${metodo}</td>
+            <td>${obs}</td>
+          </tr>
+        `;
+      }).join("");
 
-      // \uFEFF asegura que Excel lea los acentos (UTF-8 BOM), sep=; fuerza a dividir columnas
-      const blob = new Blob(["sep=;\n\uFEFF" + header + rows], { type: 'text/csv;charset=utf-8;' });
+      const template = `
+        <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+        <head>
+          <meta charset="utf-8">
+          ${excelStyle}
+        </head>
+        <body>
+          <table>
+            <thead>${header}</thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </body>
+        </html>
+      `;
+
+      const blob = new Blob([template], { type: 'application/vnd.ms-excel;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       
       const fileNameStr = (exportDates.start && exportDates.end) 
-        ? `Reporte_Asistencia_${exportDates.start}_al_${exportDates.end}.csv`
-        : `Reporte_Asistencia_Completo.csv`;
+        ? `Reporte_Asistencia_${exportDates.start}_al_${exportDates.end}.xls`
+        : `Reporte_Asistencia_Completo.xls`;
 
       const link = document.createElement('a');
       link.href = url;
@@ -851,10 +896,10 @@ const Dashboard = ({ user, onLogout }) => {
       link.remove();
       URL.revokeObjectURL(url);
       
-      setIsExportModalOpen(false); // Cerramos el modal
+      setIsExportModalOpen(false);
     } catch (error) {
       console.error(error);
-      alert('Error al generar el reporte local.');
+      alert('Error al generar el reporte con diseño.');
     }
   };
 
