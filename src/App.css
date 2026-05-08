@@ -256,6 +256,51 @@ input:focus {
   color: var(--text-main);
 }
 
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  font-size: 1.1rem;
+  opacity: 0.5;
+  color: var(--primary);
+  pointer-events: none;
+}
+
+.input-with-icon {
+  padding-left: 40px !important;
+  border: 1px solid rgba(139, 90, 43, 0.2) !important;
+  background-color: #fff !important;
+}
+
+.input-with-icon:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(139, 90, 43, 0.1) !important;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  opacity: 0.6;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+}
+
+.password-toggle:hover {
+  opacity: 1;
+}
+
 .error-message {
   background: rgba(239, 68, 68, 0.1);
   color: var(--danger);

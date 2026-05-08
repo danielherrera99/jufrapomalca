@@ -138,6 +138,8 @@ const getSafeDateForInput = (dateStr) => {
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
 
   const handleLogin = async (e) => {
@@ -147,6 +149,9 @@ const Login = ({ onLogin }) => {
       if (data.usuario.rol === 'admin' || data.usuario.rol === 'consejo') {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.usuario));
+        if (rememberMe) {
+          localStorage.setItem('rememberedUser', username);
+        }
         onLogin(data.usuario);
       } else {
         setError('Acceso denegado: Solo miembros del consejo.');
@@ -170,13 +175,54 @@ const Login = ({ onLogin }) => {
         <form onSubmit={handleLogin}>
           <div className="input-group">
             <label>Usuario (o Email)</label>
-            <input type="text" value={username} onChange={e => setUsername(e.target.value)} required placeholder="ej: francisco@jufra.org"/>
+            <div className="input-wrapper">
+              <span className="input-icon">👤</span>
+              <input 
+                type="text" 
+                value={username} 
+                onChange={e => setUsername(e.target.value)} 
+                required 
+                placeholder="ej: francisco@jufra.org"
+                className="input-with-icon"
+              />
+            </div>
           </div>
           <div className="input-group">
-            <label>Contraseña</label>
-            <input type="password" value={password} onChange={e => setPassword(e.target.value)} required />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <label>Contraseña</label>
+              <a href="#" style={{ fontSize: '0.75rem', color: 'var(--primary)', textDecoration: 'none' }}>¿Olvidaste tu contraseña?</a>
+            </div>
+            <div className="input-wrapper">
+              <span className="input-icon">🔒</span>
+              <input 
+                type={showPassword ? "text" : "password"} 
+                value={password} 
+                onChange={e => setPassword(e.target.value)} 
+                required 
+                className="input-with-icon"
+              />
+              <button 
+                type="button" 
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? '👁️' : '👁️‍🗨️'}
+              </button>
+            </div>
           </div>
-          <button type="submit" className="btn btn-primary w-full mt-4">Ingresar al Panel</button>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '1rem 0' }}>
+            <input 
+              type="checkbox" 
+              id="remember" 
+              checked={rememberMe} 
+              onChange={e => setRememberMe(e.target.checked)}
+              style={{ width: 'auto' }}
+            />
+            <label htmlFor="remember" style={{ fontSize: '0.85rem', cursor: 'pointer', margin: 0 }}>Recordar sesión</label>
+          </div>
+
+          <button type="submit" className="btn btn-primary w-full">Ingresar al Panel</button>
         </form>
       </div>
     </div>
