@@ -55,7 +55,10 @@ const LandingView = () => {
     <div className="landing-page animate-fade">
       {/* Navegación Pública */}
       <nav className="landing-nav">
-        <Link to="/" className="logo">JUFRA POMALCA</Link>
+        <Link to="/" className="logo" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <span style={{ color: 'var(--primary)', fontWeight: 'bold', fontSize: '1.4rem' }}>TAU</span>
+          JUFRA POMALCA
+        </Link>
         
         <button className="nav-toggle" onClick={() => setIsMenuOpen(!isMenuOpen)}>
           {isMenuOpen ? '✕' : '☰'}
@@ -70,18 +73,24 @@ const LandingView = () => {
       </nav>
 
       {/* Hero Section */}
-      <header id="inicio" className="hero-section" style={{ backgroundImage: `url('/hero_jufra_background.png')` }}>
+      <header 
+        id="inicio" 
+        className="hero-section" 
+        style={{ backgroundImage: `url('/hero_jufra_background.png')` }}
+        role="img"
+        aria-label="Jóvenes de JUFRA Pomalca compartiendo en comunidad al atardecer"
+      >
         <div className="hero-overlay"></div>
         <div className="hero-content">
           <h1 className="hero-title">{config.heroTitle}</h1>
           <p className="hero-subtitle">
             {config.heroSubtitle}
           </p>
-          <div className="flex-responsive" style={{ justifyContent: 'center' }}>
-            <button className="btn btn-primary" style={{ padding: '1rem 3rem' }}>
+          <div className="flex-responsive" style={{ justifyContent: 'center', gap: '1.5rem', marginTop: '2rem' }}>
+            <button className="btn btn-primary zoom-hover" style={{ padding: '1rem 3.5rem', boxShadow: '0 4px 15px rgba(139, 90, 43, 0.3)' }}>
               Únete a nuestra fraternidad
             </button>
-            <button className="btn btn-ghost" style={{ padding: '1rem 3rem' }}>
+            <button className="btn btn-ghost zoom-hover" style={{ padding: '1rem 3rem', borderColor: 'white', color: 'white' }}>
               Ver actividades
             </button>
           </div>
