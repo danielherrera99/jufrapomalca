@@ -59,6 +59,19 @@ const EventosEditModal = ({ selectedItem, setSelectedItem, MapPicker, getSafeDat
           </select>
         </div>
         <div className="input-group">
+          <label>📍 Visibilidad</label>
+          <select 
+            className="form-select" 
+            value={selectedItem.visibilidad || 'todos'} 
+            onChange={e => setSelectedItem({...selectedItem, visibilidad: e.target.value})}
+            style={{ border: '2px solid var(--primary)', fontWeight: 'bold' }}
+          >
+            <option value="todos">🔄 Ambos (App y Web)</option>
+            <option value="app">📱 Solo App (Interno)</option>
+            <option value="web">🌐 Solo Web (Público)</option>
+          </select>
+        </div>
+        <div className="input-group">
           <label>Lugar</label>
           <input 
             type="text" 

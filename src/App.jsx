@@ -646,6 +646,7 @@ const Dashboard = ({ user, onLogout }) => {
         formData.append('hora', newItem.hora || '18:00');
         formData.append('lugar', newItem.lugar || 'Sede Jufra');
         formData.append('tipo', newItem.tipo || 'reunion');
+        formData.append('visibilidad', newItem.visibilidad || 'todos');
         formData.append('lat', newItem.lat || -6.745);
         formData.append('lng', newItem.lng || -79.824);
         if (newItem.imagenFile) formData.append('imagen', newItem.imagenFile);
@@ -989,6 +990,7 @@ const Dashboard = ({ user, onLogout }) => {
         formData.append('hora', selectedItem.hora || '');
         formData.append('lugar', selectedItem.lugar || '');
         formData.append('tipo', selectedItem.tipo || 'reunion');
+        formData.append('visibilidad', selectedItem.visibilidad || 'todos');
         if (selectedItem.ubicacion?.lat) formData.append('lat', selectedItem.ubicacion.lat);
         if (selectedItem.ubicacion?.lng) formData.append('lng', selectedItem.ubicacion.lng);
         if (selectedItem.nuevaImagenFile) formData.append('imagen', selectedItem.nuevaImagenFile);

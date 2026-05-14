@@ -32,7 +32,11 @@ const LandingView = () => {
         if (eventosRes.data.success) {
           const now = new Date();
           const proximos = eventosRes.data.data
-            .filter(e => new Date(e.fecha) >= now)
+            .filter(e => {
+              const isFuture = new Date(e.fecha) >= now;
+              const isVisibleOnWeb = !e.visibilidad || e.visibilidad === 'web' || e.visibilidad === 'todos';
+              return isFuture && isVisibleOnWeb;
+            })
             .sort((a, b) => new Date(a.fecha) - new Date(b.fecha))
             .slice(0, 3);
           setEventos(proximos);

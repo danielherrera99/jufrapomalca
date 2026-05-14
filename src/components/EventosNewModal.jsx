@@ -51,15 +51,29 @@ const EventosNewModal = ({ newItem, setNewItem, MapPicker }) => {
           </select>
         </div>
         <div className="input-group">
+          <label>📍 Visibilidad</label>
+          <select 
+            className="form-select" 
+            value={newItem.visibilidad || 'todos'} 
+            onChange={e => setNewItem({...newItem, visibilidad: e.target.value})}
+            style={{ border: '2px solid var(--primary)', fontWeight: 'bold' }}
+          >
+            <option value="todos">🔄 Ambos (App y Web)</option>
+            <option value="app">📱 Solo App (Interno)</option>
+            <option value="web">🌐 Solo Web (Público)</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="input-group" style={{ marginTop: '1rem' }}>
           <label>Lugar</label>
           <input 
             type="text" 
             value={newItem.lugar || ''} 
             onChange={e => setNewItem({...newItem, lugar: e.target.value})} 
-            placeholder="Ej: Parroquia San Francisco"
+            placeholder="Ej: Parroquia María del Perpetuo Socorro"
             required 
           />
-        </div>
       </div>
 
       <div className="input-group" style={{ marginTop: '1rem' }}>
