@@ -1683,6 +1683,8 @@ class ErrorBoundary extends React.Component {
   }
 }
 
+import FloatingChat from './components/FloatingChat';
+
 function App() {
   const [user, setUser] = useState(() => {
     try {
@@ -1716,6 +1718,8 @@ function App() {
           {/* Redirección por defecto */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
+        {/* El Chatbot Flotante Premium */}
+        <FloatingChat />
       </ErrorBoundary>
     </BrowserRouter>
   );
