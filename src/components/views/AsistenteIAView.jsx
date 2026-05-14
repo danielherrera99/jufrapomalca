@@ -44,8 +44,15 @@ const AsistenteIAView = () => {
 
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
-      // Usamos el modelo Pro original que tiene la mayor compatibilidad
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" }, { apiVersion: 'v1' });
+      // Usamos el modelo ultra-nuevo Gemini 3 Flash Preview que tiene tu cuenta
+      const model = genAI.getGenerativeModel({ 
+        model: "gemini-3-flash-preview"
+      });
+
+      // Configuración avanzada para Gemini 3
+      const generationConfig = {
+        thinkingConfig: { includeThoughts: true }
+      };
 
       // Preparar historial de chat para darle contexto de JUFRA
       const systemInstruction = `Eres un asistente virtual llamado "Asistente Seráfico" para la Juventud Franciscana (JUFRA) de Pomalca. Tu tono debe ser amable, franciscano (saludando siempre con "Paz y bien" si es la primera interacción o si amerita), y dispuesto a ayudar. Estás ayudando a los líderes (el consejo) a redactar correos, actas, oraciones o resolver dudas.`;
