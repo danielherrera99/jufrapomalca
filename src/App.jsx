@@ -42,6 +42,7 @@ import WebConfigView from './components/views/WebConfigView';
 import OfsConfigView from './components/views/OfsConfigView';
 import MisMensajesView from './components/views/MisMensajesView';
 import MensajesAdminView from './components/views/MensajesAdminView';
+import AsistenteIAView from './components/views/AsistenteIAView';
 import ItemReadModal from './components/ItemReadModal';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -248,8 +249,9 @@ const modules = [
   { id: 'Chat', label: 'Mis Mensajes', icon: '💬' },
   { id: 'Cantos', label: 'Cancionero', icon: '🎵' },
   { id: 'Comunicacion', label: 'Comunicación', icon: '📢' },
+  { id: 'Asistente', label: 'Asistente IA', icon: '🤖' },
   { id: 'WebConfig', label: 'Web Institucional', icon: '🌐' },
-  {id: 'OfsConfig', label: 'Configuración OFS', icon: '☦️'},
+  { id: 'OfsConfig', label: 'Configuración OFS', icon: '☦️' },
   { id: 'Perfil', label: 'Mi Perfil', icon: '👤' },
 ];
 
@@ -1089,27 +1091,6 @@ const Dashboard = ({ user, onLogout }) => {
     return acc;
   }, {}) : null;
 
-  const getSafeDateForInput = (dateStr) => {
-    if (!dateStr) return '';
-    const d = new Date(dateStr);
-    return isNaN(d.getTime()) ? '' : d.toISOString().split('T')[0];
-  };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const currentView = () => {
     if (loading) return <p>Cargando datos desde la nube...</p>;
     
@@ -1152,6 +1133,7 @@ const Dashboard = ({ user, onLogout }) => {
       case 'Comunicacion': return <ComunicacionView loading={loading} setLoading={setLoading} hermanos={data.hermanos || []} />;
       case 'Mensajes': return <MensajesAdminView loading={loading} ActivityIndicator={ActivityIndicator} data={data} openChatAdmin={openChatAdmin} formatSafeDate={formatSafeDate} />;
       case 'Espiritu': return <EspirituList filteredData={filteredData} espirituTab={espirituTab} setEspirituTab={setEspirituTab} openEditModal={openEditModal} handleDelete={handleDelete} />;
+      case 'Asistente': return <AsistenteIAView />;
       case 'Consejo':
         return <Consejo miembrosData={filteredData} />;
       default:
