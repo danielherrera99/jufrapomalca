@@ -241,6 +241,7 @@ const modules = [
   { id: 'Eventos', label: 'Calendario (Eventos)', icon: '📅' },
   { id: 'Servicios', label: 'Servicios', icon: '💼' },
   { id: 'Peticiones', label: 'Peticiones', icon: '🙏' },
+  { id: 'Solicitudes', label: 'Solicitudes Web', icon: '🙋' },
   { id: 'Formacion', label: 'Formación', icon: '📖' },
   { id: 'Actas', label: 'Actas', icon: '📝' },
   { id: 'Documentos', label: 'Documentos', icon: '📄' },
