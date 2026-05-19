@@ -325,7 +325,9 @@ const LandingView = () => {
               📱 App Móvil
             </a>
           </div>
-        </footer>
+        </div>
+      </footer>
+
       </div>
 
       {/* Modal de Interés */}
