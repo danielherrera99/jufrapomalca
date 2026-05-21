@@ -44,6 +44,7 @@ import MisMensajesView from './components/views/MisMensajesView';
 import MensajesAdminView from './components/views/MensajesAdminView';
 import AsistenteIAView from './components/views/AsistenteIAView';
 import SolicitudesView from './components/views/SolicitudesView';
+import FraternidadesAdminView from './components/views/FraternidadesAdminView';
 import ItemReadModal from './components/ItemReadModal';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -254,6 +255,7 @@ const modules = [
   { id: 'Asistente', label: 'Asistente IA', icon: '🤖' },
   { id: 'WebConfig', label: 'Web Institucional', icon: '🌐' },
   { id: 'OfsConfig', label: 'Configuración OFS', icon: '☦️' },
+  { id: 'Fraternidades', label: 'JUFRA Perú', icon: '🇵🇪' },
   { id: 'Perfil', label: 'Mi Perfil', icon: '👤' },
 ];
 
@@ -440,6 +442,7 @@ const Dashboard = ({ user, onLogout }) => {
       else if (activeTab === 'Mensajes') endpoint = '/mensajes/admin/todas';
       else if (activeTab === 'Perfil') endpoint = '/auth/perfil';
       else if (activeTab === 'Chat') endpoint = '/mensajes/conversaciones';
+      else if (activeTab === 'Fraternidades') endpoint = '/fraternidades';
       else if (activeTab === 'Comunicacion') {
         const [herRes] = await Promise.all([
           api.get('/hermanos?todos=true')
@@ -1136,6 +1139,7 @@ const Dashboard = ({ user, onLogout }) => {
       case 'Perfil': return <PerfilView data={data} loading={loading} ActivityIndicator={ActivityIndicator} SafeImage={SafeImage} isProfileEditing={isProfileEditing} setIsProfileEditing={setIsProfileEditing} profileData={profileData} setProfileData={setProfileData} handleUpdatePerfil={handleUpdatePerfil} getSafeDateForInput={getSafeDateForInput} formatSafeDate={formatSafeDate} />;
       case 'WebConfig': return <WebConfigView loading={loading} setLoading={setLoading} />;
       case 'OfsConfig': return <OfsConfigView loading={loading} setLoading={setLoading} />;
+      case 'Fraternidades': return <FraternidadesAdminView fraternidades={filteredData} loading={loading} fetchData={fetchData} />;
       case 'Comunicacion': return <ComunicacionView loading={loading} setLoading={setLoading} hermanos={data.hermanos || []} />;
       case 'Mensajes': return <MensajesAdminView loading={loading} ActivityIndicator={ActivityIndicator} data={data} openChatAdmin={openChatAdmin} formatSafeDate={formatSafeDate} />;
       case 'Espiritu': return <EspirituList filteredData={filteredData} espirituTab={espirituTab} setEspirituTab={setEspirituTab} openEditModal={openEditModal} handleDelete={handleDelete} />;
@@ -1236,7 +1240,7 @@ const Dashboard = ({ user, onLogout }) => {
 
           {/* GRUPO: ADMIN */}
           <div className="nav-section-title" style={{ marginTop: '1.5rem' }}>ADMINISTRACIÓN</div>
-          {modules.filter(m => ['Documentos', 'Actas', 'Formacion', 'Galeria', 'Servicios', 'Comunicacion', 'Asistente', 'Mensajes', 'WebConfig', 'OfsConfig', 'Perfil'].includes(m.id)).map((mod) => (
+          {modules.filter(m => ['Documentos', 'Actas', 'Formacion', 'Galeria', 'Servicios', 'Comunicacion', 'Asistente', 'Mensajes', 'WebConfig', 'OfsConfig', 'Fraternidades', 'Perfil'].includes(m.id)).map((mod) => (
              <a key={mod.id} href="#" onClick={(e) => { e.preventDefault(); setActiveTab(mod.id); setIsSidebarOpen(false); }}
               className={`nav-link ${activeTab === mod.id ? 'active' : ''}`}
             >
@@ -1307,7 +1311,7 @@ const Dashboard = ({ user, onLogout }) => {
                 <button className="btn btn-primary zoom-hover" onClick={() => setIsModalOpen(true)} style={{ whiteSpace: 'nowrap', boxShadow: '0 4px 15px rgba(139, 90, 43, 0.4)' }}>
                   👤 + Añadir Hermano
                 </button>
-              ) : activeTab !== 'Hermanos' && (
+              ) : !['Hermanos', 'Asistencia', 'Solicitudes', 'WebConfig', 'OfsConfig', 'Perfil', 'Comunicacion', 'Asistente', 'Mensajes', 'Chat', 'Fraternidades'].includes(activeTab) && (
                 <button className="btn btn-primary zoom-hover" onClick={() => setIsModalOpen(true)} style={{ whiteSpace: 'nowrap', boxShadow: '0 4px 15px rgba(139, 90, 43, 0.4)' }}>
                   + Nuevo
                 </button>

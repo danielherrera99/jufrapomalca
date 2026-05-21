@@ -1,6 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../config/api';
+
+const DEPARTAMENTOS_MAPA = [
+  { id: 'Amazonas', name: 'Amazonas', path: 'M 110 65 L 125 55 L 138 75 L 125 105 L 118 90 Z', x: 122, y: 78 },
+  { id: 'Áncash', name: 'Áncash', path: 'M 85 160 L 105 180 L 115 175 L 125 210 L 98 225 Z', x: 106, y: 198 },
+  { id: 'Apurímac', name: 'Apurímac', path: 'M 182 290 L 202 295 L 198 318 L 175 325 Z', x: 188, y: 308 },
+  { id: 'Arequipa', name: 'Arequipa', path: 'M 158 335 L 175 325 L 198 318 L 202 295 L 230 295 L 225 310 L 238 320 L 210 350 L 180 355 Z', x: 195, y: 338 },
+  { id: 'Ayacucho', name: 'Ayacucho', path: 'M 148 295 L 168 285 L 182 290 L 175 325 L 155 345 L 158 335 Z', x: 165, y: 312 },
+  { id: 'Cajamarca', name: 'Cajamarca', path: 'M 95 70 L 110 65 L 118 90 L 112 110 L 95 120 L 85 105 Z', x: 102, y: 92 },
+  { id: 'Callao', name: 'Callao', path: 'M 112 250 A 6 6 0 1 1 112 249 Z', x: 106, y: 247 },
+  { id: 'Cusco', name: 'Cusco', path: 'M 172 250 L 195 215 L 218 238 L 245 242 L 230 295 L 202 295 L 182 290 L 168 285 L 160 260 Z', x: 205, y: 260 },
+  { id: 'Huancavelica', name: 'Huancavelica', path: 'M 135 285 L 145 255 L 160 260 L 168 285 L 148 295 Z', x: 152, y: 275 },
+  { id: 'Huánuco', name: 'Huánuco', path: 'M 125 155 L 142 165 L 155 170 L 148 200 L 135 205 L 120 185 Z', x: 138, y: 180 },
+  { id: 'Ica', name: 'Ica', path: 'M 120 280 L 135 285 L 148 295 L 158 335 L 135 320 Z', x: 138, y: 308 },
+  { id: 'Junín', name: 'Junín', path: 'M 128 220 L 150 220 L 168 220 L 172 250 L 145 255 L 135 240 Z', x: 150, y: 235 },
+  { id: 'La Libertad', name: 'La Libertad', path: 'M 78 135 L 95 120 L 115 130 L 125 155 L 105 180 L 85 160 Z', x: 101, y: 148 },
+  { id: 'Lambayeque', name: 'Lambayeque', path: 'M 60 90 L 85 105 L 95 120 L 78 135 L 55 110 Z', x: 72, y: 112 },
+  { id: 'Lima', name: 'Lima', path: 'M 98 225 L 125 210 L 128 220 L 135 240 L 145 255 L 135 285 L 120 280 L 108 260 Z', x: 122, y: 252 },
+  { id: 'Loreto', name: 'Loreto', path: 'M 125 55 L 175 25 L 210 50 L 225 100 L 180 150 L 140 120 L 138 75 Z', x: 175, y: 88 },
+  { id: 'Madre de Dios', name: 'Madre de Dios', path: 'M 215 180 L 260 210 L 255 235 L 245 242 L 218 238 Z', x: 240, y: 212 },
+  { id: 'Moquegua', name: 'Moquegua', path: 'M 238 320 L 250 330 L 240 348 L 225 342 L 210 350 Z', x: 232, y: 338 },
+  { id: 'Pasco', name: 'Pasco', path: 'M 125 210 L 135 205 L 148 200 L 155 205 L 150 220 L 128 220 Z', x: 140, y: 211 },
+  { id: 'Piura', name: 'Piura', path: 'M 65 60 L 78 60 L 90 60 L 98 75 L 85 105 L 60 90 Z', x: 77, y: 80 },
+  { id: 'Puno', name: 'Puno', path: 'M 245 242 L 275 255 L 268 298 L 238 320 L 225 310 L 230 295 Z', x: 255, y: 290 },
+  { id: 'San Martín', name: 'San Martín', path: 'M 118 90 L 125 105 L 140 120 L 155 115 L 165 145 L 142 165 L 125 155 L 115 130 Z', x: 138, y: 135 },
+  { id: 'Tacna', name: 'Tacna', path: 'M 240 348 L 262 360 L 248 375 L 232 365 Z', x: 248, y: 362 },
+  { id: 'Tumbes', name: 'Tumbes', path: 'M 78 50 L 95 45 L 90 60 L 78 60 Z', x: 84, y: 53 },
+  { id: 'Ucayali', name: 'Ucayali', path: 'M 140 120 L 180 150 L 215 180 L 195 215 L 155 195 L 155 170 Z', x: 180, y: 178 }
+];
 
 const LandingView = () => {
   const [config] = useState({
@@ -19,6 +47,14 @@ const LandingView = () => {
   });
   const [eventos, setEventos] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Estados para JUFRA en el Perú
+  const [fraternidades, setFraternidades] = useState([]);
+  const [loadingFrat, setLoadingFrat] = useState(true);
+  const [selectedDepto, setSelectedDepto] = useState('todos');
+  const [selectedZona, setSelectedZona] = useState('todas');
+  const [searchFrat, setSearchFrat] = useState('');
+  const [hoveredDepto, setHoveredDepto] = useState(null);
   
   // Modal de Interés
   const [isInterestModalOpen, setIsInterestModalOpen] = useState(false);
@@ -110,7 +146,7 @@ const LandingView = () => {
       }
 
       // 2. Active Section Spy
-      const sections = ['inicio', 'mision', 'historia', 'galeria', 'eventos', 'contacto'];
+      const sections = ['inicio', 'mision', 'historia', 'nacional', 'galeria', 'eventos', 'contacto'];
       const scrollPosition = window.scrollY + 200; // Offset for navbar
 
       for (const section of sections) {
@@ -128,6 +164,76 @@ const LandingView = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const normalizeString = (str) => {
+    if (!str) return '';
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  };
+
+  const activeDeptos = useMemo(() => {
+    const list = fraternidades.map(f => f.departamento).filter(Boolean);
+    return [...new Set(list)].sort();
+  }, [fraternidades]);
+
+  const filteredFraternidades = useMemo(() => {
+    return fraternidades.filter(f => {
+      // 1. Search match
+      if (searchFrat.trim()) {
+        const query = searchFrat.toLowerCase();
+        const matchesName = f.nombre?.toLowerCase().includes(query);
+        const matchesParish = f.parroquia?.toLowerCase().includes(query);
+        const matchesContact = f.contacto?.toLowerCase().includes(query);
+        if (!matchesName && !matchesParish && !matchesContact) return false;
+      }
+
+      // 2. Zone match
+      if (selectedZona !== 'todas' && f.zona !== selectedZona) return false;
+
+      // 3. Depto match
+      if (selectedDepto !== 'todos') {
+        if (normalizeString(f.departamento) !== normalizeString(selectedDepto)) return false;
+      }
+
+      return true;
+    });
+  }, [fraternidades, searchFrat, selectedZona, selectedDepto]);
+
+  const getWhatsAppLink = (tel, nombre) => {
+    if (!tel) return '';
+    const cleanNumber = tel.replace(/\D/g, '');
+    const finalNumber = cleanNumber.length === 9 ? `51${cleanNumber}` : cleanNumber;
+    const message = `¡Paz y Bien! Deseo contactarme con la Fraternidad ${nombre} de JUFRA en el Perú. 🕊️`;
+    return `https://wa.me/${finalNumber}?text=${encodeURIComponent(message)}`;
+  };
+
+  const getZonaStyles = (zona) => {
+    switch (zona) {
+      case 'norte':
+        return { color: '#8B4513', badgeClass: 'norte' };
+      case 'centro':
+        return { color: '#D4A574', badgeClass: 'centro' };
+      case 'sur':
+        return { color: '#6B8E23', badgeClass: 'sur' };
+      default:
+        return { color: 'var(--primary)', badgeClass: '' };
+    }
+  };
+
+  useEffect(() => {
+    const fetchFraternidades = async () => {
+      try {
+        const res = await api.get('/fraternidades');
+        if (res.data.success) {
+          setFraternidades(res.data.data);
+        }
+      } catch (err) {
+        console.error('Error al cargar fraternidades:', err);
+      } finally {
+        setLoadingFrat(false);
+      }
+    };
+    fetchFraternidades();
   }, []);
 
   useEffect(() => {
@@ -178,6 +284,7 @@ const LandingView = () => {
             <a href="#inicio" className={activeSection === 'inicio' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Inicio</a>
             <a href="#mision" className={activeSection === 'mision' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Misión</a>
             <a href="#historia" className={activeSection === 'historia' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Nuestro Camino</a>
+            <a href="#nacional" className={activeSection === 'nacional' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>JUFRA en el Perú</a>
             <a href="#galeria" className={activeSection === 'galeria' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Galería</a>
             <a href="#eventos" className={activeSection === 'eventos' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Eventos</a>
             <a href="#contacto" className={activeSection === 'contacto' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Contacto</a>
@@ -348,6 +455,223 @@ const LandingView = () => {
                   Lanzamiento del portal web institucional y la aplicación móvil oficial de JUFRA Pomalca, permitiendo mayor cercanía con la comunidad, digitalización de asistencia, gestión interna y un canal de comunicación interactivo e inteligente.
                 </p>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Sección JUFRA en el Perú (Mapa & Directorio Nacional) */}
+        <section id="nacional" className="jufra-peru-section section-padding">
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <span style={{ color: 'var(--secondary)', fontWeight: 'bold', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Directorio Nacional</span>
+            <h2 className="section-title" style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>JUFRA en el Perú</h2>
+            <p style={{ color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto' }}>
+              Encuentra la fraternidad más cercana a ti. Estamos presentes en distintas regiones y parroquias del país viviendo el carisma franciscano.
+            </p>
+          </div>
+
+          <div className="jufra-peru-container">
+            {/* Columna Izquierda: Mapa Interactivo SVG */}
+            <div className="map-column">
+              <div className="map-header-hint">
+                <span>🗺️</span> Haz clic en un departamento resaltado para filtrar
+              </div>
+              
+              <div className="peru-svg-wrapper">
+                <svg viewBox="0 0 350 480" className="peru-svg">
+                  <g>
+                    {DEPARTAMENTOS_MAPA.map(dep => {
+                      const count = fraternidades.filter(f => normalizeString(f.departamento) === normalizeString(dep.id)).length;
+                      const hasFrats = count > 0;
+                      const isSelected = normalizeString(selectedDepto) === normalizeString(dep.id);
+                      
+                      return (
+                        <path
+                          key={dep.id}
+                          d={dep.path}
+                          className={`depto-path ${hasFrats ? 'has-frats' : ''} ${isSelected ? 'active-selected' : ''}`}
+                          onMouseEnter={() => setHoveredDepto({ name: dep.name, count })}
+                          onMouseLeave={() => setHoveredDepto(null)}
+                          onClick={() => {
+                            if (hasFrats) {
+                              setSelectedDepto(normalizeString(selectedDepto) === normalizeString(dep.id) ? 'todos' : dep.id);
+                            }
+                          }}
+                        />
+                      );
+                    })}
+                  </g>
+                </svg>
+
+                {/* Floating Map Tooltip */}
+                {hoveredDepto && (
+                  <div className="map-tooltip">
+                    <h4>{hoveredDepto.name}</h4>
+                    <p>{hoveredDepto.count > 0 ? `${hoveredDepto.count} ${hoveredDepto.count === 1 ? 'fraternidad' : 'fraternidades'} activa(s)` : 'Sin fraternidades registradas'}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Columna Derecha: Controles y Tarjetas de Directorio */}
+            <div className="directory-column">
+              <div className="directory-controls">
+                
+                {/* 1. Barra de Búsqueda */}
+                <div className="search-frat-wrapper">
+                  <span className="search-frat-icon">🔍</span>
+                  <input
+                    type="text"
+                    className="search-frat-input"
+                    placeholder="Buscar fraternidad, parroquia o contacto..."
+                    value={searchFrat}
+                    onChange={(e) => setSearchFrat(e.target.value)}
+                  />
+                </div>
+
+                {/* 2. Filtro de Zonas (Chips) */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                  <span style={{ fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--text-muted)' }}>Filtrar por Zona Geográfica:</span>
+                  <div className="zone-filter-chips">
+                    {[
+                      { id: 'todas', label: 'Todas', emoji: '🇵🇪', activeClass: 'active-todas' },
+                      { id: 'norte', label: 'Norte', emoji: '🪵', activeClass: 'active-norte' },
+                      { id: 'centro', label: 'Centro', emoji: '☀️', activeClass: 'active-centro' },
+                      { id: 'sur', label: 'Sur', emoji: '🌱', activeClass: 'active-sur' }
+                    ].map(chip => (
+                      <button
+                        key={chip.id}
+                        className={`zone-chip ${selectedZona === chip.id ? chip.activeClass : ''}`}
+                        onClick={() => setSelectedZona(chip.id)}
+                      >
+                        <span>{chip.emoji}</span> {chip.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 3. Selector de Departamentos (Visible en móvil, pero funciona como alternativa en desktop) */}
+                <div className="depto-filter-mobile-wrapper">
+                  <label htmlFor="mobile-depto-select">Región / Departamento:</label>
+                  <select
+                    id="mobile-depto-select"
+                    className="depto-dropdown-select"
+                    value={selectedDepto}
+                    onChange={(e) => setSelectedDepto(e.target.value)}
+                  >
+                    <option value="todos">Todos los Departamentos</option>
+                    {activeDeptos.map(dep => (
+                      <option key={dep} value={dep}>📍 {dep}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Barra de estado de filtros activos */}
+              {(selectedDepto !== 'todos' || selectedZona !== 'todas' || searchFrat.trim()) && (
+                <div className="filter-status-bar">
+                  <div>
+                    Filtros activos: {selectedZona !== 'todas' && <span style={{ textTransform: 'capitalize' }}>Zona {selectedZona} • </span>}
+                    {selectedDepto !== 'todos' && <span>{selectedDepto} • </span>}
+                    {searchFrat.trim() && <span>Búsqueda: "{searchFrat}" • </span>}
+                    <span style={{ color: 'var(--text-muted)' }}>({filteredFraternidades.length} encontradas)</span>
+                  </div>
+                  <button className="btn-reset-filters" onClick={() => { setSelectedDepto('todos'); setSelectedZona('todas'); setSearchFrat(''); }}>
+                    Restablecer
+                  </button>
+                </div>
+              )}
+
+              {/* Listado de Tarjetas */}
+              {loadingFrat ? (
+                <div style={{ textAlign: 'center', padding: '3rem' }}>
+                  <div className="spinner" style={{ marginBottom: '1rem' }}></div>
+                  <p style={{ color: 'var(--text-muted)' }}>Cargando fraternidades nacionales...</p>
+                </div>
+              ) : filteredFraternidades.length === 0 ? (
+                <div className="directory-empty-state">
+                  <span>🕊️</span>
+                  <h4>Paz y Bien</h4>
+                  <p>No se encontraron fraternidades registradas con los filtros seleccionados.</p>
+                  <button 
+                    className="btn btn-primary mt-4" 
+                    onClick={() => { setSelectedDepto('todos'); setSelectedZona('todas'); setSearchFrat(''); }}
+                    style={{ fontSize: '0.85rem', padding: '0.5rem 1.5rem' }}
+                  >
+                    Ver todas las fraternidades
+                  </button>
+                </div>
+              ) : (
+                <div className="cards-scroll-container">
+                  {filteredFraternidades.map(frat => {
+                    const zStyle = getZonaStyles(frat.zona);
+                    return (
+                      <div 
+                        key={frat._id} 
+                        className="frat-card-premium" 
+                        style={{ '--card-border-color': zStyle.color }}
+                      >
+                        <div>
+                          <div className="frat-card-header">
+                            <div>
+                              <h3 className="frat-card-title">{frat.nombre}</h3>
+                              <div className="frat-card-depto">
+                                <span>📍</span> {frat.departamento}
+                              </div>
+                            </div>
+                            <span className={`frat-card-badge ${zStyle.badgeClass}`}>
+                              {frat.zona}
+                            </span>
+                          </div>
+
+                          <div className="frat-card-body">
+                            {frat.parroquia && (
+                              <div className="frat-detail-item">
+                                <span className="frat-detail-icon">🏛️</span>
+                                <span>{frat.parroquia}</span>
+                              </div>
+                            )}
+                            {frat.contacto && (
+                              <div className="frat-detail-item">
+                                <span className="frat-detail-icon">👤</span>
+                                <span>{frat.contacto}</span>
+                              </div>
+                            )}
+                            {frat.telefono && (
+                              <div className="frat-detail-item">
+                                <span className="frat-detail-icon">📞</span>
+                                <span>{frat.telefono}</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="frat-card-actions">
+                          {frat.telefono && (
+                            <a
+                              href={getWhatsAppLink(frat.telefono, frat.nombre)}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="btn-card-action btn-card-whatsapp"
+                            >
+                              💬 WhatsApp
+                            </a>
+                          )}
+                          {frat.enlaceSocial && (
+                            <a
+                              href={frat.enlaceSocial}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="btn-card-action btn-card-social"
+                            >
+                              🌐 Red Social
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         </section>
