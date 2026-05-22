@@ -1398,10 +1398,11 @@ input:focus {
 .peru-svg-wrapper {
   position: relative;
   width: 100%;
-  max-width: 380px;
+  max-width: 330px; /* Precise aspect-ratio width for a 480px height to prevent geographical stretching */
   height: 480px;
   display: flex;
   justify-content: center;
+  margin: 0 auto;
 }
 
 .peru-svg {
