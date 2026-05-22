@@ -36,7 +36,8 @@ const FraternidadesAdminView = ({ fraternidades = [], loading, fetchData }) => {
       total: fraternidades.length,
       norte: fraternidades.filter(f => f.zona === 'norte').length,
       centro: fraternidades.filter(f => f.zona === 'centro').length,
-      sur: fraternidades.filter(f => f.zona === 'sur').length,
+      lima_callao_sur_medio: fraternidades.filter(f => f.zona === 'lima_callao_sur_medio').length,
+      sur_altiplano: fraternidades.filter(f => f.zona === 'sur_altiplano').length,
     };
   }, [fraternidades]);
 
@@ -157,9 +158,21 @@ const FraternidadesAdminView = ({ fraternidades = [], loading, fetchData }) => {
           color: '#D97706',
           border: 'rgba(217, 119, 6, 0.3)'
         };
+      case 'lima_callao_sur_medio':
+        return {
+          bg: 'rgba(26, 82, 118, 0.1)', // Ocean Blue
+          color: '#1A5276',
+          border: 'rgba(26, 82, 118, 0.3)'
+        };
+      case 'sur_altiplano':
+        return {
+          bg: 'rgba(108, 52, 131, 0.1)', // Purple Highland
+          color: '#6C3483',
+          border: 'rgba(108, 52, 131, 0.3)'
+        };
       case 'sur':
         return {
-          bg: 'rgba(21, 128, 61, 0.1)', // Verde Oliva
+          bg: 'rgba(21, 128, 61, 0.1)', // Verde Oliva (Fallback)
           color: '#15803D',
           border: 'rgba(21, 128, 61, 0.3)'
         };
@@ -194,20 +207,26 @@ const FraternidadesAdminView = ({ fraternidades = [], loading, fetchData }) => {
         {/* KPI Norte */}
         <div className="glass-card" style={{ padding: '1.25rem', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.25rem', borderLeft: '4px solid #8B5A2B', cursor: 'pointer' }} onClick={() => setZonaFilter('norte')}>
           <span style={{ fontSize: '1.8rem' }}>🪵</span>
-          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 'bold', textTransform: 'uppercase' }}>Zona Norte</span>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 'bold', textTransform: 'uppercase' }}>Región Norte</span>
           <span style={{ fontSize: '1.8rem', fontWeight: '800', color: '#8B5A2B' }}>{stats.norte}</span>
         </div>
         {/* KPI Centro */}
         <div className="glass-card" style={{ padding: '1.25rem', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.25rem', borderLeft: '4px solid #D97706', cursor: 'pointer' }} onClick={() => setZonaFilter('centro')}>
           <span style={{ fontSize: '1.8rem' }}>☀️</span>
-          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 'bold', textTransform: 'uppercase' }}>Zona Centro</span>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 'bold', textTransform: 'uppercase' }}>Región Centro</span>
           <span style={{ fontSize: '1.8rem', fontWeight: '800', color: '#D97706' }}>{stats.centro}</span>
         </div>
-        {/* KPI Sur */}
-        <div className="glass-card" style={{ padding: '1.25rem', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.25rem', borderLeft: '4px solid #15803D', cursor: 'pointer' }} onClick={() => setZonaFilter('sur')}>
-          <span style={{ fontSize: '1.8rem' }}>🌱</span>
-          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 'bold', textTransform: 'uppercase' }}>Zona Sur</span>
-          <span style={{ fontSize: '1.8rem', fontWeight: '800', color: '#15803D' }}>{stats.sur}</span>
+        {/* KPI Lima, Callao y Sur Medio */}
+        <div className="glass-card" style={{ padding: '1.25rem', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.25rem', borderLeft: '4px solid #1A5276', cursor: 'pointer' }} onClick={() => setZonaFilter('lima_callao_sur_medio')}>
+          <span style={{ fontSize: '1.8rem' }}>🌊</span>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 'bold', textTransform: 'uppercase' }}>Región Lima/Callao/SurM.</span>
+          <span style={{ fontSize: '1.8rem', fontWeight: '800', color: '#1A5276' }}>{stats.lima_callao_sur_medio}</span>
+        </div>
+        {/* KPI Sur Altiplano */}
+        <div className="glass-card" style={{ padding: '1.25rem', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.25rem', borderLeft: '4px solid #6C3483', cursor: 'pointer' }} onClick={() => setZonaFilter('sur_altiplano')}>
+          <span style={{ fontSize: '1.8rem' }}>🏔️</span>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 'bold', textTransform: 'uppercase' }}>Región Sur Altiplano</span>
+          <span style={{ fontSize: '1.8rem', fontWeight: '800', color: '#6C3483' }}>{stats.sur_altiplano}</span>
         </div>
       </div>
 
@@ -221,7 +240,8 @@ const FraternidadesAdminView = ({ fraternidades = [], loading, fetchData }) => {
               { id: 'todas', label: 'Todas', count: stats.total },
               { id: 'norte', label: '🪵 Norte', count: stats.norte },
               { id: 'centro', label: '☀️ Centro', count: stats.centro },
-              { id: 'sur', label: '🌱 Sur', count: stats.sur },
+              { id: 'lima_callao_sur_medio', label: '🌊 Lima, Callao y Sur Medio', count: stats.lima_callao_sur_medio },
+              { id: 'sur_altiplano', label: '🏔️ Sur Altiplano', count: stats.sur_altiplano },
             ].map(tab => (
               <button
                 key={tab.id}
@@ -350,7 +370,13 @@ const FraternidadesAdminView = ({ fraternidades = [], loading, fetchData }) => {
                       color: zStyle.color,
                       border: `1px solid ${zStyle.border}`
                     }}>
-                      Zona {frat.zona}
+                      {
+                        frat.zona === 'lima_callao_sur_medio' ? '🌊 Lima, Callao y Sur Medio' :
+                        frat.zona === 'sur_altiplano' ? '🏔️ Sur Altiplano' :
+                        frat.zona === 'norte' ? '🪵 Norte' :
+                        frat.zona === 'centro' ? '☀️ Centro' :
+                        `Zona ${frat.zona}`
+                      }
                     </span>
                   </div>
 
@@ -529,9 +555,10 @@ const FraternidadesAdminView = ({ fraternidades = [], loading, fetchData }) => {
                     required
                     style={{ borderRadius: '8px', border: '1px solid var(--border)', padding: '0.6rem', background: 'white' }}
                   >
-                    <option value="norte">🪵 Zona Norte</option>
-                    <option value="centro">☀️ Zona Centro</option>
-                    <option value="sur">🌱 Zona Sur</option>
+                    <option value="norte">🪵 Región Norte</option>
+                    <option value="centro">☀️ Región Centro</option>
+                    <option value="lima_callao_sur_medio">🌊 Región Lima, Callao y Sur Medio</option>
+                    <option value="sur_altiplano">🏔️ Región Sur Altiplano</option>
                   </select>
                 </div>
               </div>

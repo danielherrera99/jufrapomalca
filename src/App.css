@@ -1562,6 +1562,20 @@ input:focus {
   box-shadow: 0 4px 12px rgba(212, 165, 116, 0.25) !important;
 }
 
+.zone-chip.active-lima_callao_sur_medio {
+  background: #1A5276 !important;
+  color: white !important;
+  border-color: #1A5276 !important;
+  box-shadow: 0 4px 12px rgba(26, 82, 118, 0.25) !important;
+}
+
+.zone-chip.active-sur_altiplano {
+  background: #6C3483 !important;
+  color: white !important;
+  border-color: #6C3483 !important;
+  box-shadow: 0 4px 12px rgba(108, 52, 131, 0.25) !important;
+}
+
 .zone-chip.active-sur {
   background: var(--tertiary) !important;
   color: white !important;
@@ -1744,6 +1758,18 @@ input:focus {
   background: rgba(212, 165, 116, 0.12);
   color: #B45309;
   border: 1px solid rgba(212, 165, 116, 0.25);
+}
+
+.frat-card-badge.lima-callao-sur-medio {
+  background: rgba(26, 82, 118, 0.08);
+  color: #1A5276;
+  border: 1px solid rgba(26, 82, 118, 0.25);
+}
+
+.frat-card-badge.sur-altiplano {
+  background: rgba(108, 52, 131, 0.08);
+  color: #6C3483;
+  border: 1px solid rgba(108, 52, 131, 0.25);
 }
 
 .frat-card-badge.sur {

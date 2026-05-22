@@ -213,6 +213,10 @@ const LandingView = () => {
         return { color: '#8B4513', badgeClass: 'norte' };
       case 'centro':
         return { color: '#D4A574', badgeClass: 'centro' };
+      case 'lima_callao_sur_medio':
+        return { color: '#1A5276', badgeClass: 'lima-callao-sur-medio' };
+      case 'sur_altiplano':
+        return { color: '#6C3483', badgeClass: 'sur-altiplano' };
       case 'sur':
         return { color: '#6B8E23', badgeClass: 'sur' };
       default:
@@ -536,7 +540,8 @@ const LandingView = () => {
                       { id: 'todas', label: 'Todas', emoji: '🇵🇪', activeClass: 'active-todas' },
                       { id: 'norte', label: 'Norte', emoji: '🪵', activeClass: 'active-norte' },
                       { id: 'centro', label: 'Centro', emoji: '☀️', activeClass: 'active-centro' },
-                      { id: 'sur', label: 'Sur', emoji: '🌱', activeClass: 'active-sur' }
+                      { id: 'lima_callao_sur_medio', label: 'Lima, Callao y Sur Medio', emoji: '🌊', activeClass: 'active-lima_callao_sur_medio' },
+                      { id: 'sur_altiplano', label: 'Sur Altiplano', emoji: '🏔️', activeClass: 'active-sur_altiplano' }
                     ].map(chip => (
                       <button
                         key={chip.id}
@@ -570,7 +575,17 @@ const LandingView = () => {
               {(selectedDepto !== 'todos' || selectedZona !== 'todas' || searchFrat.trim()) && (
                 <div className="filter-status-bar">
                   <div>
-                    Filtros activos: {selectedZona !== 'todas' && <span style={{ textTransform: 'capitalize' }}>Zona {selectedZona} • </span>}
+                    Filtros activos: {selectedZona !== 'todas' && (
+                      <span>
+                        Región {
+                          selectedZona === 'lima_callao_sur_medio' ? 'Lima, Callao y Sur Medio' :
+                          selectedZona === 'sur_altiplano' ? 'Sur Altiplano' :
+                          selectedZona === 'norte' ? 'Norte' :
+                          selectedZona === 'centro' ? 'Centro' :
+                          selectedZona
+                        } •{' '}
+                      </span>
+                    )}
                     {selectedDepto !== 'todos' && <span>{selectedDepto} • </span>}
                     {searchFrat.trim() && <span>Búsqueda: "{searchFrat}" • </span>}
                     <span style={{ color: 'var(--text-muted)' }}>({filteredFraternidades.length} encontradas)</span>
@@ -619,7 +634,13 @@ const LandingView = () => {
                               </div>
                             </div>
                             <span className={`frat-card-badge ${zStyle.badgeClass}`}>
-                              {frat.zona}
+                              {
+                                frat.zona === 'lima_callao_sur_medio' ? '🌊 Lima, Callao y Sur Medio' :
+                                frat.zona === 'sur_altiplano' ? '🏔️ Sur Altiplano' :
+                                frat.zona === 'norte' ? '🪵 Norte' :
+                                frat.zona === 'centro' ? '☀️ Centro' :
+                                frat.zona
+                              }
                             </span>
                           </div>
 
