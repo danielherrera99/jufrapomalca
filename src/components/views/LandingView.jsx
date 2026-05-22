@@ -532,42 +532,40 @@ const LandingView = () => {
                   />
                 </div>
 
-                {/* 2. Filtro de Zonas (Chips) */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                  <span style={{ fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--text-muted)' }}>Filtrar por Zona Geográfica:</span>
-                  <div className="zone-filter-chips">
-                    {[
-                      { id: 'todas', label: 'Todas', emoji: '🇵🇪', activeClass: 'active-todas' },
-                      { id: 'norte', label: 'Norte', emoji: '🪵', activeClass: 'active-norte' },
-                      { id: 'centro', label: 'Centro', emoji: '☀️', activeClass: 'active-centro' },
-                      { id: 'lima_callao_sur_medio', label: 'Lima, Callao y Sur Medio', emoji: '🌊', activeClass: 'active-lima_callao_sur_medio' },
-                      { id: 'sur_altiplano', label: 'Sur Altiplano', emoji: '🏔️', activeClass: 'active-sur_altiplano' }
-                    ].map(chip => (
-                      <button
-                        key={chip.id}
-                        className={`zone-chip ${selectedZona === chip.id ? chip.activeClass : ''}`}
-                        onClick={() => setSelectedZona(chip.id)}
-                      >
-                        <span>{chip.emoji}</span> {chip.label}
-                      </button>
-                    ))}
+                {/* 2. Selectores de Filtros en una Fila (Región y Departamento) */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginTop: '0.4rem' }}>
+                  <div className="depto-filter-mobile-wrapper" style={{ gap: '0.3rem' }}>
+                    <label htmlFor="mobile-region-select" style={{ fontSize: '0.72rem', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Región JUFRA:</label>
+                    <select
+                      id="mobile-region-select"
+                      className="depto-dropdown-select"
+                      value={selectedZona}
+                      onChange={(e) => setSelectedZona(e.target.value)}
+                      style={{ height: '40px', fontSize: '0.85rem', padding: '0.25rem 0.5rem', borderRadius: '10px' }}
+                    >
+                      <option value="todas">🇵🇪 Todas las Regiones</option>
+                      <option value="norte">🪵 Región Norte</option>
+                      <option value="centro">☀️ Región Centro</option>
+                      <option value="lima_callao_sur_medio">🌊 Región L.C. y Sur Medio</option>
+                      <option value="sur_altiplano">🏔️ Región Sur Altiplano</option>
+                    </select>
                   </div>
-                </div>
 
-                {/* 3. Selector de Departamentos (Visible en móvil, pero funciona como alternativa en desktop) */}
-                <div className="depto-filter-mobile-wrapper">
-                  <label htmlFor="mobile-depto-select">Región / Departamento:</label>
-                  <select
-                    id="mobile-depto-select"
-                    className="depto-dropdown-select"
-                    value={selectedDepto}
-                    onChange={(e) => setSelectedDepto(e.target.value)}
-                  >
-                    <option value="todos">Todos los Departamentos</option>
-                    {activeDeptos.map(dep => (
-                      <option key={dep} value={dep}>📍 {dep}</option>
-                    ))}
-                  </select>
+                  <div className="depto-filter-mobile-wrapper" style={{ gap: '0.3rem' }}>
+                    <label htmlFor="mobile-depto-select" style={{ fontSize: '0.72rem', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Departamento:</label>
+                    <select
+                      id="mobile-depto-select"
+                      className="depto-dropdown-select"
+                      value={selectedDepto}
+                      onChange={(e) => setSelectedDepto(e.target.value)}
+                      style={{ height: '40px', fontSize: '0.85rem', padding: '0.25rem 0.5rem', borderRadius: '10px' }}
+                    >
+                      <option value="todos">Todos los Departamentos</option>
+                      {activeDeptos.map(dep => (
+                        <option key={dep} value={dep}>📍 {dep}</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               </div>
 
@@ -626,22 +624,22 @@ const LandingView = () => {
                         style={{ '--card-border-color': zStyle.color }}
                       >
                         <div>
-                          <div className="frat-card-header">
-                            <div>
-                              <h3 className="frat-card-title">{frat.nombre}</h3>
-                              <div className="frat-card-depto">
+                          <div className="frat-card-header" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '6px', marginBottom: '0.75rem' }}>
+                            <h3 className="frat-card-title" style={{ width: '100%' }}>{frat.nombre}</h3>
+                            <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap', width: '100%' }}>
+                              <div className="frat-card-depto" style={{ marginTop: 0 }}>
                                 <span>📍</span> {frat.departamento}
                               </div>
+                              <span className={`frat-card-badge ${zStyle.badgeClass}`} style={{ whiteSpace: 'nowrap', fontSize: '0.62rem', padding: '2px 8px' }}>
+                                {
+                                  frat.zona === 'lima_callao_sur_medio' ? '🌊 Lima, Callao y S.M.' :
+                                  frat.zona === 'sur_altiplano' ? '🏔️ Sur Altiplano' :
+                                  frat.zona === 'norte' ? '🪵 Norte' :
+                                  frat.zona === 'centro' ? '☀️ Centro' :
+                                  frat.zona
+                                }
+                              </span>
                             </div>
-                            <span className={`frat-card-badge ${zStyle.badgeClass}`}>
-                              {
-                                frat.zona === 'lima_callao_sur_medio' ? '🌊 Lima, Callao y Sur Medio' :
-                                frat.zona === 'sur_altiplano' ? '🏔️ Sur Altiplano' :
-                                frat.zona === 'norte' ? '🪵 Norte' :
-                                frat.zona === 'centro' ? '☀️ Centro' :
-                                frat.zona
-                              }
-                            </span>
                           </div>
 
                           <div className="frat-card-body">

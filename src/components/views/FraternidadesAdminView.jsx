@@ -349,35 +349,35 @@ const FraternidadesAdminView = ({ fraternidades = [], loading, fetchData }) => {
               >
                 {/* Card Header & Content */}
                 <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-                    <div>
-                      <h3 style={{ margin: 0, color: 'var(--primary)', fontSize: '1.25rem', fontWeight: 'bold' }}>
-                        {frat.nombre}
-                      </h3>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginTop: '2px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '6px', marginBottom: '0.75rem' }}>
+                    <h3 style={{ margin: 0, color: 'var(--primary)', fontSize: '1.25rem', fontWeight: 'bold', width: '100%' }}>
+                      {frat.nombre}
+                    </h3>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap', width: '100%' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                         📍 {frat.departamento}
                       </span>
+                      {/* Badge de Zona */}
+                      <span style={{ 
+                        padding: '2px 8px', 
+                        borderRadius: '12px', 
+                        fontSize: '0.62rem', 
+                        fontWeight: 'bold',
+                        textTransform: 'uppercase',
+                        backgroundColor: zStyle.bg,
+                        color: zStyle.color,
+                        border: `1px solid ${zStyle.border}`,
+                        whiteSpace: 'nowrap'
+                      }}>
+                        {
+                          frat.zona === 'lima_callao_sur_medio' ? '🌊 Lima, Callao y S.M.' :
+                          frat.zona === 'sur_altiplano' ? '🏔️ Sur Altiplano' :
+                          frat.zona === 'norte' ? '🪵 Norte' :
+                          frat.zona === 'centro' ? '☀️ Centro' :
+                          `Zona ${frat.zona}`
+                        }
+                      </span>
                     </div>
-                    
-                    {/* Badge de Zona */}
-                    <span style={{ 
-                      padding: '4px 10px', 
-                      borderRadius: '12px', 
-                      fontSize: '0.7rem', 
-                      fontWeight: 'bold',
-                      textTransform: 'uppercase',
-                      backgroundColor: zStyle.bg,
-                      color: zStyle.color,
-                      border: `1px solid ${zStyle.border}`
-                    }}>
-                      {
-                        frat.zona === 'lima_callao_sur_medio' ? '🌊 Lima, Callao y Sur Medio' :
-                        frat.zona === 'sur_altiplano' ? '🏔️ Sur Altiplano' :
-                        frat.zona === 'norte' ? '🪵 Norte' :
-                        frat.zona === 'centro' ? '☀️ Centro' :
-                        `Zona ${frat.zona}`
-                      }
-                    </span>
                   </div>
 
                   {/* Detalles */}
