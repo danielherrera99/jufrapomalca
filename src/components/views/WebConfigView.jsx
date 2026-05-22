@@ -19,7 +19,9 @@ const WebConfigView = ({ loading, setLoading }) => {
     ofsHeroSubtitle: '',
     ofsMapQuery: '',
     facebookUrl: '',
-    instagramUrl: ''
+    instagramUrl: '',
+    whatsappUrl: '',
+    tiktokUrl: ''
   });
 
   useEffect(() => {
@@ -188,6 +190,58 @@ const WebConfigView = ({ loading, setLoading }) => {
                 placeholder="Ej: Parroquia San Juan Maria Vianney, Pomalca"
               />
               <small style={{ color: 'var(--text-muted)' }}>Tip: Escribe el nombre del lugar o coordenadas para mover el pin.</small>
+            </div>
+          </section>
+
+          <section style={{ marginBottom: '3rem' }}>
+            <h3 style={{ color: 'var(--secondary)', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', marginBottom: '1.5rem' }}>Redes Sociales de la JUFRA</h3>
+            <div className="row" style={{ gap: '1rem', display: 'flex', flexWrap: 'wrap' }}>
+              <div className="col" style={{ flex: 1, minWidth: '200px' }}>
+                <div className="input-group">
+                  <label>Enlace de Facebook:</label>
+                  <input 
+                    type="url" 
+                    value={config.facebookUrl || ''} 
+                    onChange={e => setConfig({...config, facebookUrl: e.target.value})} 
+                    placeholder="Ej: https://facebook.com/jufra.pomalca"
+                  />
+                </div>
+              </div>
+              <div className="col" style={{ flex: 1, minWidth: '200px' }}>
+                <div className="input-group">
+                  <label>Enlace de Instagram:</label>
+                  <input 
+                    type="url" 
+                    value={config.instagramUrl || ''} 
+                    onChange={e => setConfig({...config, instagramUrl: e.target.value})} 
+                    placeholder="Ej: https://instagram.com/jufra.pomalca"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="row" style={{ gap: '1rem', display: 'flex', flexWrap: 'wrap', marginTop: '1rem' }}>
+              <div className="col" style={{ flex: 1, minWidth: '200px' }}>
+                <div className="input-group">
+                  <label>Enlace de WhatsApp (wa.me o chat):</label>
+                  <input 
+                    type="url" 
+                    value={config.whatsappUrl || ''} 
+                    onChange={e => setConfig({...config, whatsappUrl: e.target.value})} 
+                    placeholder="Ej: https://wa.me/51981574685"
+                  />
+                </div>
+              </div>
+              <div className="col" style={{ flex: 1, minWidth: '200px' }}>
+                <div className="input-group">
+                  <label>Enlace de TikTok:</label>
+                  <input 
+                    type="url" 
+                    value={config.tiktokUrl || ''} 
+                    onChange={e => setConfig({...config, tiktokUrl: e.target.value})} 
+                    placeholder="Ej: https://tiktok.com/@jufra.pomalca"
+                  />
+                </div>
+              </div>
             </div>
           </section>
 

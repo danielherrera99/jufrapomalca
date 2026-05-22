@@ -31,7 +31,7 @@ const DEPARTAMENTOS_MAPA = [
 ];
 
 const LandingView = () => {
-  const [config] = useState({
+  const [config, setConfig] = useState({
     heroTitle: 'JUFRA Pomalca',
     heroSubtitle: 'Siguiendo los pasos de San Francisco de Asís y Santa Clara...',
     mision: 'Cultivando la fe a través de la oración y el encuentro fraterno, llevando el Evangelio a la vida cotidiana.',
@@ -43,7 +43,11 @@ const LandingView = () => {
     telefonoContacto: '+51 981 574 685',
     mapQuery: 'Parroquia María del Perpetuo Socorro, Pomalca',
     familiaTitulo: 'Orden Franciscana Seglar (OFS)',
-    familiaDescripcion: 'Caminamos junto a nuestros hermanos mayores de la OFS, compartiendo el mismo ideal de vida y misión en la Iglesia.'
+    familiaDescripcion: 'Caminamos junto a nuestros hermanos mayores de la OFS, compartiendo el mismo ideal de vida y misión en la Iglesia.',
+    facebookUrl: '',
+    instagramUrl: '',
+    whatsappUrl: '',
+    tiktokUrl: ''
   });
   const [eventos, setEventos] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -223,6 +227,20 @@ const LandingView = () => {
         return { color: 'var(--primary)', badgeClass: '' };
     }
   };
+
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const res = await api.get('/web-config');
+        if (res.data.success) {
+          setConfig(prev => ({ ...prev, ...res.data.data }));
+        }
+      } catch (err) {
+        console.error('Error al cargar config web:', err);
+      }
+    };
+    fetchConfig();
+  }, []);
 
   useEffect(() => {
     const fetchFraternidades = async () => {
@@ -853,9 +871,46 @@ const LandingView = () => {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <h4 style={{ margin: 0, textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.9rem', color: 'var(--secondary)' }}>Síguenos</h4>
-              <div style={{ display: 'flex', gap: '1rem' }}>
-                <a href="#" className="zoom-hover" style={{ background: 'rgba(255,255,255,0.1)', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}>
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                <a 
+                  href={config.facebookUrl || "https://facebook.com/jufrapomalca"} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="zoom-hover" 
+                  title="Facebook"
+                  style={{ background: 'rgba(255,255,255,0.1)', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', transition: 'all 0.3s ease' }}
+                >
                   <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                </a>
+                <a 
+                  href={config.instagramUrl || "https://instagram.com/jufra.pomalca"} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="zoom-hover" 
+                  title="Instagram"
+                  style={{ background: 'rgba(255,255,255,0.1)', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', transition: 'all 0.3s ease' }}
+                >
+                  <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                </a>
+                <a 
+                  href={config.whatsappUrl || "https://wa.me/51981574685"} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="zoom-hover" 
+                  title="WhatsApp"
+                  style={{ background: 'rgba(255,255,255,0.1)', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', transition: 'all 0.3s ease' }}
+                >
+                  <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.968C16.628 3.971 14.168 2.94 11.54 2.94c-5.444 0-9.87 4.372-9.874 9.802-.001 1.774.478 3.509 1.387 5.034L2.083 21.68l4.564-1.526zm11.482-6.861c-.302-.15-1.788-.882-2.057-.978-.268-.097-.463-.146-.658.146-.195.293-.755.978-.927 1.173-.171.197-.343.221-.646.071-.3-.15-1.269-.467-2.417-1.491-.892-.797-1.493-1.783-1.669-2.082-.176-.3-.018-.462.132-.61.135-.134.302-.35.453-.524.151-.174.2-.299.3-.499.099-.2.05-.375-.025-.524-.075-.15-.658-1.587-.902-2.172-.237-.57-.479-.493-.658-.502-.171-.008-.366-.01-.561-.01-.195 0-.512.073-.78.366-.268.293-1.024 1.002-1.024 2.445 0 1.443 1.049 2.839 1.195 3.034.146.195 2.062 3.149 4.996 4.417.697.302 1.24.482 1.664.617.7.223 1.338.192 1.843.117.563-.083 1.788-.731 2.037-1.437.249-.706.249-1.312.174-1.437-.076-.125-.27-.197-.572-.347z"/></svg>
+                </a>
+                <a 
+                  href={config.tiktokUrl || "https://tiktok.com/@jufra.pomalca"} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="zoom-hover" 
+                  title="TikTok"
+                  style={{ background: 'rgba(255,255,255,0.1)', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', transition: 'all 0.3s ease' }}
+                >
+                  <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.06-2.89-.53-4.09-1.37-.76-.53-1.43-1.22-1.93-2.02v6.18c.1 2.62-1.12 5.25-3.32 6.66-2.22 1.43-5.23 1.58-7.6 1.05-2.37-.53-4.52-2.23-5.46-4.53-1-2.45-.63-5.48 1.01-7.58 1.62-2.07 4.34-3.13 6.94-2.82 1.08.13 2.15.53 3.03 1.18V.02zm-3.24 10.74c-1.42-.23-2.92.36-3.72 1.57-.8 1.21-.83 2.89-.09 4.14.74 1.25 2.19 1.95 3.62 1.81 1.42-.14 2.7-1.15 3.12-2.52.42-1.37-.01-2.96-1.08-3.87-.73-.61-1.67-.98-2.63-1.13z"/></svg>
                 </a>
               </div>
             </div>
