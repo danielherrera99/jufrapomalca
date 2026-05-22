@@ -1032,10 +1032,10 @@ input:focus {
 .timeline-line {
   position: absolute;
   top: calc(5rem + 10px); /* Centrado horizontal en relación al dot de 24px */
-  left: 16.6%;
-  right: 16.6%;
+  left: 12.5%;
+  right: 12.5%;
   height: 4px;
-  background: linear-gradient(to right, var(--primary), var(--secondary), var(--tertiary));
+  background: linear-gradient(to right, var(--primary), var(--secondary), var(--tertiary), var(--primary));
   border-radius: 2px;
   z-index: 1;
 }

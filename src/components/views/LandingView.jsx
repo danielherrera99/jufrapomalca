@@ -431,10 +431,10 @@ const LandingView = () => {
             <div className="timeline-item animate-fade">
               <div className="timeline-dot" style={{ '--dot-color': 'var(--primary)' }}></div>
               <div className="timeline-card">
-                <div className="timeline-year" style={{ '--dot-color': 'var(--primary)' }}>2018</div>
+                <div className="timeline-year" style={{ '--dot-color': 'var(--primary)' }}>2000</div>
                 <h4 className="timeline-title">Fundación de la Fraternidad</h4>
                 <p className="timeline-text">
-                  Un pequeño grupo de jóvenes, impulsados por el carisma de San Francisco de Asís y Santa Clara, inicia las reuniones semanales de oración y vida fraterna en la Parroquia de Pomalca, sembrando las primeras semillas de paz y bien.
+                  El 18 de mayo de 2000 nace JUFRA Pomalca por iniciativa de jóvenes catecúmenos liderados por Raúl Tantaleán y guiados por el párroco Pedro Delfín Vidalón. El 8 de octubre es presentada oficialmente a la población.
                 </p>
               </div>
             </div>
@@ -442,10 +442,10 @@ const LandingView = () => {
             <div className="timeline-item animate-fade">
               <div className="timeline-dot" style={{ '--dot-color': 'var(--secondary)' }}></div>
               <div className="timeline-card">
-                <div className="timeline-year" style={{ '--dot-color': 'var(--secondary)' }}>2021</div>
-                <h4 className="timeline-title">Crecimiento y Misión Activa</h4>
+                <div className="timeline-year" style={{ '--dot-color': 'var(--secondary)' }}>2019</div>
+                <h4 className="timeline-title">Camino al Reconocimiento</h4>
                 <p className="timeline-text">
-                  Consolidación de las misiones y obras sociales navideñas en los sectores más vulnerables de Pomalca. La fraternidad crece en número de hermanos y se convierte en un pilar activo de apoyo social y espiritual en toda la comunidad.
+                  El hermano Jean Pierre Juárez asume el cargo de coordinador e inicia, junto a su consejo, la búsqueda activa del reconocimiento e integración canónica e histórica formal ante la Orden Franciscana Seglar (OFS).
                 </p>
               </div>
             </div>
@@ -453,10 +453,21 @@ const LandingView = () => {
             <div className="timeline-item animate-fade">
               <div className="timeline-dot" style={{ '--dot-color': 'var(--tertiary)' }}></div>
               <div className="timeline-card">
-                <div className="timeline-year" style={{ '--dot-color': 'var(--tertiary)' }}>2026</div>
-                <h4 className="timeline-title">Juventud e Innovación Digital</h4>
+                <div className="timeline-year" style={{ '--dot-color': 'var(--tertiary)' }}>2024</div>
+                <h4 className="timeline-title">Reconocimiento Oficial OFS</h4>
                 <p className="timeline-text">
-                  Lanzamiento del portal web institucional y la aplicación móvil oficial de JUFRA Pomalca, permitiendo mayor cercanía con la comunidad, digitalización de asistencia, gestión interna y un canal de comunicación interactivo e inteligente.
+                  El 3 de enero de 2024, tras cumplir con las Constituciones Generales, se promulga el decreto de reconocimiento formal de JUFRA Pomalca y se convoca a elecciones para conformar el primer consejo electivo oficial.
+                </p>
+              </div>
+            </div>
+
+            <div className="timeline-item animate-fade">
+              <div className="timeline-dot" style={{ '--dot-color': 'var(--primary)' }}></div>
+              <div className="timeline-card">
+                <div className="timeline-year" style={{ '--dot-color': 'var(--primary)' }}>2026</div>
+                <h4 className="timeline-title">Innovación e Impacto Digital</h4>
+                <p className="timeline-text">
+                  Consolidación de la fraternidad a nivel nacional y lanzamiento oficial del portal web institucional y aplicación móvil de JUFRA Pomalca, digitalizando la asistencia, gestión interna y la comunicación fraterna.
                 </p>
               </div>
             </div>
