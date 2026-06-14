@@ -31,7 +31,8 @@ const SolicitudesView = ({ data, loading, fetchData }) => {
         const nombreMatch = s.nombre ? s.nombre.toLowerCase().includes(query) : false;
         const telefonoMatch = s.telefono ? s.telefono.toLowerCase().includes(query) : false;
         const edadMatch = s.edad ? String(s.edad).includes(query) : false;
-        return nombreMatch || telefonoMatch || edadMatch;
+        const mensajeMatch = s.mensaje ? s.mensaje.toLowerCase().includes(query) : false;
+        return nombreMatch || telefonoMatch || edadMatch || mensajeMatch;
       }
       return true;
     });
@@ -99,6 +100,7 @@ const SolicitudesView = ({ data, loading, fetchData }) => {
           <th>NOMBRE COMPLETO</th>
           <th>EDAD</th>
           <th>TELÉFONO</th>
+          <th>MENSAJE</th>
           <th>ESTADO</th>
         </tr>
       `;
@@ -114,6 +116,7 @@ const SolicitudesView = ({ data, loading, fetchData }) => {
             <td>${s.nombre}</td>
             <td>${s.edad}</td>
             <td>'${s.telefono}</td>
+            <td>${s.mensaje || ''}</td>
             <td class="${s.estado}">${estadoLabel}</td>
           </tr>
         `;
@@ -329,6 +332,11 @@ const SolicitudesView = ({ data, loading, fetchData }) => {
                   <p style={{ margin: 0 }}>
                     <strong>Teléfono:</strong> <span style={{ fontFamily: 'var(--mono)', color: 'var(--text-main)', letterSpacing: '0.5px' }}>{solicitud.telefono}</span>
                   </p>
+                  {solicitud.mensaje && (
+                    <p style={{ margin: 0, padding: '0.5rem', background: 'rgba(0,0,0,0.03)', borderRadius: '6px', fontSize: '0.85rem', fontStyle: 'italic', color: 'var(--text-muted)' }}>
+                      "{solicitud.mensaje}"
+                    </p>
+                  )}
                 </div>
               </div>
 

@@ -62,7 +62,7 @@ const LandingView = () => {
   
   // Modal de Interés
   const [isInterestModalOpen, setIsInterestModalOpen] = useState(false);
-  const [interestData, setInterestData] = useState({ nombre: '', edad: '', telefono: '' });
+  const [interestData, setInterestData] = useState({ nombre: '', edad: '', telefono: '', mensaje: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -130,7 +130,8 @@ const LandingView = () => {
       await api.post('/solicitudes', {
         nombre: interestData.nombre,
         edad: interestData.edad,
-        telefono: interestData.telefono
+        telefono: interestData.telefono,
+        mensaje: interestData.mensaje
       });
       setSubmitSuccess(true);
     } catch (error) {
@@ -951,7 +952,7 @@ const LandingView = () => {
                   onClick={() => {
                     setIsInterestModalOpen(false);
                     setSubmitSuccess(false);
-                    setInterestData({ nombre: '', edad: '', telefono: '' });
+                    setInterestData({ nombre: '', edad: '', telefono: '', mensaje: '' });
                   }}
                   style={{ padding: '0.8rem 2.5rem', borderRadius: '12px', boxShadow: '0 4px 15px rgba(107, 142, 35, 0.3)', background: 'var(--tertiary)', width: '100%', fontSize: '1rem', fontWeight: 'bold' }}
                 >
@@ -997,7 +998,7 @@ const LandingView = () => {
                       style={{ background: 'white', border: '1px solid var(--border)', borderRadius: '10px', padding: '0.85rem' }}
                     />
                   </div>
-                  <div className="input-group input-focus-line" style={{ marginBottom: '2rem' }}>
+                  <div className="input-group input-focus-line" style={{ marginBottom: '1.25rem' }}>
                     <label style={{ color: 'var(--text-main)', fontWeight: 'bold', fontSize: '0.9rem' }}>Número de Teléfono / WhatsApp</label>
                     <input 
                       type="tel" 
@@ -1006,6 +1007,15 @@ const LandingView = () => {
                       value={interestData.telefono}
                       onChange={(e) => setInterestData({...interestData, telefono: e.target.value})}
                       style={{ background: 'white', border: '1px solid var(--border)', borderRadius: '10px', padding: '0.85rem' }}
+                    />
+                  </div>
+                  <div className="input-group input-focus-line" style={{ marginBottom: '2rem' }}>
+                    <label style={{ color: 'var(--text-main)', fontWeight: 'bold', fontSize: '0.9rem' }}>Déjanos un mensaje (Opcional)</label>
+                    <textarea 
+                      placeholder="Ej: Me gustaría unirme a la fraternidad..."
+                      value={interestData.mensaje}
+                      onChange={(e) => setInterestData({...interestData, mensaje: e.target.value})}
+                      style={{ background: 'white', border: '1px solid var(--border)', borderRadius: '10px', padding: '0.85rem', width: '100%', minHeight: '80px', resize: 'vertical', fontFamily: 'inherit' }}
                     />
                   </div>
                   
