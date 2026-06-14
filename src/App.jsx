@@ -416,7 +416,7 @@ const Dashboard = ({ user, onLogout }) => {
       let endpoint = '';
       if (activeTab === 'Hermanos') endpoint = '/hermanos?todos=true';
       else if (activeTab === 'Anuncios') endpoint = '/anuncios';
-      else if (activeTab === 'Eventos') endpoint = '/eventos';
+      else if (activeTab === 'Eventos') endpoint = '/eventos?todos=true';
       else if (activeTab === 'Servicios') endpoint = '/servicios';
       else if (activeTab === 'Peticiones') endpoint = '/peticiones';
       else if (activeTab === 'Solicitudes') endpoint = '/solicitudes';
@@ -457,7 +457,7 @@ const Dashboard = ({ user, onLogout }) => {
         const [hermanosRes, anunciosRes, eventosRes, asisRes] = await Promise.all([
           api.get('/hermanos?todos=true'),
           api.get('/anuncios'),
-          api.get('/eventos'),
+          api.get('/eventos?todos=true'),
           api.get('/asistencia')
         ]);
         setData({
