@@ -118,6 +118,8 @@ const LandingView = () => {
     }
   ]);
 
+  const [activeSocialTab, setActiveSocialTab] = useState('facebook');
+
   // Publicaciones simuladas de Facebook
   const [facebookPosts] = useState([
     {
@@ -152,6 +154,99 @@ const LandingView = () => {
       likes: 120,
       comments: 5,
       link: 'https://www.facebook.com/profile.php?id=100069002220455'
+    }
+  ]);
+
+  const [instagramPosts] = useState([
+    {
+      id: 1,
+      username: 'jufrapomalca',
+      userIcon: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=150&q=80',
+      image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=800&q=80',
+      likes: 134,
+      caption: 'jufrapomalca Un día bendecido en hermandad. Paz y Bien. ✨ #Jufra #Pomalca #PazYBien',
+      date: 'HACE 1 DÍA',
+      link: 'https://instagram.com'
+    },
+    {
+      id: 2,
+      username: 'jufrapomalca',
+      userIcon: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=150&q=80',
+      image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80',
+      likes: 215,
+      caption: 'jufrapomalca Preparando corazones para el retiro anual. ¡Se vienen grandes cosas! 🙏🔥 #JuventudFranciscana',
+      date: 'HACE 3 DÍAS',
+      link: 'https://instagram.com'
+    },
+    {
+      id: 3,
+      username: 'jufrapomalca',
+      userIcon: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=150&q=80',
+      image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80',
+      likes: 302,
+      caption: 'jufrapomalca Servicio social con los más necesitados. Donde hay amor, está Dios. ❤️🕊️',
+      date: 'HACE 1 SEMANA',
+      link: 'https://instagram.com'
+    }
+  ]);
+
+  const [youtubeVideos] = useState([
+    {
+      id: 1,
+      channelName: 'JUFRA Pomalca',
+      channelIcon: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=150&q=80',
+      title: 'Resumen de nuestro Retiro Espiritual 2026',
+      thumbnail: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80',
+      views: '1.2K vistas',
+      date: 'Hace 2 semanas',
+      link: 'https://youtube.com'
+    },
+    {
+      id: 2,
+      channelName: 'JUFRA Pomalca',
+      channelIcon: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=150&q=80',
+      title: 'Cantos Franciscanos - Ensayo del Coro',
+      thumbnail: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=800&q=80',
+      views: '856 vistas',
+      date: 'Hace 1 mes',
+      link: 'https://youtube.com'
+    },
+    {
+      id: 3,
+      channelName: 'JUFRA Pomalca',
+      channelIcon: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=150&q=80',
+      title: '¿Qué es la Juventud Franciscana? - Testimonios',
+      thumbnail: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80',
+      views: '2.5K vistas',
+      date: 'Hace 3 meses',
+      link: 'https://youtube.com'
+    }
+  ]);
+
+  const [tiktokVideos] = useState([
+    {
+      id: 1,
+      username: '@jufrapomalca',
+      description: 'El verdadero trend es seguir a Cristo 🙏😂 #humorcristiano #jufra #paz',
+      thumbnail: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=400&h=700&q=80',
+      likes: '4.5K',
+      link: 'https://tiktok.com'
+    },
+    {
+      id: 2,
+      username: '@jufrapomalca',
+      description: 'POV: Llegas temprano a la reunión de Jufra 🏃‍♂️💨 #franciscanos #catolico',
+      thumbnail: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=400&h=700&q=80',
+      likes: '12K',
+      link: 'https://tiktok.com'
+    },
+    {
+      id: 3,
+      username: '@jufrapomalca',
+      description: 'Hermosa alabanza en nuestro último encuentro 🎸🎤 #worship #jovenes',
+      thumbnail: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=400&h=700&q=80',
+      likes: '2.1K',
+      link: 'https://tiktok.com'
     }
   ]);
 
@@ -766,9 +861,50 @@ const LandingView = () => {
         <section id="redes" className="section-padding" style={{ background: '#f0f2f5' }}>
           <div className="container">
             <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-              <span style={{ color: '#1877F2', fontWeight: 'bold', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Nuestras Redes</span>
+              <span style={{ 
+                color: activeSocialTab === 'facebook' ? '#1877F2' : 
+                       activeSocialTab === 'instagram' ? '#E1306C' : 
+                       activeSocialTab === 'youtube' ? '#FF0000' : '#000000', 
+                fontWeight: 'bold', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px', transition: 'color 0.3s' 
+              }}>Nuestras Redes</span>
               <h2 className="section-title" style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>Últimas Publicaciones</h2>
-              <p style={{ color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto' }}>Entérate de lo último que estamos compartiendo en nuestra comunidad de Facebook.</p>
+              <p style={{ color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto' }}>Entérate de lo último que estamos compartiendo en nuestras redes oficiales.</p>
+              
+              {/* Social Tabs */}
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap', marginTop: '1.5rem' }}>
+                <button 
+                  onClick={() => setActiveSocialTab('facebook')}
+                  style={{
+                    padding: '0.6rem 1.2rem', borderRadius: '30px', fontWeight: 'bold', border: 'none', cursor: 'pointer', transition: 'all 0.3s',
+                    background: activeSocialTab === 'facebook' ? '#1877F2' : 'white',
+                    color: activeSocialTab === 'facebook' ? 'white' : '#65676B',
+                    boxShadow: activeSocialTab === 'facebook' ? '0 4px 10px rgba(24,119,242,0.3)' : '0 2px 5px rgba(0,0,0,0.05)'
+                  }}>📘 Facebook</button>
+                <button 
+                  onClick={() => setActiveSocialTab('instagram')}
+                  style={{
+                    padding: '0.6rem 1.2rem', borderRadius: '30px', fontWeight: 'bold', border: 'none', cursor: 'pointer', transition: 'all 0.3s',
+                    background: activeSocialTab === 'instagram' ? 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)' : 'white',
+                    color: activeSocialTab === 'instagram' ? 'white' : '#65676B',
+                    boxShadow: activeSocialTab === 'instagram' ? '0 4px 10px rgba(225,48,108,0.3)' : '0 2px 5px rgba(0,0,0,0.05)'
+                  }}>📸 Instagram</button>
+                <button 
+                  onClick={() => setActiveSocialTab('tiktok')}
+                  style={{
+                    padding: '0.6rem 1.2rem', borderRadius: '30px', fontWeight: 'bold', border: 'none', cursor: 'pointer', transition: 'all 0.3s',
+                    background: activeSocialTab === 'tiktok' ? '#000000' : 'white',
+                    color: activeSocialTab === 'tiktok' ? 'white' : '#65676B',
+                    boxShadow: activeSocialTab === 'tiktok' ? '0 4px 10px rgba(0,0,0,0.3)' : '0 2px 5px rgba(0,0,0,0.05)'
+                  }}>🎵 TikTok</button>
+                <button 
+                  onClick={() => setActiveSocialTab('youtube')}
+                  style={{
+                    padding: '0.6rem 1.2rem', borderRadius: '30px', fontWeight: 'bold', border: 'none', cursor: 'pointer', transition: 'all 0.3s',
+                    background: activeSocialTab === 'youtube' ? '#FF0000' : 'white',
+                    color: activeSocialTab === 'youtube' ? 'white' : '#65676B',
+                    boxShadow: activeSocialTab === 'youtube' ? '0 4px 10px rgba(255,0,0,0.3)' : '0 2px 5px rgba(0,0,0,0.05)'
+                  }}>▶️ YouTube</button>
+              </div>
             </div>
 
             {/* Carrusel (Scroll Horizontal) */}
@@ -783,72 +919,93 @@ const LandingView = () => {
               scrollbarWidth: 'none',
               msOverflowStyle: 'none'
             }} className="hide-scrollbar">
-              {facebookPosts.map(post => (
-                <div key={post.id} className="zoom-hover" style={{
-                  flex: '0 0 auto',
-                  width: '350px',
-                  maxWidth: '85vw',
-                  background: 'white',
-                  borderRadius: '12px',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-                  overflow: 'hidden',
-                  scrollSnapAlign: 'start',
-                  display: 'flex',
-                  flexDirection: 'column'
-                }}>
-                  {/* FB Card Header */}
+              {activeSocialTab === 'facebook' && facebookPosts.map(post => (
+                <div key={post.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '350px', maxWidth: '85vw', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', scrollSnapAlign: 'start', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ display: 'flex', alignItems: 'center', padding: '1rem', gap: '10px' }}>
                     <img src={post.pageIcon} alt="JUFRA" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                       <span style={{ fontWeight: 'bold', fontSize: '0.95rem', color: '#050505' }}>{post.pageName}</span>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.8rem', color: '#65676B' }}>
-                        <span>{post.date}</span>
-                        <span>•</span>
-                        <span>🌎</span>
-                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.8rem', color: '#65676B' }}><span>{post.date}</span><span>•</span><span>🌎</span></div>
                     </div>
                   </div>
-                  
-                  {/* FB Card Text */}
-                  <div style={{ padding: '0 1rem 0.5rem 1rem', fontSize: '0.95rem', color: '#050505', lineHeight: '1.4' }}>
-                    {post.content}
-                  </div>
-                  
-                  {/* FB Card Image */}
-                  <div style={{ width: '100%', height: '220px', background: '#f0f2f5' }}>
-                    <img src={post.image} alt="Post" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  </div>
-                  
-                  {/* FB Card Footer (Stats & Actions) */}
+                  <div style={{ padding: '0 1rem 0.5rem 1rem', fontSize: '0.95rem', color: '#050505', lineHeight: '1.4' }}>{post.content}</div>
+                  <div style={{ width: '100%', height: '220px', background: '#f0f2f5' }}><img src={post.image} alt="Post" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></div>
                   <div style={{ padding: '0.5rem 1rem', display: 'flex', flexDirection: 'column' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: '#65676B', paddingBottom: '0.5rem', borderBottom: '1px solid #E4E6EB' }}>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>👍💙 {post.likes}</span>
-                      <span>{post.comments} comentarios</span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>👍💙 {post.likes}</span><span>{post.comments} comentarios</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '0.5rem' }}>
-                      <a 
-                        href={post.link} 
-                        target="_blank" 
-                        rel="noreferrer" 
-                        style={{
-                          textDecoration: 'none',
-                          color: '#1877F2',
-                          fontWeight: 'bold',
-                          fontSize: '0.9rem',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                          padding: '0.5rem 1rem',
-                          borderRadius: '6px',
-                          transition: 'background 0.2s',
-                          background: '#E7F3FF',
-                          width: '100%',
-                          justifyContent: 'center'
-                        }}
-                      >
+                      <a href={post.link} target="_blank" rel="noreferrer" style={{ textDecoration: 'none', color: '#1877F2', fontWeight: 'bold', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '6px', padding: '0.5rem 1rem', borderRadius: '6px', transition: 'background 0.2s', background: '#E7F3FF', width: '100%', justifyContent: 'center' }}>
                         Ver en Facebook ↗
                       </a>
                     </div>
+                  </div>
+                </div>
+              ))}
+
+              {activeSocialTab === 'instagram' && instagramPosts.map(post => (
+                <div key={post.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '350px', maxWidth: '85vw', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', scrollSnapAlign: 'start', display: 'flex', flexDirection: 'column', border: '1px solid #efefef' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', padding: '0.8rem 1rem', gap: '10px' }}>
+                    <img src={post.userIcon} alt="Profile" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #E1306C', padding: '2px' }} />
+                    <span style={{ fontWeight: '600', fontSize: '0.9rem', color: '#262626' }}>{post.username}</span>
+                  </div>
+                  <div style={{ width: '100%', height: '350px', background: '#fafafa' }}><img src={post.image} alt="Insta" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></div>
+                  <div style={{ padding: '0.8rem 1rem' }}>
+                    <div style={{ display: 'flex', gap: '1rem', marginBottom: '0.5rem', fontSize: '1.4rem' }}><span>❤️</span><span>💬</span><span>↗️</span></div>
+                    <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#262626', marginBottom: '0.3rem' }}>{post.likes} Me gusta</div>
+                    <div style={{ fontSize: '0.9rem', color: '#262626', lineHeight: '1.4', marginBottom: '0.3rem' }}>
+                      <span style={{ fontWeight: '600', marginRight: '5px' }}>{post.username}</span>
+                      {post.caption}
+                    </div>
+                    <div style={{ fontSize: '0.7rem', color: '#8e8e8e', marginTop: '0.5rem', letterSpacing: '0.5px' }}>{post.date}</div>
+                    <a href={post.link} target="_blank" rel="noreferrer" style={{ display: 'block', textDecoration: 'none', color: 'white', fontWeight: 'bold', fontSize: '0.9rem', textAlign: 'center', padding: '0.5rem 1rem', borderRadius: '6px', background: '#0095f6', marginTop: '1rem' }}>
+                      Ver en Instagram
+                    </a>
+                  </div>
+                </div>
+              ))}
+
+              {activeSocialTab === 'tiktok' && tiktokVideos.map(video => (
+                <div key={video.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '300px', maxWidth: '80vw', background: '#000', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.2)', overflow: 'hidden', scrollSnapAlign: 'start', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+                  <div style={{ width: '100%', height: '500px', background: '#222', position: 'relative' }}>
+                    <img src={video.thumbnail} alt="TikTok" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
+                    <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '3rem', color: 'rgba(255,255,255,0.7)' }}>▶️</div>
+                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1rem', background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)' }}>
+                      <div style={{ color: 'white', fontWeight: 'bold', fontSize: '1rem', marginBottom: '0.3rem' }}>{video.username}</div>
+                      <div style={{ color: 'white', fontSize: '0.9rem', lineHeight: '1.3' }}>{video.description}</div>
+                    </div>
+                  </div>
+                  <div style={{ padding: '0.8rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#111' }}>
+                    <span style={{ color: 'white', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '5px' }}>❤️ {video.likes}</span>
+                    <a href={video.link} target="_blank" rel="noreferrer" style={{ textDecoration: 'none', color: 'black', fontWeight: 'bold', fontSize: '0.85rem', padding: '0.4rem 1rem', borderRadius: '2px', background: '#fe2c55' }}>
+                      Ver en TikTok
+                    </a>
+                  </div>
+                </div>
+              ))}
+
+              {activeSocialTab === 'youtube' && youtubeVideos.map(video => (
+                <div key={video.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '350px', maxWidth: '85vw', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', scrollSnapAlign: 'start', display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ width: '100%', height: '200px', background: '#000', position: 'relative' }}>
+                    <img src={video.thumbnail} alt="YouTube" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '50px', height: '35px', background: 'rgba(255,0,0,0.9)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div style={{ width: 0, height: 0, borderTop: '8px solid transparent', borderBottom: '8px solid transparent', borderLeft: '12px solid white' }}></div>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', padding: '1rem', gap: '12px' }}>
+                    <img src={video.channelIcon} alt="Channel" style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }} />
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <span style={{ fontWeight: '600', fontSize: '0.95rem', color: '#0f0f0f', lineHeight: '1.3', marginBottom: '4px' }}>{video.title}</span>
+                      <span style={{ fontSize: '0.85rem', color: '#606060' }}>{video.channelName}</span>
+                      <div style={{ display: 'flex', fontSize: '0.85rem', color: '#606060', gap: '4px' }}>
+                        <span>{video.views}</span><span>•</span><span>{video.date}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ padding: '0 1rem 1rem 1rem', display: 'flex', justifyContent: 'center' }}>
+                    <a href={video.link} target="_blank" rel="noreferrer" style={{ textDecoration: 'none', color: '#FF0000', fontWeight: 'bold', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '6px', padding: '0.5rem 1rem', borderRadius: '6px', transition: 'background 0.2s', background: 'rgba(255,0,0,0.1)', width: '100%', justifyContent: 'center' }}>
+                      Ver Video ↗
+                    </a>
                   </div>
                 </div>
               ))}
