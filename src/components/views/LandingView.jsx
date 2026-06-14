@@ -118,6 +118,43 @@ const LandingView = () => {
     }
   ]);
 
+  // Publicaciones simuladas de Facebook
+  const [facebookPosts] = useState([
+    {
+      id: 1,
+      pageName: 'JUFRA Pomalca',
+      pageIcon: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=150&q=80',
+      date: 'Hace 2 horas',
+      content: '¡Hermanos! Este fin de semana tuvimos un hermoso encuentro fraterno compartiendo la palabra de Dios. Gracias a todos los que asistieron. Paz y Bien. 🙏🕊️',
+      image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80',
+      likes: 45,
+      comments: 12,
+      link: 'https://www.facebook.com/profile.php?id=100069002220455'
+    },
+    {
+      id: 2,
+      pageName: 'JUFRA Pomalca',
+      pageIcon: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=150&q=80',
+      date: 'Ayer a las 15:30',
+      content: 'En nuestra última jornada de labor social, estuvimos ayudando a las familias más necesitadas de nuestra comunidad. ¡El espíritu franciscano sigue vivo! 🌿🤲',
+      image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80',
+      likes: 89,
+      comments: 24,
+      link: 'https://www.facebook.com/profile.php?id=100069002220455'
+    },
+    {
+      id: 3,
+      pageName: 'JUFRA Pomalca',
+      pageIcon: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=150&q=80',
+      date: '10 de Junio',
+      content: 'Nos preparamos para nuestro gran retiro espiritual anual. Jóvenes, no falten, será una experiencia inolvidable. #JufraPomalca #PazYBien',
+      image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80',
+      likes: 120,
+      comments: 5,
+      link: 'https://www.facebook.com/profile.php?id=100069002220455'
+    }
+  ]);
+
   const filteredGalleryItems = activeCategory === 'todas'
     ? galleryItems
     : galleryItems.filter(item => item.categoria === activeCategory);
@@ -721,6 +758,100 @@ const LandingView = () => {
                   })}
                 </div>
               )}
+            </div>
+          </div>
+        </section>
+
+        {/* Sección Redes Sociales (Facebook) */}
+        <section id="redes" className="section-padding" style={{ background: '#f0f2f5' }}>
+          <div className="container">
+            <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+              <span style={{ color: '#1877F2', fontWeight: 'bold', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Nuestras Redes</span>
+              <h2 className="section-title" style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>Últimas Publicaciones</h2>
+              <p style={{ color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto' }}>Entérate de lo último que estamos compartiendo en nuestra comunidad de Facebook.</p>
+            </div>
+
+            {/* Carrusel (Scroll Horizontal) */}
+            <div style={{
+              display: 'flex',
+              gap: '1.5rem',
+              overflowX: 'auto',
+              paddingBottom: '2rem',
+              scrollSnapType: 'x mandatory',
+              WebkitOverflowScrolling: 'touch',
+              padding: '1rem',
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none'
+            }} className="hide-scrollbar">
+              {facebookPosts.map(post => (
+                <div key={post.id} className="zoom-hover" style={{
+                  flex: '0 0 auto',
+                  width: '350px',
+                  maxWidth: '85vw',
+                  background: 'white',
+                  borderRadius: '12px',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                  overflow: 'hidden',
+                  scrollSnapAlign: 'start',
+                  display: 'flex',
+                  flexDirection: 'column'
+                }}>
+                  {/* FB Card Header */}
+                  <div style={{ display: 'flex', alignItems: 'center', padding: '1rem', gap: '10px' }}>
+                    <img src={post.pageIcon} alt="JUFRA" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <span style={{ fontWeight: 'bold', fontSize: '0.95rem', color: '#050505' }}>{post.pageName}</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.8rem', color: '#65676B' }}>
+                        <span>{post.date}</span>
+                        <span>•</span>
+                        <span>🌎</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* FB Card Text */}
+                  <div style={{ padding: '0 1rem 0.5rem 1rem', fontSize: '0.95rem', color: '#050505', lineHeight: '1.4' }}>
+                    {post.content}
+                  </div>
+                  
+                  {/* FB Card Image */}
+                  <div style={{ width: '100%', height: '220px', background: '#f0f2f5' }}>
+                    <img src={post.image} alt="Post" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                  
+                  {/* FB Card Footer (Stats & Actions) */}
+                  <div style={{ padding: '0.5rem 1rem', display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: '#65676B', paddingBottom: '0.5rem', borderBottom: '1px solid #E4E6EB' }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>👍💙 {post.likes}</span>
+                      <span>{post.comments} comentarios</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '0.5rem' }}>
+                      <a 
+                        href={post.link} 
+                        target="_blank" 
+                        rel="noreferrer" 
+                        style={{
+                          textDecoration: 'none',
+                          color: '#1877F2',
+                          fontWeight: 'bold',
+                          fontSize: '0.9rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          padding: '0.5rem 1rem',
+                          borderRadius: '6px',
+                          transition: 'background 0.2s',
+                          background: '#E7F3FF',
+                          width: '100%',
+                          justifyContent: 'center'
+                        }}
+                      >
+                        Ver en Facebook ↗
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
