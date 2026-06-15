@@ -88,18 +88,19 @@ const DashboardView = ({ loading, data, user, formatSafeDate, setActiveTab, hand
       {/* Estadísticas Rápidas */}
       <div className="stats-grid">
         {[
-          { label: 'HERMANOS TOTALES', value: totalHermanos, icon: '👥', color: 'var(--text-main)', bg: 'linear-gradient(135deg, #EFF6FF, #DBEAFE)' },
-          { label: 'ACTIVOS', value: activos, icon: '✅', color: '#10B981', border: '#10B981' },
-          { label: 'PENDIENTES', value: pendientes, icon: '⏳', color: '#F59E0B', border: '#F59E0B' },
-          { label: 'EN CALENDARIO', value: data.eventos?.length || 0, icon: '📅', color: '#6366F1', border: '#6366F1' }
+          { label: 'HERMANOS TOTALES', value: totalHermanos, icon: '👥', color: 'var(--text-main)', bg: 'linear-gradient(135deg, #EFF6FF, #DBEAFE)', tab: 'Hermanos' },
+          { label: 'ACTIVOS', value: activos, icon: '✅', color: '#10B981', border: '#10B981', tab: 'Hermanos' },
+          { label: 'PENDIENTES', value: pendientes, icon: '⏳', color: '#F59E0B', border: '#F59E0B', tab: 'Hermanos' },
+          { label: 'EN CALENDARIO', value: data.eventos?.length || 0, icon: '📅', color: '#6366F1', border: '#6366F1', tab: 'Eventos' }
         ].map((stat, i) => (
-          <div key={i} className="glass-card zoom-hover" style={{ 
+          <div key={i} onClick={() => setActiveTab(stat.tab)} className="glass-card zoom-hover" style={{ 
             padding: '1.5rem', 
             display: 'flex', 
             alignItems: 'center', 
             gap: '1rem', 
             background: stat.bg || 'white',
-            borderLeft: stat.border ? `5px solid ${stat.border}` : 'none'
+            borderLeft: stat.border ? `5px solid ${stat.border}` : 'none',
+            cursor: 'pointer'
           }}>
              <div style={{ fontSize: '2.2rem' }}>{stat.icon}</div>
              <div>
