@@ -119,7 +119,7 @@ const DashboardView = ({ loading, data, user, formatSafeDate, setActiveTab, hand
             📈 Tendencia de Asistencia
           </h3>
           <div style={{ width: '100%', height: 250 }}>
-            <ResponsiveContainer>
+            <ResponsiveContainer width="99%" height={250}>
               <AreaChart data={chartData.attendance}>
                 <defs>
                   <linearGradient id="colorAsis" x1="0" y1="0" x2="0" y2="1">
@@ -147,7 +147,7 @@ const DashboardView = ({ loading, data, user, formatSafeDate, setActiveTab, hand
             🍩 Distribución por Etapas
           </h3>
           <div style={{ width: '100%', height: 250 }}>
-            <ResponsiveContainer>
+            <ResponsiveContainer width="99%" height={250}>
               <PieChart>
                 <Pie
                   data={chartData.distribution}
