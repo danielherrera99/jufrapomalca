@@ -45,6 +45,7 @@ import MensajesAdminView from './components/views/MensajesAdminView';
 import AsistenteIAView from './components/views/AsistenteIAView';
 import SolicitudesView from './components/views/SolicitudesView';
 import FraternidadesAdminView from './components/views/FraternidadesAdminView';
+import RedesAdminView from './components/views/RedesAdminView';
 import ItemReadModal from './components/ItemReadModal';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -253,6 +254,7 @@ const modules = [
   { id: 'Cantos', label: 'Cancionero', icon: '🎵' },
   { id: 'Comunicacion', label: 'Comunicación', icon: '📢' },
   { id: 'Asistente', label: 'Asistente IA', icon: '🤖' },
+  { id: 'Redes', label: 'Redes Sociales', icon: '📱' },
   { id: 'WebConfig', label: 'Web Institucional', icon: '🌐' },
   { id: 'OfsConfig', label: 'Configuración OFS', icon: '☦️' },
   { id: 'Fraternidades', label: 'JUFRA Perú', icon: '🇵🇪' },
@@ -1137,6 +1139,7 @@ const Dashboard = ({ user, onLogout }) => {
           />
         );
       case 'Perfil': return <PerfilView data={data} loading={loading} ActivityIndicator={ActivityIndicator} SafeImage={SafeImage} isProfileEditing={isProfileEditing} setIsProfileEditing={setIsProfileEditing} profileData={profileData} setProfileData={setProfileData} handleUpdatePerfil={handleUpdatePerfil} getSafeDateForInput={getSafeDateForInput} formatSafeDate={formatSafeDate} />;
+      case 'Redes': return <RedesAdminView loading={loading} fetchData={fetchData} />;
       case 'WebConfig': return <WebConfigView loading={loading} setLoading={setLoading} />;
       case 'OfsConfig': return <OfsConfigView loading={loading} setLoading={setLoading} />;
       case 'Fraternidades': return <FraternidadesAdminView fraternidades={filteredData} loading={loading} fetchData={fetchData} />;
@@ -1240,7 +1243,7 @@ const Dashboard = ({ user, onLogout }) => {
 
           {/* GRUPO: ADMIN */}
           <div className="nav-section-title" style={{ marginTop: '1.5rem' }}>ADMINISTRACIÓN</div>
-          {modules.filter(m => ['Documentos', 'Actas', 'Formacion', 'Galeria', 'Servicios', 'Comunicacion', 'Asistente', 'Mensajes', 'WebConfig', 'OfsConfig', 'Fraternidades', 'Perfil'].includes(m.id)).map((mod) => (
+          {modules.filter(m => ['Documentos', 'Actas', 'Formacion', 'Galeria', 'Servicios', 'Comunicacion', 'Asistente', 'Mensajes', 'Redes', 'WebConfig', 'OfsConfig', 'Fraternidades', 'Perfil'].includes(m.id)).map((mod) => (
              <a key={mod.id} href="#" onClick={(e) => { e.preventDefault(); setActiveTab(mod.id); setIsSidebarOpen(false); }}
               className={`nav-link ${activeTab === mod.id ? 'active' : ''}`}
             >

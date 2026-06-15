@@ -73,182 +73,84 @@ const LandingView = () => {
 
   // Galería
   const [activeCategory, setActiveCategory] = useState('todas');
-  const [galleryItems] = useState([
-    {
-      id: 1,
-      titulo: 'Círculo de Oración Juvenil',
-      descripcion: 'Encuentro íntimo de oración y canto bajo la luz de Cristo.',
-      categoria: 'encuentros',
-      archivoUrl: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=800&q=80'
-    },
-    {
-      id: 2,
-      titulo: 'Acción Ecológica Laudato Si\'',
-      descripcion: 'Sembrado de árboles en Pomalca cuidando nuestra casa común.',
-      categoria: 'apostolado',
-      archivoUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80'
-    },
-    {
-      id: 3,
-      titulo: 'Abrazo Fraterno Franciscano',
-      descripcion: 'Celebrando la hermandad y alegría de estar juntos en fe.',
-      categoria: 'fraternidad',
-      archivoUrl: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80'
-    },
-    {
-      id: 4,
-      titulo: 'Misión Navideña Comunitaria',
-      descripcion: 'Llevando alegría y canastas de víveres a las familias pomalqueñas.',
-      categoria: 'apostolado',
-      archivoUrl: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80'
-    },
-    {
-      id: 5,
-      titulo: 'Jornada Espiritual de Cuaresma',
-      descripcion: 'Reflexión y retiro espiritual con el Consejo y hermanos de la OFS.',
-      categoria: 'encuentros',
-      archivoUrl: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80'
-    },
-    {
-      id: 6,
-      titulo: 'Cena de Confraternidad Jufra',
-      descripcion: 'Compartiendo el pan y vivencias de nuestra vida diaria.',
-      categoria: 'fraternidad',
-      archivoUrl: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=800&q=80'
-    }
-  ]);
+  const [galleryItems, setGalleryItems] = useState([]);
+
+  useEffect(() => {
+    const fetchGaleria = async () => {
+      try {
+        const { data } = await api.get('/galeria');
+        if (data.success) {
+          setGalleryItems(data.galeria);
+        }
+      } catch (err) {
+        console.error('Error fetching galeria', err);
+      }
+    };
+    fetchGaleria();
+  }, []);
 
   const [activeSocialTab, setActiveSocialTab] = useState('facebook');
 
-  // Publicaciones simuladas de Facebook
-  const [facebookPosts] = useState([
-    {
-      id: 1,
-      pageName: 'JUFRA Pomalca',
-      pageIcon: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=150&q=80',
-      date: 'Hace 2 horas',
-      content: '¡Hermanos! Este fin de semana tuvimos un hermoso encuentro fraterno compartiendo la palabra de Dios. Gracias a todos los que asistieron. Paz y Bien. 🙏🕊️',
-      image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80',
-      likes: 45,
-      comments: 12,
-      link: 'https://www.facebook.com/profile.php?id=100069002220455'
-    },
-    {
-      id: 2,
-      pageName: 'JUFRA Pomalca',
-      pageIcon: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=150&q=80',
-      date: 'Ayer a las 15:30',
-      content: 'En nuestra última jornada de labor social, estuvimos ayudando a las familias más necesitadas de nuestra comunidad. ¡El espíritu franciscano sigue vivo! 🌿🤲',
-      image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80',
-      likes: 89,
-      comments: 24,
-      link: 'https://www.facebook.com/profile.php?id=100069002220455'
-    },
-    {
-      id: 3,
-      pageName: 'JUFRA Pomalca',
-      pageIcon: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=150&q=80',
-      date: '10 de Junio',
-      content: 'Nos preparamos para nuestro gran retiro espiritual anual. Jóvenes, no falten, será una experiencia inolvidable. #JufraPomalca #PazYBien',
-      image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80',
-      likes: 120,
-      comments: 5,
-      link: 'https://www.facebook.com/profile.php?id=100069002220455'
-    }
-  ]);
+  const [socialPosts, setSocialPosts] = useState({
+    facebook: [],
+    instagram: [],
+    tiktok: [],
+    youtube: []
+  });
 
-  const [instagramPosts] = useState([
-    {
-      id: 1,
-      username: 'jufrapomalca',
-      userIcon: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=150&q=80',
-      image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=800&q=80',
-      likes: 134,
-      caption: 'jufrapomalca Un día bendecido en hermandad. Paz y Bien. ✨ #Jufra #Pomalca #PazYBien',
-      date: 'HACE 1 DÍA',
-      link: 'https://instagram.com'
-    },
-    {
-      id: 2,
-      username: 'jufrapomalca',
-      userIcon: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=150&q=80',
-      image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80',
-      likes: 215,
-      caption: 'jufrapomalca Preparando corazones para el retiro anual. ¡Se vienen grandes cosas! 🙏🔥 #JuventudFranciscana',
-      date: 'HACE 3 DÍAS',
-      link: 'https://instagram.com'
-    },
-    {
-      id: 3,
-      username: 'jufrapomalca',
-      userIcon: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=150&q=80',
-      image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80',
-      likes: 302,
-      caption: 'jufrapomalca Servicio social con los más necesitados. Donde hay amor, está Dios. ❤️🕊️',
-      date: 'HACE 1 SEMANA',
-      link: 'https://instagram.com'
-    }
-  ]);
-
-  const [youtubeVideos] = useState([
-    {
-      id: 1,
-      channelName: 'JUFRA Pomalca',
-      channelIcon: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=150&q=80',
-      title: 'Resumen de nuestro Retiro Espiritual 2026',
-      thumbnail: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80',
-      views: '1.2K vistas',
-      date: 'Hace 2 semanas',
-      link: 'https://youtube.com'
-    },
-    {
-      id: 2,
-      channelName: 'JUFRA Pomalca',
-      channelIcon: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=150&q=80',
-      title: 'Cantos Franciscanos - Ensayo del Coro',
-      thumbnail: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=800&q=80',
-      views: '856 vistas',
-      date: 'Hace 1 mes',
-      link: 'https://youtube.com'
-    },
-    {
-      id: 3,
-      channelName: 'JUFRA Pomalca',
-      channelIcon: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=150&q=80',
-      title: '¿Qué es la Juventud Franciscana? - Testimonios',
-      thumbnail: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80',
-      views: '2.5K vistas',
-      date: 'Hace 3 meses',
-      link: 'https://youtube.com'
-    }
-  ]);
-
-  const [tiktokVideos] = useState([
-    {
-      id: 1,
-      username: '@jufrapomalca',
-      description: 'El verdadero trend es seguir a Cristo 🙏😂 #humorcristiano #jufra #paz',
-      thumbnail: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=400&h=700&q=80',
-      likes: '4.5K',
-      link: 'https://tiktok.com'
-    },
-    {
-      id: 2,
-      username: '@jufrapomalca',
-      description: 'POV: Llegas temprano a la reunión de Jufra 🏃‍♂️💨 #franciscanos #catolico',
-      thumbnail: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=400&h=700&q=80',
-      likes: '12K',
-      link: 'https://tiktok.com'
-    },
-    {
-      id: 3,
-      username: '@jufrapomalca',
-      description: 'Hermosa alabanza en nuestro último encuentro 🎸🎤 #worship #jovenes',
-      thumbnail: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=400&h=700&q=80',
-      likes: '2.1K',
-      link: 'https://tiktok.com'
-    }
-  ]);
+  useEffect(() => {
+    const fetchRedes = async () => {
+      try {
+        const { data } = await api.get('/redes');
+        if (data.posts) {
+          setSocialPosts({
+            facebook: data.posts.filter(p => p.red_social === 'facebook').map(p => ({
+              id: p.id,
+              pageName: p.author_name,
+              pageIcon: p.author_icon,
+              date: p.date_text,
+              content: p.content,
+              image: p.image_url,
+              likes: p.likes,
+              comments: p.comments,
+              link: p.link
+            })),
+            instagram: data.posts.filter(p => p.red_social === 'instagram').map(p => ({
+              id: p.id,
+              username: p.author_name,
+              userIcon: p.author_icon,
+              image: p.image_url,
+              likes: p.likes,
+              caption: p.content,
+              date: p.date_text,
+              link: p.link
+            })),
+            tiktok: data.posts.filter(p => p.red_social === 'tiktok').map(p => ({
+              id: p.id,
+              username: p.author_name,
+              description: p.content,
+              thumbnail: p.image_url,
+              likes: p.likes,
+              link: p.link
+            })),
+            youtube: data.posts.filter(p => p.red_social === 'youtube').map(p => ({
+              id: p.id,
+              channelName: p.author_name,
+              channelIcon: p.author_icon,
+              title: p.content,
+              thumbnail: p.image_url,
+              views: p.likes,
+              date: p.date_text,
+              link: p.link
+            }))
+          });
+        }
+      } catch (err) {
+        console.error('Error fetching redes', err);
+      }
+    };
+    fetchRedes();
+  }, []);
 
   const filteredGalleryItems = activeCategory === 'todas'
     ? galleryItems
@@ -919,7 +821,7 @@ const LandingView = () => {
               scrollbarWidth: 'none',
               msOverflowStyle: 'none'
             }} className="hide-scrollbar">
-              {activeSocialTab === 'facebook' && facebookPosts.map(post => (
+              {activeSocialTab === 'facebook' && socialPosts.facebook.map(post => (
                 <div key={post.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '350px', maxWidth: '85vw', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', scrollSnapAlign: 'start', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ display: 'flex', alignItems: 'center', padding: '1rem', gap: '10px' }}>
                     <img src={post.pageIcon} alt="JUFRA" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
@@ -943,7 +845,7 @@ const LandingView = () => {
                 </div>
               ))}
 
-              {activeSocialTab === 'instagram' && instagramPosts.map(post => (
+              {activeSocialTab === 'instagram' && socialPosts.instagram.map(post => (
                 <div key={post.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '350px', maxWidth: '85vw', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', scrollSnapAlign: 'start', display: 'flex', flexDirection: 'column', border: '1px solid #efefef' }}>
                   <div style={{ display: 'flex', alignItems: 'center', padding: '0.8rem 1rem', gap: '10px' }}>
                     <img src={post.userIcon} alt="Profile" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #E1306C', padding: '2px' }} />
@@ -965,7 +867,7 @@ const LandingView = () => {
                 </div>
               ))}
 
-              {activeSocialTab === 'tiktok' && tiktokVideos.map(video => (
+              {activeSocialTab === 'tiktok' && socialPosts.tiktok.map(video => (
                 <div key={video.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '300px', maxWidth: '80vw', background: '#000', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.2)', overflow: 'hidden', scrollSnapAlign: 'start', display: 'flex', flexDirection: 'column', position: 'relative' }}>
                   <div style={{ width: '100%', height: '500px', background: '#222', position: 'relative' }}>
                     <img src={video.thumbnail} alt="TikTok" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
@@ -984,7 +886,7 @@ const LandingView = () => {
                 </div>
               ))}
 
-              {activeSocialTab === 'youtube' && youtubeVideos.map(video => (
+              {activeSocialTab === 'youtube' && socialPosts.youtube.map(video => (
                 <div key={video.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '350px', maxWidth: '85vw', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', scrollSnapAlign: 'start', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ width: '100%', height: '200px', background: '#000', position: 'relative' }}>
                     <img src={video.thumbnail} alt="YouTube" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
