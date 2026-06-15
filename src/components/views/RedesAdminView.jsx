@@ -14,6 +14,7 @@ const RedesAdminView = () => {
     date_text: '',
     content: '',
     image_url: '',
+    imagen_file: null,
     likes: '',
     comments: '',
     link: ''
@@ -45,6 +46,7 @@ const RedesAdminView = () => {
         date_text: post.date_text || '',
         content: post.content || '',
         image_url: post.image_url || '',
+        imagen_file: null,
         likes: post.likes || '',
         comments: post.comments || '',
         link: post.link || ''
@@ -58,6 +60,7 @@ const RedesAdminView = () => {
         date_text: '',
         content: '',
         image_url: '',
+        imagen_file: null,
         likes: '',
         comments: '',
         link: ''
@@ -69,10 +72,21 @@ const RedesAdminView = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const data = new FormData();
+      Object.keys(formData).forEach(key => {
+        if (formData[key] !== null && formData[key] !== undefined) {
+          data.append(key, formData[key]);
+        }
+      });
+
       if (editingPost) {
-        await api.put(`/redes/${editingPost.id}`, formData);
+        await api.put(`/redes/${editingPost.id}`, data, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
       } else {
-        await api.post('/redes', formData);
+        await api.post('/redes', data, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
       }
       setIsModalOpen(false);
       fetchPosts();
@@ -172,8 +186,27 @@ const RedesAdminView = () => {
               </div>
 
               <div className="input-group">
+                <label>Subir Imagen (Opcional, reemplaza URL)</label>
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  onChange={e => {
+                    if (e.target.files && e.target.files[0]) {
+                      setFormData({...formData, imagen_file: e.target.files[0]});
+                    }
+                  }} 
+                />
+              </div>
+
+              <div className="input-group">
                 <label>Imagen / Miniatura (URL)</label>
-                <input type="url" value={formData.image_url} onChange={e => setFormData({...formData, image_url: e.target.value})} placeholder="https://..." required />
+                <input 
+                  type="url" 
+                  value={formData.image_url} 
+                  onChange={e => setFormData({...formData, image_url: e.target.value})} 
+                  placeholder="https://..." 
+                  required={!formData.imagen_file && !editingPost} 
+                />
               </div>
 
               <div style={{ display: 'flex', gap: '1rem' }}>

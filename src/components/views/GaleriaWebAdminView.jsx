@@ -12,7 +12,8 @@ const GaleriaWebAdminView = () => {
     titulo: '',
     descripcion: '',
     categoria: 'todas',
-    archivoUrl: ''
+    archivoUrl: '',
+    imagen_file: null
   });
 
   const fetchItems = async () => {
@@ -45,7 +46,8 @@ const GaleriaWebAdminView = () => {
         titulo: item.titulo || '',
         descripcion: item.descripcion || '',
         categoria: item.categoria || 'todas',
-        archivoUrl: item.archivo_url || item.archivoUrl || ''
+        archivoUrl: item.archivo_url || item.archivoUrl || '',
+        imagen_file: null
       });
     } else {
       setIsEditing(false);
@@ -54,7 +56,8 @@ const GaleriaWebAdminView = () => {
         titulo: '',
         descripcion: '',
         categoria: 'todas',
-        archivoUrl: ''
+        archivoUrl: '',
+        imagen_file: null
       });
     }
     setIsModalOpen(true);
@@ -63,10 +66,21 @@ const GaleriaWebAdminView = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const data = new FormData();
+      Object.keys(formData).forEach(key => {
+        if (formData[key] !== null && formData[key] !== undefined) {
+          data.append(key, formData[key]);
+        }
+      });
+
       if (isEditing) {
-        await api.put(`/galeria-web/${currentId}`, formData);
+        await api.put(`/galeria-web/${currentId}`, data, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
       } else {
-        await api.post('/galeria-web', formData);
+        await api.post('/galeria-web', data, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
       }
       setIsModalOpen(false);
       fetchItems();
@@ -151,8 +165,31 @@ const GaleriaWebAdminView = () => {
               </div>
 
               <div className="form-group" style={{ marginBottom: '15px' }}>
+                <label>Subir Imagen/Video (Opcional, reemplaza URL)</label>
+                <input 
+                  type="file" 
+                  accept="image/*,video/*" 
+                  onChange={e => {
+                    if (e.target.files && e.target.files[0]) {
+                      setFormData({...formData, imagen_file: e.target.files[0]});
+                    }
+                  }} 
+                  className="form-control" 
+                  style={{ width: '100%', padding: '8px' }} 
+                />
+              </div>
+
+              <div className="form-group" style={{ marginBottom: '15px' }}>
                 <label>URL de la Imagen/Archivo</label>
-                <input type="text" name="archivoUrl" value={formData.archivoUrl} onChange={handleInputChange} required className="form-control" style={{ width: '100%', padding: '8px' }} />
+                <input 
+                  type="text" 
+                  name="archivoUrl" 
+                  value={formData.archivoUrl} 
+                  onChange={handleInputChange} 
+                  required={!formData.imagen_file && !isEditing} 
+                  className="form-control" 
+                  style={{ width: '100%', padding: '8px' }} 
+                />
                 {formData.archivoUrl && <img src={formData.archivoUrl} alt="Preview" style={{ marginTop: '10px', width: '100px', height: '100px', objectFit: 'cover', borderRadius: '5px' }} />}
               </div>
 
