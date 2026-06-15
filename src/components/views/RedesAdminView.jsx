@@ -11,6 +11,7 @@ const RedesAdminView = () => {
     red_social: 'facebook',
     author_name: '',
     author_icon: '',
+    author_icon_file: null,
     date_text: '',
     content: '',
     image_url: '',
@@ -43,6 +44,7 @@ const RedesAdminView = () => {
         red_social: post.red_social || 'facebook',
         author_name: post.author_name || '',
         author_icon: post.author_icon || '',
+        author_icon_file: null,
         date_text: post.date_text || '',
         content: post.content || '',
         image_url: post.image_url || '',
@@ -57,6 +59,7 @@ const RedesAdminView = () => {
         red_social: 'facebook',
         author_name: '',
         author_icon: '',
+        author_icon_file: null,
         date_text: '',
         content: '',
         image_url: '',
@@ -170,8 +173,24 @@ const RedesAdminView = () => {
                   <input type="text" value={formData.author_name} onChange={e => setFormData({...formData, author_name: e.target.value})} placeholder="Ej: JUFRA Pomalca" required />
                 </div>
                 <div className="input-group" style={{ flex: 1 }}>
-                  <label>Logo/Avatar del Autor (URL)</label>
-                  <input type="url" value={formData.author_icon} onChange={e => setFormData({...formData, author_icon: e.target.value})} placeholder="https://..." required />
+                  <label>Logo/Avatar del Autor (Sube un archivo o pega URL)</label>
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    onChange={e => {
+                      if (e.target.files && e.target.files[0]) {
+                        setFormData({...formData, author_icon_file: e.target.files[0]});
+                      }
+                    }} 
+                    style={{ marginBottom: '5px' }}
+                  />
+                  <input 
+                    type="url" 
+                    value={formData.author_icon} 
+                    onChange={e => setFormData({...formData, author_icon: e.target.value})} 
+                    placeholder="https://..." 
+                    required={!formData.author_icon_file && !editingPost} 
+                  />
                 </div>
               </div>
 
