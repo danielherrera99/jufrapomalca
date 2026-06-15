@@ -78,7 +78,7 @@ const LandingView = () => {
   useEffect(() => {
     const fetchGaleria = async () => {
       try {
-        const { data } = await api.get('/galeria');
+        const { data } = await api.get('/galeria-web');
         if (data.success) {
           setGalleryItems(data.galeria);
         }

@@ -46,6 +46,7 @@ import AsistenteIAView from './components/views/AsistenteIAView';
 import SolicitudesView from './components/views/SolicitudesView';
 import FraternidadesAdminView from './components/views/FraternidadesAdminView';
 import RedesAdminView from './components/views/RedesAdminView';
+import GaleriaWebAdminView from './components/views/GaleriaWebAdminView';
 import ItemReadModal from './components/ItemReadModal';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -255,6 +256,7 @@ const modules = [
   { id: 'Comunicacion', label: 'Comunicación', icon: '📢' },
   { id: 'Asistente', label: 'Asistente IA', icon: '🤖' },
   { id: 'Redes', label: 'Redes Sociales', icon: '📱' },
+  { id: 'GaleriaWeb', label: 'Galería Web', icon: '🌐' },
   { id: 'WebConfig', label: 'Web Institucional', icon: '🌐' },
   { id: 'OfsConfig', label: 'Configuración OFS', icon: '☦️' },
   { id: 'Fraternidades', label: 'JUFRA Perú', icon: '🇵🇪' },
@@ -445,6 +447,7 @@ const Dashboard = ({ user, onLogout }) => {
       else if (activeTab === 'Perfil') endpoint = '/auth/perfil';
       else if (activeTab === 'Chat') endpoint = '/mensajes/conversaciones';
       else if (activeTab === 'Fraternidades') endpoint = '/fraternidades';
+      else if (activeTab === 'GaleriaWeb') endpoint = '/galeria';
       else if (activeTab === 'Comunicacion') {
         const [herRes] = await Promise.all([
           api.get('/hermanos?todos=true')
@@ -1116,6 +1119,7 @@ const Dashboard = ({ user, onLogout }) => {
       case 'Actas': return <ActasList filteredData={filteredData} getActaColor={getActaColor} formatSafeDate={formatSafeDate} setReadItem={setReadItem} openEditModal={openEditModal} handleDelete={handleDelete} />;
       case 'Documentos': return <DocumentosList filteredData={filteredData} setReadItem={setReadItem} openEditModal={openEditModal} handleDelete={handleDelete} />;
       case 'Galeria': return <GaleriaList filteredData={filteredData} setReadItem={setReadItem} SafeImage={SafeImage} formatSafeDate={formatSafeDate} handleDelete={handleDelete} />;
+      case 'GaleriaWeb': return <GaleriaWebAdminView data={{ user }} />;
       case 'Mapa': return <MapaView data={data} loading={loading} ActivityIndicator={ActivityIndicator} setReadItem={setReadItem} setActiveTab={setActiveTab} />;
       case 'Dashboard': return <DashboardView loading={loading} data={data} user={user} formatSafeDate={formatSafeDate} setActiveTab={setActiveTab} handleApprove={handleApprove} ActivityIndicator={ActivityIndicator} />;
       case 'Chat':
