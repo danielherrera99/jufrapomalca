@@ -20,7 +20,7 @@ const EspirituView = () => {
     try {
       const response = await api.get('/espiritualidad');
       const resData = response.data;
-      setData(resData.espiritualidad || (Array.isArray(resData) ? resData : []));
+      setData(resData.items || (Array.isArray(resData) ? resData : []));
     } catch (err) {
       console.error('Error fetching espiritualidad:', err);
     } finally {

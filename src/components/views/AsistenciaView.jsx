@@ -34,7 +34,7 @@ const AsistenciaView = () => {
         api.get('/hermanos?todos=true')
       ]);
       const resData = asisRes.data;
-      setData(resData.asistencia || (Array.isArray(resData) ? resData : []));
+      setData(resData.asistencias || (Array.isArray(resData) ? resData : []));
       setHermanos(herRes.data.hermanos || []);
     } catch (err) {
       console.error('Error fetching asistencia:', err);
