@@ -1,12 +1,31 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import api from '../../config/api';
 
-const SolicitudesView = ({ data, loading, fetchData }) => {
+const SolicitudesView = () => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [statusFilter, setStatusFilter] = useState('todas');
   const [localSearch, setLocalSearch] = useState('');
 
-  const rawSolicitudes = data.solicitudes || [];
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response = await api.get('/solicitudes');
+      const resData = response.data;
+      setData(resData.solicitudes || (Array.isArray(resData) ? resData : []));
+    } catch (err) {
+      console.error('Error fetching solicitudes:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const rawSolicitudes = data || [];
 
   // Calcular KPIs en base a todos los datos sin filtrar
   const stats = useMemo(() => {

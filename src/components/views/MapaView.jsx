@@ -1,9 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import api from '../../config/api';
 
-const MapaView = ({ data, loading, ActivityIndicator, setReadItem, setActiveTab }) => {
+const MapaView = ({ ActivityIndicator, setReadItem, setActiveTab }) => {
+  const [data, setData] = useState({ eventos: [], anuncios: [], servicios: [] });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const [eventosRes, anunciosRes, serviciosRes] = await Promise.all([
+          api.get('/eventos'),
+          api.get('/anuncios'),
+          api.get('/servicios')
+        ]);
+        setData({
+          eventos: eventosRes.data.eventos || [],
+          anuncios: anunciosRes.data.anuncios || [],
+          servicios: serviciosRes.data.servicios || []
+        });
+      } catch (error) {
+        console.error('Error fetching mapa data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
   if (loading) return <div style={{ textAlign: 'center', padding: '3rem' }}><ActivityIndicator /> Cargando ubicaciones...</div>;
 
   const markers = [];

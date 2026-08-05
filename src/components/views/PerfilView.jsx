@@ -1,19 +1,70 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import api from '../../config/api';
+import { format, parseISO } from 'date-fns';
+import { es } from 'date-fns/locale';
 
-const PerfilView = ({ 
-  data, 
-  loading, 
-  ActivityIndicator, 
-  SafeImage, 
-  isProfileEditing, 
-  setIsProfileEditing, 
-  profileData, 
-  setProfileData, 
-  handleUpdatePerfil, 
-  getSafeDateForInput, 
-  formatSafeDate 
-}) => {
-  const user = Array.isArray(data) ? {} : data;
+const PerfilView = ({ ActivityIndicator, SafeImage }) => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [isProfileEditing, setIsProfileEditing] = useState(false);
+  const [profileData, setProfileData] = useState({});
+
+  const formatSafeDate = (dateStr, fmt = 'dd MMM yyyy') => {
+    if (!dateStr) return 'Sin fecha';
+    try {
+      let parsed = typeof dateStr === 'string' ? (dateStr.includes('T') ? parseISO(dateStr) : new Date(dateStr)) : dateStr;
+      if (isNaN(parsed)) return 'Fecha inválida';
+      return format(parsed, fmt, { locale: es });
+    } catch {
+      return 'Fecha inválida';
+    }
+  };
+
+  const getSafeDateForInput = (dateStr) => {
+    if (!dateStr) return '';
+    try {
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return '';
+      return d.toISOString().split('T')[0];
+    } catch {
+      return '';
+    }
+  };
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response = await api.get('/auth/perfil');
+      setData(response.data.usuario || response.data);
+    } catch (error) {
+      console.error('Error fetching perfil:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleUpdatePerfil = async (e) => {
+    e.preventDefault();
+    try {
+      await api.put('/auth/perfil', profileData);
+      if (profileData.nuevaFotoFile) {
+        const formData = new FormData();
+        formData.append('foto', profileData.nuevaFotoFile);
+        await api.post('/auth/foto', formData);
+      }
+      alert('Perfil actualizado con éxito ✅');
+      setIsProfileEditing(false);
+      fetchData();
+    } catch (err) {
+      alert('Error al actualizar perfil: ' + (err.response?.data?.message || err.message));
+    }
+  };
+
+  const user = data || {};
   if (loading) return <div style={{ textAlign: 'center', padding: '3rem' }}><ActivityIndicator /> Cargando tu perfil...</div>;
 
   return (

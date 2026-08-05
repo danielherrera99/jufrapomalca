@@ -1,36 +1,18 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import api from './config/api';
+import ItemReadModal from './components/ItemReadModal';
 import Consejo from './components/Consejo';
-import HermanosEditModal from './components/HermanosEditModal';
-import AnunciosEditModal from './components/AnunciosEditModal';
-import EventosEditModal from './components/EventosEditModal';
-import ActasEditModal from './components/ActasEditModal';
-import CantosEditModal from './components/CantosEditModal';
-import FormacionEditModal from './components/FormacionEditModal';
-import DocumentosEditModal from './components/DocumentosEditModal';
-import ServiciosEditModal from './components/ServiciosEditModal';
-import EspirituEditModal from './components/EspirituEditModal';
-import ActasNewModal from './components/ActasNewModal';
-import DocumentosNewModal from './components/DocumentosNewModal';
-import PeticionesNewModal from './components/PeticionesNewModal';
-import GaleriaNewModal from './components/GaleriaNewModal';
-import EspirituNewModal from './components/EspirituNewModal';
-import AnunciosNewModal from './components/AnunciosNewModal';
-import CantosNewModal from './components/CantosNewModal';
-import FormacionNewModal from './components/FormacionNewModal';
-import ServiciosNewModal from './components/ServiciosNewModal';
-import EventosNewModal from './components/EventosNewModal';
-import AnunciosList from './components/lists/AnunciosList';
-import ActasList from './components/lists/ActasList';
-import EventosList from './components/lists/EventosList';
-import FormacionList from './components/lists/FormacionList';
-import CantosList from './components/lists/CantosList';
-import ServiciosList from './components/lists/ServiciosList';
-import PeticionesList from './components/lists/PeticionesList';
-import GaleriaList from './components/lists/GaleriaList';
-import EspirituList from './components/lists/EspirituList';
-import DocumentosList from './components/lists/DocumentosList';
+import AnunciosView from './components/views/AnunciosView';
+import EventosView from './components/views/EventosView';
+import ServiciosView from './components/views/ServiciosView';
+import ActasView from './components/views/ActasView';import FormacionView from './components/views/FormacionView';
+import CantosView from './components/views/CantosView';
+import PeticionesView from './components/views/PeticionesView';
+import HermanosView from './components/views/HermanosView';
+import GaleriaView from './components/views/GaleriaView';
+import EspirituView from './components/views/EspirituView';
+import DocumentosView from './components/views/DocumentosView';
 import AsistenciaView from './components/views/AsistenciaView';
 import DashboardView from './components/views/DashboardView';
 import PerfilView from './components/views/PerfilView';
@@ -47,7 +29,6 @@ import SolicitudesView from './components/views/SolicitudesView';
 import FraternidadesAdminView from './components/views/FraternidadesAdminView';
 import RedesAdminView from './components/views/RedesAdminView';
 import GaleriaWebAdminView from './components/views/GaleriaWebAdminView';
-import ItemReadModal from './components/ItemReadModal';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import 'leaflet/dist/leaflet.css';
@@ -162,7 +143,11 @@ const Login = ({ onLogin }) => {
         setError('Acceso denegado: Solo miembros del consejo.');
       }
     } catch (err) {
-      setError('Credenciales inválidas o cuenta no aprobada.');
+      if (err.code === 'ECONNABORTED' || err.message.includes('timeout') || err.message.includes('Network Error')) {
+        setError('El servidor se está despertando (puede tomar hasta 1 min). Vuelve a intentar en unos segundos.');
+      } else {
+        setError('Credenciales inválidas o cuenta no aprobada.');
+      }
     }
   };
 
@@ -287,20 +272,7 @@ const Dashboard = ({ user, onLogout }) => {
   };
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [newItem, setNewItem] = useState({ titulo: '', contenido: '', fecha: '', lugar: '', artista: '', anonimo: false });
   const [searchTerm, setSearchTerm] = useState('');
-  const [hermanosFilter, setHermanosFilter] = useState('pendientes'); // Default to view pending
-  const [anunciosFilter, setAnunciosFilter] = useState('todos');
-  const [actasFilter, setActasFilter] = useState('todas');
-  const [cantosFilter, setCantosFilter] = useState('todos');
-  const [selectedAsistenciaDate, setSelectedAsistenciaDate] = useState(null);
-  const [expandedArchivos, setExpandedArchivos] = useState({}); 
-  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
-  const [exportDates, setExportDates] = useState({ start: '', end: '' });
-  const [espirituTab, setEspirituTab] = useState('oracion');
   const [readItem, setReadItem] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -343,76 +315,7 @@ const Dashboard = ({ user, onLogout }) => {
     }
   };
 
-  const toggleArchivo = (key) => {
-    setExpandedArchivos(prev => ({ ...prev, [key]: !prev[key] }));
-  };
 
-  const filteredData = useMemo(() => {
-    let rawData = [];
-    if (activeTab === 'Dashboard' || activeTab === 'Asistencia') {
-      rawData = data.asistencias || (Array.isArray(data) ? data : []);
-    } else {
-      rawData = Array.isArray(data) ? data : [];
-    }
-    
-    // Filtros por Categoría aplicados SIEMPRE sobre rawData
-    let filtered = rawData;
-    
-    if (activeTab === 'Hermanos') {
-      filtered = filtered.filter(item => {
-        if (hermanosFilter === 'activos') return item.activo;
-        if (hermanosFilter === 'pendientes') return !item.activo;
-        return true;
-      });
-    } else if (activeTab === 'Anuncios') {
-      if (anunciosFilter !== 'todos') {
-        filtered = filtered.filter(item => (item.tipo || 'urgente') === anunciosFilter);
-      }
-    } else if (activeTab === 'Actas') {
-      if (actasFilter !== 'todas') {
-        filtered = filtered.filter(item => (item.tipoReunion || 'consejo') === actasFilter);
-      }
-    } else if (activeTab === 'Cantos') {
-      if (cantosFilter !== 'todos') {
-        filtered = filtered.filter(item => item.categoria === cantosFilter);
-      }
-    }
-
-    if (!searchTerm) {
-      if (activeTab === 'Asistencia') return filtered; 
-      return filtered;
-    }
-
-    // Búsqueda por Texto Libre sobre los datos ya filtrados por categoría
-    return filtered.filter(item => {
-      if (!item) return false;
-      if (activeTab === 'Mapa') return true; 
-      
-      // Búsqueda por Texto Libre
-      const normalize = (str) => typeof str === 'string' ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : '';
-      const term = normalize(searchTerm).trim();
-      
-      try {
-        // Extrae todos los valores de texto del objeto recursivamente a un solo string
-        const extractValues = (obj) => {
-          if (!obj) return '';
-          if (typeof obj !== 'object') return String(obj);
-          return Object.values(obj).map(v => extractValues(v)).join(' ');
-        };
-        
-        const megaStr = normalize(extractValues(item));
-        return megaStr.includes(term);
-      } catch (e) {
-        const fallback = normalize(`${item.titulo||''} ${item.nombre||''} ${item.apellido||''} ${item.contenido||''} ${item.descripcion||''}`);
-        if (activeTab === 'Mensajes') {
-          return fallback.includes(term) ||
-                 normalize(item.usuario1?.nombre || '').includes(term) ||
-                 normalize(item.usuario2?.nombre || '').includes(term);
-        }
-        return fallback.includes(term);
-      }
-    });
-  }, [data, activeTab, searchTerm, hermanosFilter, anunciosFilter, actasFilter, cantosFilter]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -430,12 +333,11 @@ const Dashboard = ({ user, onLogout }) => {
       else if (activeTab === 'Galeria') endpoint = '/galeria';
       else if (activeTab === 'Cantos') endpoint = '/cantos';
       else if (activeTab === 'Asistencia') {
-        const [asisRes, herRes] = await Promise.all([
-          api.get('/asistencia'),
+        const [herRes] = await Promise.all([
           api.get('/hermanos?todos=true')
         ]);
         setData({
-          asistencias: asisRes.data.asistencias || [],
+          asistencias: [],
           hermanos: herRes.data.hermanos || []
         });
         setLoading(false);
@@ -537,37 +439,7 @@ const Dashboard = ({ user, onLogout }) => {
   const [activeChat, setActiveChat] = useState(null);
   const [nuevoMensaje, setNuevoMensaje] = useState("");
   const [showSearchChat, setShowSearchChat] = useState(false);
-  const [showBulkAsistencia, setShowBulkAsistencia] = useState(false);
-  const [bulkList, setBulkList] = useState([]);
-  const [bulkGuests, setBulkGuests] = useState([]);
-  const [bulkGuestName, setBulkGuestName] = useState("");
-  const [bulkConfig, setBulkConfig] = useState({ fecha: new Date().toISOString().split('T')[0], tipoReunion: 'semanal' });
 
-  const handleSaveBulkAsistencia = async () => {
-    try {
-      const payload = {
-        fecha: bulkConfig.fecha,
-        tipoReunion: bulkConfig.tipoReunion,
-        asistencias: [
-          ...bulkList.map(item => ({
-            usuarioId: item._id,
-            estado: item.estado || 'falta'
-          })),
-          ...bulkGuests.map(name => ({
-            nombreInvitado: name,
-            estado: 'presente'
-          }))
-        ]
-      };
-      await api.post('/asistencia/lote', payload);
-      alert('Asistencia registrada correctamente ✅');
-      setShowBulkAsistencia(false);
-      setBulkGuests([]);
-      fetchData();
-    } catch (err) {
-      alert('Error: ' + (err.response?.data?.message || err.message));
-    }
-  };
 
   const openChatPersonal = async (user2) => {
     setActiveChat(user2);
@@ -614,169 +486,6 @@ const Dashboard = ({ user, onLogout }) => {
     }
   };
 
-  const handleCreate = async (e) => {
-    e.preventDefault();
-    try {
-      if (activeTab === 'Hermanos') {
-        alert('Los hermanos deben registrarse ellos mismos desde su propia App Móvil.');
-        setIsModalOpen(false);
-        return;
-      }
-      if (activeTab === 'Asistencia') {
-        alert('Las asistencias deben ser tomadas por QR oficial desde la App.');
-        setIsModalOpen(false);
-        return;
-      }
-
-      let endpoint = '';
-      let payload = {};
-
-      // Dynamic payload building based on the module
-      if (activeTab === 'Anuncios') {
-        const formData = new FormData();
-        formData.append('titulo', newItem.titulo || '');
-        formData.append('contenido', newItem.contenido || '');
-        formData.append('tipo', newItem.tipo || 'urgente');
-        formData.append('prioridad', newItem.prioridad || 'normal');
-        formData.append('destinatarios', newItem.destinatarios || 'todos');
-        if (newItem.destacado) formData.append('destacado', 'true');
-        if (newItem.imagenFile) formData.append('imagen', newItem.imagenFile);
-        if (newItem.lat) formData.append('lat', newItem.lat);
-        if (newItem.lng) formData.append('lng', newItem.lng);
-
-        await api.post('/anuncios', formData);
-        setIsModalOpen(false);
-        setNewItem({ titulo: '', contenido: '', fecha: '', lugar: '', artista: '' });
-        fetchData();
-        return; // Early return ya que usamos FormData
-      } else if (activeTab === 'Eventos') {
-        const formData = new FormData();
-        formData.append('titulo', newItem.titulo || '');
-        formData.append('descripcion', newItem.contenido || '');
-        formData.append('fecha', newItem.fecha ? new Date(newItem.fecha + 'T12:00:00').toISOString() : new Date().toISOString());
-        formData.append('hora', newItem.hora || '18:00');
-        formData.append('lugar', newItem.lugar || 'Sede Jufra');
-        formData.append('tipo', newItem.tipo || 'reunion');
-        formData.append('visibilidad', newItem.visibilidad || 'todos');
-        formData.append('lat', newItem.lat || -6.745);
-        formData.append('lng', newItem.lng || -79.824);
-        if (newItem.imagenFile) formData.append('imagen', newItem.imagenFile);
-
-        await api.post('/eventos', formData);
-        setIsModalOpen(false);
-        setNewItem({ titulo: '', contenido: '', fecha: '', hora: '', lugar: '', tipo: 'reunion', lat: '', lng: '', imagenFile: null, previewImagen: '' });
-        fetchData();
-        return;
-      } else if (activeTab === 'Servicios') {
-        const formData = new FormData();
-        formData.append('titulo', newItem.titulo || '');
-        formData.append('descripcion', newItem.contenido || '');
-        formData.append('fecha', newItem.fecha ? new Date(newItem.fecha).toISOString() : new Date().toISOString());
-        formData.append('lugar', newItem.lugar || 'Sede Jufra');
-        formData.append('cupoMaximo', newItem.cupoMaximo || 0);
-        if (newItem.lat) formData.append('lat', newItem.lat);
-        if (newItem.lng) formData.append('lng', newItem.lng);
-        if (newItem.imagenFile) formData.append('imagen', newItem.imagenFile);
-
-        await api.post('/servicios', formData);
-        setIsModalOpen(false);
-        setNewItem({ titulo: '', contenido: '', fecha: '', lugar: '', cupoMaximo: 0, lat: '', lng: '', imagenFile: null, previewImagen: '' });
-        fetchData();
-        return;
-      } else if (activeTab === 'Peticiones') {
-        endpoint = '/peticiones';
-        payload = { contenido: newItem.contenido, anonimo: newItem.anonimo || false };
-      } else if (activeTab === 'Formacion') {
-        const formData = new FormData();
-        formData.append('titulo', newItem.titulo || '');
-        formData.append('descripcion', newItem.descripcion || '');
-        formData.append('contenido', newItem.contenido || '');
-        const etiqArray = (newItem.etiquetas || '').split(',').map(e => e.trim()).filter(e => e);
-        etiqArray.forEach(e => formData.append('etiquetas', e));
-        if (newItem.archivoFile) formData.append('archivo', newItem.archivoFile);
-
-        await api.post('/formacion', formData);
-        setIsModalOpen(false);
-        setNewItem({ titulo: '', descripcion: '', contenido: '', etiquetas: '', archivoFile: null });
-        fetchData();
-        return;
-      } else if (activeTab === 'Actas') {
-        endpoint = '/actas';
-        const parsedAcuerdos = (newItem.acuerdoTexto || '').split('\n').map(line => line.trim()).filter(line => line.length > 0).map(desc => ({ descripcion: desc }));
-        payload = { 
-          titulo: newItem.titulo, 
-          contenido: newItem.contenido, 
-          tipoReunion: newItem.tipoReunion || 'consejo',
-          fecha: newItem.fecha ? new Date(newItem.fecha).toISOString() : new Date().toISOString(),
-          acuerdos: parsedAcuerdos
-        };
-      } else if (activeTab === 'Documentos') {
-        endpoint = '/documentos';
-        payload = { titulo: newItem.titulo, descripcion: newItem.contenido };
-      } else if (activeTab === 'Cantos') {
-        const formData = new FormData();
-        formData.append('titulo', newItem.titulo || '');
-        formData.append('letra', newItem.letra || newItem.contenido || '');
-        formData.append('autor', newItem.artista || '');
-        formData.append('categoria', newItem.categoria || 'otro');
-        if (newItem.archivoFile) formData.append('archivo', newItem.archivoFile);
-
-        await api.post('/cantos', formData);
-        setIsModalOpen(false);
-        setNewItem({ titulo: '', contenido: '', fecha: '', lugar: '', artista: '', letra: '', categoria: 'otro', archivoFile: null });
-        fetchData();
-        return;
-      } else if (activeTab === 'Documentos') {
-        const formData = new FormData();
-        formData.append('titulo', newItem.titulo || '');
-        formData.append('descripcion', newItem.descripcion || '');
-        formData.append('tipo', newItem.tipo || 'otro');
-        formData.append('contenido', newItem.contenido || '');
-        if (newItem.archivoFile) formData.append('archivo', newItem.archivoFile);
-
-        await api.post('/documentos', formData);
-        setIsModalOpen(false);
-        setNewItem({ titulo: '', descripcion: '', contenido: '', tipo: 'otro', archivoFile: null });
-        fetchData();
-        return;
-      } else if (activeTab === 'Espiritu') {
-        await api.post('/espiritualidad', {
-          titulo: newItem.titulo,
-          contenido: newItem.contenido,
-          tipo: newItem.tipo || 'oracion',
-          categoria: newItem.categoria || ''
-        });
-        setIsModalOpen(false);
-        setNewItem({ titulo: '', contenido: '', tipo: 'oracion' });
-        fetchData();
-        return;
-      } else if (activeTab === 'Galeria') {
-        const formData = new FormData();
-        formData.append('titulo', newItem.titulo || '');
-        formData.append('descripcion', newItem.descripcion || '');
-        formData.append('fecha', newItem.fecha || new Date().toISOString());
-        if (newItem.archivoFile) formData.append('archivo', newItem.archivoFile);
-
-        await api.post('/galeria', formData);
-        setIsModalOpen(false);
-        setNewItem({ titulo: '', descripcion: '', fecha: '', archivoFile: null });
-        fetchData();
-        return;
-      }
-
-      if (endpoint) {
-        await api.post(endpoint, payload);
-        setIsModalOpen(false);
-        setNewItem({ titulo: '', contenido: '', fecha: '', lugar: '', artista: '' });
-        fetchData(); // Recargar datos
-      } else {
-        alert('Módulo en construcción.');
-      }
-    } catch (error) {
-      alert(`Error al crear el registro: ${error.response?.data?.message || error.message}`);
-    }
-  };
-
   const handleApprove = async (id, e) => {
     e.stopPropagation();
     try {
@@ -816,400 +525,6 @@ const Dashboard = ({ user, onLogout }) => {
       fetchData();
     } catch (error) {
       alert(error.response?.data?.message || 'Error al procesar inscripción');
-    }
-  };
-
-  const handleExportAsistencia = async (e) => {
-    e.preventDefault();
-    
-    try {
-      let sourceData = data.asistencias || (Array.isArray(data) ? data : []);
-      let asistenciasToExport = sourceData;
-      
-      if (exportDates.start && exportDates.end) {
-        const startT = new Date(`${exportDates.start}T00:00:00`).getTime();
-        const endT = new Date(`${exportDates.end}T23:59:59`).getTime();
-        asistenciasToExport = sourceData.filter(item => {
-           if (!item.fecha) return false;
-           const itemT = new Date(item.fecha).getTime();
-           return itemT >= startT && itemT <= endT;
-        });
-      } else if (exportDates.start || exportDates.end) {
-        alert("Por favor selecciona ambas fechas (Desde y Hasta) o déjalas vacías para un reporte completo.");
-        return;
-      }
-
-      if (asistenciasToExport.length === 0) {
-        alert("No hay ningún registro de asistencia en este rango de fechas.");
-        return;
-      }
-
-      // Diseño del Excel (Formato HTML Excel para permitir estilos)
-      const excelStyle = `
-        <style>
-          table { border-collapse: collapse; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-          th { background-color: #8B4513; color: #FFFFFF; font-weight: bold; padding: 10px; border: 1px solid #70360F; text-align: center; }
-          td { border: 1px solid #E5E7EB; padding: 8px; text-align: left; }
-          tr:nth-child(even) { background-color: #F9FAFB; }
-          .presente { color: #065F46; font-weight: bold; }
-          .falta { color: #991B1B; }
-          .permiso { color: #92400E; }
-        </style>
-      `;
-
-      const header = `
-        <tr>
-          <th>FECHA</th>
-          <th>HERMANO / INVITADO</th>
-          <th>TIPO DE REUNIÓN</th>
-          <th>ESTADO</th>
-          <th>MÉTODO DE REGISTRO</th>
-          <th>OBSERVACIONES</th>
-        </tr>
-      `;
-
-      const rows = asistenciasToExport.map(a => {
-        const fechaFull = a.fecha ? new Date(a.fecha) : new Date();
-        const fechaStr = fechaFull.toLocaleDateString('es-ES');
-        const hermano = a.usuario ? `${a.usuario.nombre} ${a.usuario.apellido}` : (a.nombreInvitado ? `Invitado: ${a.nombreInvitado}` : 'Usuario Desconocido');
-        const tipo = (a.tipoReunion || 'semanal').toUpperCase();
-        const estadoRaw = a.estado || (a.presente ? 'presente' : 'falta');
-        const estado = estadoRaw.charAt(0).toUpperCase() + estadoRaw.slice(1);
-        const metodo = (a.metodoRegistro || 'qr').toUpperCase();
-        const obs = a.observaciones || '';
-        
-        return `
-          <tr>
-            <td>${fechaStr}</td>
-            <td>${hermano}</td>
-            <td>${tipo}</td>
-            <td class="${estadoRaw}">${estado}</td>
-            <td>${metodo}</td>
-            <td>${obs}</td>
-          </tr>
-        `;
-      }).join("");
-
-      const template = `
-        <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-        <head>
-          <meta charset="utf-8">
-          ${excelStyle}
-        </head>
-        <body>
-          <table>
-            <thead>${header}</thead>
-            <tbody>${rows}</tbody>
-          </table>
-        </body>
-        </html>
-      `;
-
-      const blob = new Blob([template], { type: 'application/vnd.ms-excel;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      
-      const fileNameStr = (exportDates.start && exportDates.end) 
-        ? `Reporte_Asistencia_${exportDates.start}_al_${exportDates.end}.xls`
-        : `Reporte_Asistencia_Completo.xls`;
-
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', fileNameStr);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      URL.revokeObjectURL(url);
-      
-      setIsExportModalOpen(false);
-    } catch (error) {
-      console.error(error);
-      alert('Error al generar el reporte con diseño.');
-    }
-  };
-
-  const openEditModal = (item) => {
-    // Si es asistencia, no editar por ahora
-    if (activeTab === 'Asistencia') return;
-    
-    const extendedItem = { ...item };
-    if (activeTab === 'Actas' && item.acuerdos && item.acuerdos.length > 0) {
-       extendedItem.acuerdoTexto = item.acuerdos.map(a => a.descripcion).join('\n');
-    }
-    
-    setSelectedItem(extendedItem);
-    setIsEditModalOpen(true);
-  };
-
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    try {
-      if (activeTab === 'Hermanos') {
-        await api.put(`/hermanos/${selectedItem._id}`, {
-          nombre: selectedItem.nombre,
-          apellido: selectedItem.apellido,
-          username: selectedItem.username,
-          telefono: selectedItem.telefono,
-          contactoEmergencia: selectedItem.contactoEmergencia,
-          nombreContactoEmergencia: selectedItem.nombreContactoEmergencia,
-          rol: selectedItem.rol,
-          cargo: selectedItem.cargo,
-          etapaFormacion: selectedItem.etapaFormacion,
-          activo: selectedItem.activo,
-          email: selectedItem.email,
-          password: selectedItem.password
-        });
-        setIsEditModalOpen(false);
-        fetchData();
-      } else if (activeTab === 'Anuncios') {
-        const formData = new FormData();
-        formData.append('titulo', selectedItem.titulo);
-        formData.append('contenido', selectedItem.contenido);
-        formData.append('tipo', selectedItem.tipo || 'urgente');
-        formData.append('prioridad', selectedItem.prioridad || 'normal');
-        formData.append('destinatarios', selectedItem.destinatarios || 'todos');
-        formData.append('destacado', selectedItem.destacado ? 'true' : 'false');
-        if (selectedItem.nuevaImagenFile) {
-          formData.append('imagen', selectedItem.nuevaImagenFile);
-        }
-        if (selectedItem.ubicacion?.lat) formData.append('lat', selectedItem.ubicacion.lat);
-        if (selectedItem.ubicacion?.lng) formData.append('lng', selectedItem.ubicacion.lng);
-
-        await api.put(`/anuncios/${selectedItem._id}`, formData);
-        setIsEditModalOpen(false);
-      } else if (activeTab === 'Formacion') {
-        const formData = new FormData();
-        formData.append('titulo', selectedItem.titulo || '');
-        formData.append('descripcion', selectedItem.descripcion || '');
-        formData.append('contenido', selectedItem.contenido || '');
-        
-        const etiqList = typeof selectedItem.etiquetas === 'string' 
-          ? selectedItem.etiquetas.split(',').map(e => e.trim()).filter(e => e)
-          : (Array.isArray(selectedItem.etiquetas) ? selectedItem.etiquetas : []);
-        etiqList.forEach(e => formData.append('etiquetas', e));
-
-        if (selectedItem.nuevaImagenFile) formData.append('archivo', selectedItem.nuevaImagenFile);
-
-        await api.put(`/formacion/${selectedItem._id}`, formData);
-        setIsEditModalOpen(false);
-        fetchData();
-        return;
-      } else if (activeTab === 'Eventos') {
-        const formData = new FormData();
-        formData.append('titulo', selectedItem.titulo || '');
-        formData.append('descripcion', selectedItem.descripcion || selectedItem.contenido || '');
-        if (selectedItem.fecha) formData.append('fecha', new Date(selectedItem.fecha).toISOString());
-        formData.append('hora', selectedItem.hora || '');
-        formData.append('lugar', selectedItem.lugar || '');
-        formData.append('tipo', selectedItem.tipo || 'reunion');
-        formData.append('visibilidad', selectedItem.visibilidad || 'todos');
-        if (selectedItem.ubicacion?.lat) formData.append('lat', selectedItem.ubicacion.lat);
-        if (selectedItem.ubicacion?.lng) formData.append('lng', selectedItem.ubicacion.lng);
-        if (selectedItem.nuevaImagenFile) formData.append('imagen', selectedItem.nuevaImagenFile);
-
-        await api.put(`/eventos/${selectedItem._id}`, formData);
-        setIsEditModalOpen(false);
-        fetchData();
-        return;
-      } else if (activeTab === 'Cantos') {
-        const formData = new FormData();
-        formData.append('titulo', selectedItem.titulo || '');
-        formData.append('letra', selectedItem.letra || selectedItem.contenido || '');
-        formData.append('autor', selectedItem.autor || selectedItem.artista || '');
-        formData.append('categoria', selectedItem.categoria || 'otro');
-        if (selectedItem.nuevaImagenFile) formData.append('archivo', selectedItem.nuevaImagenFile); // Utilizamos la clave archivo backend
-
-        await api.put(`/cantos/${selectedItem._id}`, formData);
-        setIsEditModalOpen(false);
-        fetchData();
-      } else if (activeTab === 'Actas') {
-        const parsedAcuerdosEdit = (selectedItem.acuerdoTexto || '').split('\n').map(line => line.trim()).filter(line => line.length > 0).map(desc => ({ descripcion: desc }));
-        await api.put(`/actas/${selectedItem._id}`, {
-          titulo: selectedItem.titulo,
-          contenido: selectedItem.contenido,
-          tipoReunion: selectedItem.tipoReunion,
-          fecha: selectedItem.fecha ? new Date(selectedItem.fecha).toISOString() : new Date().toISOString(),
-          acuerdos: parsedAcuerdosEdit
-        });
-        setIsEditModalOpen(false);
-        fetchData();
-      } else if (activeTab === 'Peticiones') {
-        await api.put(`/peticiones/${selectedItem._id}`, {
-          contenido: selectedItem.contenido,
-          anonimo: selectedItem.anonimo
-        });
-        setIsEditModalOpen(false);
-        fetchData();
-      } else if (activeTab === 'Servicios') {
-        const formData = new FormData();
-        formData.append('titulo', selectedItem.titulo || '');
-        formData.append('descripcion', selectedItem.descripcion || '');
-        if (selectedItem.fecha) formData.append('fecha', new Date(selectedItem.fecha).toISOString());
-        formData.append('lugar', selectedItem.lugar || '');
-        formData.append('cupoMaximo', selectedItem.cupoMaximo || 0);
-        if (selectedItem.ubicacion?.lat) formData.append('lat', selectedItem.ubicacion.lat);
-        if (selectedItem.ubicacion?.lng) formData.append('lng', selectedItem.ubicacion.lng);
-        if (selectedItem.nuevaImagenFile) formData.append('imagen', selectedItem.nuevaImagenFile);
-
-        await api.put(`/servicios/${selectedItem._id}`, formData);
-        setIsEditModalOpen(false);
-        fetchData();
-        return;
-      } else if (activeTab === 'Documentos') {
-        const formData = new FormData();
-        formData.append('titulo', selectedItem.titulo || '');
-        formData.append('descripcion', selectedItem.descripcion || '');
-        formData.append('tipo', selectedItem.tipo || 'otro');
-        formData.append('contenido', selectedItem.contenido || '');
-        if (selectedItem.nuevaImagenFile) formData.append('archivo', selectedItem.nuevaImagenFile);
-
-        await api.put(`/documentos/${selectedItem._id}`, formData);
-        setIsEditModalOpen(false);
-        fetchData();
-        return;
-      } else if (activeTab === 'Espiritu') {
-        await api.put(`/espiritualidad/${selectedItem._id}`, {
-          titulo: selectedItem.titulo,
-          contenido: selectedItem.contenido,
-          tipo: selectedItem.tipo || 'oracion',
-          categoria: selectedItem.categoria || ''
-        });
-        setIsEditModalOpen(false);
-        fetchData();
-        return;
-      } else {
-        alert('Esta edición por ahora es exclusiva para Hermanos, Anuncios y Actas. ¡Se ampliará pronto!');
-      }
-    } catch (err) {
-      alert(`Error al actualizar: ${err.response?.data?.message || err.message}`);
-    }
-  };
-
-
-
-  const groupedAsistencias = activeTab === 'Asistencia' ? filteredData.reduce((acc, item) => {
-    if (!item || !item.fecha) return acc;
-    const rawDate = new Date(item.fecha);
-    if (isNaN(rawDate.getTime())) return acc;
-    
-    const year = rawDate.getFullYear().toString();
-    const month = rawDate.toLocaleDateString('es-ES', { month: 'long' });
-    const monthCapitalized = month.charAt(0).toUpperCase() + month.slice(1);
-    const dateStr = rawDate.toLocaleDateString('es-ES');
-    
-    if (!acc[year]) acc[year] = {};
-    if (!acc[year][monthCapitalized]) acc[year][monthCapitalized] = {};
-    if (!acc[year][monthCapitalized][dateStr]) acc[year][monthCapitalized][dateStr] = [];
-    
-    acc[year][monthCapitalized][dateStr].push(item);
-    return acc;
-  }, {}) : null;
-
-  const currentView = () => {
-    if (loading) return <p>Cargando datos desde la nube...</p>;
-    
-    switch (activeTab) {
-      case 'Asistencia': return <AsistenciaView groupedAsistencias={groupedAsistencias} expandedArchivos={expandedArchivos} toggleArchivo={toggleArchivo} selectedAsistenciaDate={selectedAsistenciaDate} setSelectedAsistenciaDate={setSelectedAsistenciaDate} />;
-      case 'Anuncios': return <AnunciosList filteredData={filteredData} setReadItem={setReadItem} getTipoIcon={getTipoIcon} SafeImage={SafeImage} openEditModal={openEditModal} handleDelete={handleDelete} />;
-      case 'Eventos': return <EventosList filteredData={filteredData} setReadItem={setReadItem} openEditModal={openEditModal} handleDelete={handleDelete} />;
-      case 'Servicios': return <ServiciosList filteredData={filteredData} setReadItem={setReadItem} openEditModal={openEditModal} handleDelete={handleDelete} handleParticipar={handleParticipar} />;
-      case 'Peticiones': return <PeticionesList filteredData={filteredData} handleOrar={handleOrar} openEditModal={openEditModal} handleDelete={handleDelete} />;
-      case 'Solicitudes': return <SolicitudesView data={{ solicitudes: filteredData }} loading={loading} fetchData={fetchData} />;
-      case 'Formacion': return <FormacionList filteredData={filteredData} setReadItem={setReadItem} openEditModal={openEditModal} handleDelete={handleDelete} />;
-      case 'Cantos': return <CantosList filteredData={filteredData} setReadItem={setReadItem} openEditModal={openEditModal} handleDelete={handleDelete} />;
-      case 'Actas': return <ActasList filteredData={filteredData} getActaColor={getActaColor} formatSafeDate={formatSafeDate} setReadItem={setReadItem} openEditModal={openEditModal} handleDelete={handleDelete} />;
-      case 'Documentos': return <DocumentosList filteredData={filteredData} setReadItem={setReadItem} openEditModal={openEditModal} handleDelete={handleDelete} />;
-      case 'Galeria': return <GaleriaList filteredData={filteredData} setReadItem={setReadItem} SafeImage={SafeImage} formatSafeDate={formatSafeDate} handleDelete={handleDelete} />;
-      case 'GaleriaWeb': return <GaleriaWebAdminView data={{ user }} />;
-      case 'Mapa': return <MapaView data={data} loading={loading} ActivityIndicator={ActivityIndicator} setReadItem={setReadItem} setActiveTab={setActiveTab} />;
-      case 'Dashboard': return <DashboardView loading={loading} data={data} user={user} formatSafeDate={formatSafeDate} setActiveTab={setActiveTab} handleApprove={handleApprove} ActivityIndicator={ActivityIndicator} />;
-      case 'Chat':
-        return (
-          <MisMensajesView 
-            loading={loading}
-            ActivityIndicator={ActivityIndicator}
-            data={data}
-            showSearchChat={showSearchChat}
-            setShowSearchChat={setShowSearchChat}
-            openChatPersonal={openChatPersonal}
-            SafeImage={SafeImage}
-            activeChat={activeChat}
-            user={user}
-            formatSafeDate={formatSafeDate}
-            chatLoading={chatLoading}
-            chatMessages={chatMessages}
-            handleSendChat={handleSendChat}
-            nuevoMensaje={nuevoMensaje}
-            setNuevoMensaje={setNuevoMensaje}
-          />
-        );
-      case 'Perfil': return <PerfilView data={data} loading={loading} ActivityIndicator={ActivityIndicator} SafeImage={SafeImage} isProfileEditing={isProfileEditing} setIsProfileEditing={setIsProfileEditing} profileData={profileData} setProfileData={setProfileData} handleUpdatePerfil={handleUpdatePerfil} getSafeDateForInput={getSafeDateForInput} formatSafeDate={formatSafeDate} />;
-      case 'Redes': return <RedesAdminView loading={loading} fetchData={fetchData} />;
-      case 'WebConfig': return <WebConfigView loading={loading} setLoading={setLoading} />;
-      case 'OfsConfig': return <OfsConfigView loading={loading} setLoading={setLoading} />;
-      case 'Fraternidades': return <FraternidadesAdminView fraternidades={filteredData} loading={loading} fetchData={fetchData} />;
-      case 'Comunicacion': return <ComunicacionView loading={loading} setLoading={setLoading} hermanos={data.hermanos || []} />;
-      case 'Mensajes': return <MensajesAdminView loading={loading} ActivityIndicator={ActivityIndicator} data={data} openChatAdmin={openChatAdmin} formatSafeDate={formatSafeDate} />;
-      case 'Espiritu': return <EspirituList filteredData={filteredData} espirituTab={espirituTab} setEspirituTab={setEspirituTab} openEditModal={openEditModal} handleDelete={handleDelete} />;
-      case 'Asistente': return <AsistenteIAView />;
-      case 'Consejo':
-        return <Consejo miembrosData={filteredData} />;
-      default:
-        if (filteredData.length > 0) {
-          return (
-            <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
-              {filteredData.map((item, index) => (
-                <div 
-                  key={item._id || index} 
-                  className="glass-card animate-fade" 
-                  style={{ padding: '1.5rem', position: 'relative', cursor: 'pointer' }}
-                  onClick={() => openEditModal(item)}
-                >
-                  <h3 style={{ marginBottom: '0.5rem', color: 'var(--primary)' }}>
-                    {item.titulo || item.nombreCompleto || item.nombre || 'Registro sin título'}
-                  </h3>
-                  <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                    {item.contenido || item.descripcion || item.email || item.username || ''}
-                  </p>
-                  
-                  {activeTab === 'Hermanos' && (
-                    <div style={{ marginTop: '1rem' }}>
-                      <span style={{ fontSize: '0.8rem', padding: '0.2rem 0.5rem', borderRadius: '4px', background: item.activo ? 'rgba(76, 175, 80, 0.1)' : 'rgba(244, 67, 54, 0.1)', color: item.activo ? '#4CAF50' : '#F44336' }}>
-                        {item.activo ? 'Activo (Aprobado)' : 'Pendiente de Aprobación'}
-                      </span>
-                      {!item.activo && (
-                        <button 
-                          onClick={(e) => handleApprove(item._id, e)}
-                          style={{ display: 'block', marginTop: '10px', background: '#4CAF50', color: 'white', border: 'none', padding: '0.5rem', borderRadius: '8px', cursor: 'pointer', width: '100%', fontWeight: 'bold' }}>
-                          Aprobar Acceso
-                        </button>
-                      )}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          );
-        }
-        return (
-          <div className="glass-card animate-fade" style={{ textAlign: 'center', padding: '4rem 2rem' }}>
-            <div style={{ fontSize: '4rem', marginBottom: '1.5rem', opacity: 0.2 }}>🔍</div>
-            <h3 style={{ color: 'var(--primary)', marginBottom: '0.5rem' }}>No se encontraron registros</h3>
-            <p style={{ color: "var(--text-muted)", maxWidth: '400px', margin: '0 auto' }}>
-              {data.length === 0 
-                ? `Actualmente no hay datos cargados en el módulo de ${activeTab}.` 
-                : 'No hay resultados que coincidan con tu búsqueda o filtro actual.'}
-            </p>
-            {activeTab === 'Hermanos' && (
-              <button 
-                onClick={() => {setHermanosFilter('todos'); setSearchTerm('');}}
-                className="btn btn-ghost"
-                style={{ marginTop: '1.5rem', fontSize: '0.85rem' }}
-              >
-                Ver todos los hermanos
-              </button>
-            )}
-          </div>
-        );
     }
   };
 
@@ -1294,46 +609,9 @@ const Dashboard = ({ user, onLogout }) => {
                   placeholder={`Buscar en ${activeTab}...`} 
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  style={{ width: '100%', paddingLeft: '35px', paddingRight: '1rem', paddingTop: '0.6rem', paddingBottom: '0.6rem', borderRadius: '12px', border: '1px solid rgba(139, 90, 43, 0.2)', backgroundColor: 'var(--surface)' }}
+                  style={{ width: '100%', paddingLeft: '35px', paddingRight: '1rem' }}
                 />
               </div>
-
-            <div className="flex-responsive" style={{ gap: '1rem' }}>
-              {activeTab === 'Asistencia' ? (
-                <>
-                  <button 
-                    className="btn zoom-hover" 
-                    style={{ background: '#1D6F42', color: 'white', border: 'none', fontWeight: 'bold' }} 
-                    onClick={() => setIsExportModalOpen(true)}
-                  >
-                    📊 <span className="desktop-only">Descargar Excel</span>
-                  </button>
-                  <button 
-                    onClick={() => {
-                      const hActivos = (Array.isArray(data.hermanos) ? data.hermanos : []).filter(h => h.activo);
-                      setBulkList(hActivos.map(h => ({ ...h, presente: false })));
-                      setShowBulkAsistencia(true);
-                    }}
-                    className="btn btn-primary zoom-hover" 
-                    style={{ background: 'var(--primary)', boxShadow: '0 4px 15px rgba(139, 90, 43, 0.4)', fontWeight: 'bold', whiteSpace: 'nowrap' }}
-                  >
-                    📝 Tomar Asistencia
-                  </button>
-                </>
-              ) : activeTab === 'Actas' ? (
-                <button className="btn btn-primary zoom-hover" onClick={() => setIsModalOpen(true)} style={{ background: '#795548', whiteSpace: 'nowrap', boxShadow: '0 4px 15px rgba(139, 90, 43, 0.4)' }}>
-                  📝 Redactar Acta
-                </button>
-              ) : activeTab === 'Hermanos' ? (
-                <button className="btn btn-primary zoom-hover" onClick={() => setIsModalOpen(true)} style={{ whiteSpace: 'nowrap', boxShadow: '0 4px 15px rgba(139, 90, 43, 0.4)' }}>
-                  👤 + Añadir Hermano
-                </button>
-              ) : !['Hermanos', 'Asistencia', 'Solicitudes', 'WebConfig', 'OfsConfig', 'Perfil', 'Comunicacion', 'Asistente', 'Mensajes', 'Chat', 'Fraternidades'].includes(activeTab) && (
-                <button className="btn btn-primary zoom-hover" onClick={() => setIsModalOpen(true)} style={{ whiteSpace: 'nowrap', boxShadow: '0 4px 15px rgba(139, 90, 43, 0.4)' }}>
-                  + Nuevo
-                </button>
-              )}
-            </div>
           </div>
         </header>
 
@@ -1368,169 +646,50 @@ const Dashboard = ({ user, onLogout }) => {
           </div>
         )}
         
-        {activeTab === 'Anuncios' && (
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
-            {[{ id: 'todos', label: 'Todos', icon: '📋' }, { id: 'urgente', label: 'Urgentes', icon: '🚨' }, { id: 'evento', label: 'Eventos', icon: '📅' }, { id: 'formacion', label: 'Formación', icon: '📖' }, { id: 'apostolado', label: 'Apostolado', icon: '🙏' }].map(filtro => (
-              <button
-                key={filtro.id}
-                className={`btn ${anunciosFilter === filtro.id ? 'btn-primary' : ''}`}
-                onClick={() => setAnunciosFilter(filtro.id)}
-                style={{ background: anunciosFilter !== filtro.id ? 'var(--surface)' : '', color: anunciosFilter !== filtro.id ? 'var(--text-main)' : '', border: '1px solid var(--border)', whiteSpace: 'nowrap' }}
-              >
-                {filtro.icon} {filtro.label}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {activeTab === 'Actas' && (
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
-            {[{ id: 'todas', label: 'Todas las Actas', bg: 'var(--surface)' }, { id: 'consejo', label: 'Consejo', bg: '#0288D115', border: '#0288D1' }, { id: 'fraternidad', label: 'Fraternidad', bg: '#388E3C15', border: '#388E3C' }, { id: 'formacion', label: 'Formación', bg: '#F57C0015', border: '#F57C00' }, { id: 'extraordinaria', label: 'Extraordinarias', bg: '#D32F2F15', border: '#D32F2F' }].map(filtro => (
-              <button
-                key={filtro.id}
-                className={`btn ${actasFilter === filtro.id ? 'btn-primary' : ''}`}
-                onClick={() => setActasFilter(filtro.id)}
-                style={{ 
-                  background: actasFilter === filtro.id ? filtro.border || 'var(--primary)' : filtro.bg || 'var(--surface)', 
-                  color: actasFilter === filtro.id ? 'white' : 'var(--text-main)', 
-                  border: `1px solid ${filtro.border || 'var(--border)'}`, 
-                  whiteSpace: 'nowrap',
-                  fontWeight: actasFilter === filtro.id ? 'bold' : 'normal'
-                }}
-              >
-                {filtro.label}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {activeTab === 'Cantos' && (
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
-            {[{ id: 'todos', label: 'Todos', icon: '🎵' }, { id: 'franciscano', label: 'Franciscanos', icon: '🕊️' }, { id: 'mariano', label: 'Marianos', icon: '🌹' }, { id: 'entrada', label: 'Entrada', icon: '🚶' }, { id: 'animacion', label: 'Animación', icon: '🎸' }, { id: 'adoracion', label: 'Adoración', icon: '🙏' }].map(filtro => (
-              <button
-                key={filtro.id}
-                className={`btn ${cantosFilter === filtro.id ? 'btn-primary' : ''}`}
-                onClick={() => setCantosFilter(filtro.id)}
-                style={{ background: cantosFilter !== filtro.id ? 'var(--surface)' : '', color: cantosFilter !== filtro.id ? 'var(--text-main)' : '', border: '1px solid var(--border)', whiteSpace: 'nowrap' }}
-              >
-                {filtro.icon} {filtro.label}
-              </button>
-            ))}
-          </div>
-        )}
-
         <div className="mt-4">
-          {activeTab === 'Dashboard' ? (
-            <DashboardView 
-              loading={loading} 
-              data={data} 
-              user={user} 
-              formatSafeDate={formatSafeDate} 
-              setActiveTab={setActiveTab} 
-              handleApprove={handleApprove} 
-              ActivityIndicator={ActivityIndicator}
-              setIsModalOpen={setIsModalOpen}
+          <Routes>
+          <Route path="/" element={<DashboardView user={user} formatSafeDate={formatSafeDate} setActiveTab={setActiveTab} ActivityIndicator={ActivityIndicator} />} />
+          <Route path="hermanos" element={<HermanosView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
+          <Route path="anuncios" element={<AnunciosView formatSafeDate={formatSafeDate} SafeImage={SafeImage} ActivityIndicator={ActivityIndicator} />} />
+          <Route path="eventos" element={<EventosView formatSafeDate={formatSafeDate} SafeImage={SafeImage} ActivityIndicator={ActivityIndicator} />} />
+          <Route path="servicios" element={<ServiciosView formatSafeDate={formatSafeDate} SafeImage={SafeImage} ActivityIndicator={ActivityIndicator} />} />
+          <Route path="peticiones" element={<PeticionesView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
+          <Route path="formacion" element={<FormacionView formatSafeDate={formatSafeDate} SafeImage={SafeImage} ActivityIndicator={ActivityIndicator} />} />
+          <Route path="actas" element={<ActasView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
+          <Route path="documentos" element={<DocumentosView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
+          <Route path="galeria" element={<GaleriaView formatSafeDate={formatSafeDate} SafeImage={SafeImage} ActivityIndicator={ActivityIndicator} />} />
+          <Route path="cantos" element={<CantosView ActivityIndicator={ActivityIndicator} />} />
+          <Route path="asistencia" element={<AsistenciaView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
+          <Route path="solicitudes" element={<SolicitudesView formatSafeDate={formatSafeDate} />} />
+          <Route path="mapa" element={<MapaView ActivityIndicator={ActivityIndicator} setActiveTab={setActiveTab} />} />
+          <Route path="chat" element={
+            <MisMensajesView 
+              openChatPersonal={openChatPersonal}
+              SafeImage={SafeImage}
+              activeChat={activeChat}
+              user={user}
+              formatSafeDate={formatSafeDate}
+              chatLoading={chatLoading}
+              chatMessages={chatMessages}
+              handleSendChat={handleSendChat}
+              nuevoMensaje={nuevoMensaje}
+              setNuevoMensaje={setNuevoMensaje}
             />
-          ) : currentView()}
+          } />
+          <Route path="perfil" element={<PerfilView ActivityIndicator={ActivityIndicator} SafeImage={SafeImage} />} />
+          <Route path="redes" element={<RedesAdminView loading={loading} fetchData={fetchData} />} />
+          <Route path="webconfig" element={<WebConfigView loading={loading} setLoading={setLoading} />} />
+          <Route path="ofsconfig" element={<OfsConfigView loading={loading} setLoading={setLoading} />} />
+          <Route path="fraternidades" element={<FraternidadesAdminView fraternidades={data || []} loading={loading} fetchData={fetchData} />} />
+          <Route path="consejo" element={<Consejo miembrosData={data || []} />} />
+          <Route path="comunicacion" element={<ComunicacionView loading={loading} setLoading={setLoading} hermanos={data?.hermanos || []} />} />
+          <Route path="mensajes" element={<MensajesAdminView loading={loading} ActivityIndicator={ActivityIndicator} data={data} openChatAdmin={openChatAdmin} formatSafeDate={formatSafeDate} />} />
+          <Route path="espiritu" element={<EspirituView />} />
+          <Route path="asistente" element={<AsistenteIAView />} />
+          <Route path="galeriaweb" element={<GaleriaWebAdminView data={data} loading={loading} fetchData={fetchData} />} />
+        </Routes>
         </div>
 
-        {/* Modal Window */}
-        {isModalOpen && (
-          <div className="modal-overlay">
-            <div className="modal-content animate-fade" style={{ maxHeight: '90vh', overflowY: 'auto' }}>
-              <h2>Añadir a {activeTab}</h2>
-              <form onSubmit={handleCreate}>
-                
-                {activeTab === 'Actas' ? (
-                  <ActasNewModal newItem={newItem} setNewItem={setNewItem} />
-                ) : activeTab === 'Documentos' ? (
-                  <DocumentosNewModal newItem={newItem} setNewItem={setNewItem} />
-                ) : activeTab === 'Peticiones' ? (
-                  <PeticionesNewModal newItem={newItem} setNewItem={setNewItem} />
-                ) : activeTab === 'Galeria' ? (
-                  <GaleriaNewModal newItem={newItem} setNewItem={setNewItem} />
-                ) : activeTab === 'Espiritu' ? (
-                  <EspirituNewModal newItem={newItem} setNewItem={setNewItem} />
-                ) : activeTab === 'Anuncios' ? (
-                  <AnunciosNewModal newItem={newItem} setNewItem={setNewItem} MapPicker={MapPicker} />
-                ) : activeTab === 'Cantos' ? (
-                  <CantosNewModal newItem={newItem} setNewItem={setNewItem} />
-                ) : activeTab === 'Formacion' ? (
-                  <FormacionNewModal newItem={newItem} setNewItem={setNewItem} />
-                ) : activeTab === 'Servicios' ? (
-                  <ServiciosNewModal newItem={newItem} setNewItem={setNewItem} MapPicker={MapPicker} />
-                ) : activeTab === 'Eventos' ? (
-                  <EventosNewModal newItem={newItem} setNewItem={setNewItem} MapPicker={MapPicker} />
-                ) : (
-                  <div className="input-group">
-                    <label>Título Principal</label>
-                    <input 
-                      type="text" 
-                      value={newItem.titulo || ''} 
-                      onChange={e => setNewItem({...newItem, titulo: e.target.value})} 
-                      required 
-                      placeholder="Escribe el título aquí"
-                    />
-                    <label style={{ marginTop: '1rem' }}>Contenido / Descripción</label>
-                    <textarea 
-                      value={newItem.contenido || ''} 
-                      onChange={e => setNewItem({...newItem, contenido: e.target.value})} 
-                      required 
-                      placeholder="Escribe los detalles aquí..."
-                      style={{ minHeight: '100px' }}
-                    />
-                  </div>
-                )}
-
-                <div className="modal-actions">
-                  <button type="button" className="btn btn-logout" style={{ width: 'auto'}} onClick={() => setIsModalOpen(false)}>Cancelar</button>
-                  <button type="submit" className="btn btn-primary">Guardar {activeTab}</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
-      {/* Edit Modal Window */}
-        {isEditModalOpen && selectedItem && (
-          <div className="modal-overlay">
-            <div className="modal-content animate-fade" style={{ maxHeight: '90vh', overflowY: 'auto' }}>
-              <h2>Editar {activeTab === 'Hermanos' ? 'Hermano' : 'Registro'}</h2>
-              <form onSubmit={handleUpdate}>
-                
-                {activeTab === 'Hermanos' ? (
-                  <HermanosEditModal selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
-                ) : activeTab === 'Anuncios' ? (
-                  <AnunciosEditModal selectedItem={selectedItem} setSelectedItem={setSelectedItem} MapPicker={MapPicker} />
-                ) : activeTab === 'Eventos' ? (
-                  <EventosEditModal selectedItem={selectedItem} setSelectedItem={setSelectedItem} MapPicker={MapPicker} getSafeDateForInput={getSafeDateForInput} />
-                ) : activeTab === 'Actas' ? (
-                  <ActasEditModal selectedItem={selectedItem} setSelectedItem={setSelectedItem} getSafeDateForInput={getSafeDateForInput} />
-                ) : activeTab === 'Cantos' ? (
-                  <CantosEditModal selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
-                ) : activeTab === 'Formacion' ? (
-                  <FormacionEditModal selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
-                ) : activeTab === 'Documentos' ? (
-                  <DocumentosEditModal selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
-                ) : activeTab === 'Servicios' ? (
-                  <ServiciosEditModal selectedItem={selectedItem} setSelectedItem={setSelectedItem} MapPicker={MapPicker} />
-                ) : activeTab === 'Espiritu' ? (
-                  <EspirituEditModal selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
-                ) : (
-                  <div className="glass-card animate-fade">
-                    <p style={{ color: 'var(--text-muted)' }}>La edición de este módulo estará disponible en la próxima actualización.</p>
-                  </div>
-                )}
-
-                <div className="modal-actions" style={{ marginTop: '2rem' }}>
-                  <button type="button" className="btn btn-logout" style={{ width: 'auto'}} onClick={() => setIsEditModalOpen(false)}>Cerrar</button>
-                  {['Hermanos', 'Anuncios', 'Eventos', 'Actas', 'Cantos', 'Formacion', 'Peticiones', 'Servicios', 'Documentos', 'Espiritu'].includes(activeTab) && (
-                    <button type="submit" className="btn btn-primary">Guardar Cambios</button>
-                  )}
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
         {/* Read Item Modal */}
         <ItemReadModal 
           readItem={readItem}
@@ -1545,132 +704,6 @@ const Dashboard = ({ user, onLogout }) => {
           ActivityIndicator={ActivityIndicator}
         />
 
-        {/* Modal de Asistencia Masiva */}
-        {showBulkAsistencia && (
-          <div className="modal-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(5px)' }}>
-            <div className="glass-card animate-fade" style={{ maxWidth: '700px', width: '90%', maxHeight: '90vh', display: 'flex', flexDirection: 'column', padding: '2.5rem' }}>
-               <h2 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>Registro de Asistencia Manual</h2>
-               
-               <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
-                  <div className="input-group" style={{ flex: 1 }}>
-                     <label>Fecha de la Reunión</label>
-                     <input type="date" value={bulkConfig.fecha} onChange={e => setBulkConfig({...bulkConfig, fecha: e.target.value})} />
-                  </div>
-                  <div className="input-group" style={{ flex: 1 }}>
-                     <label>Tipo de Encuentro</label>
-                     <select value={bulkConfig.tipoReunion} onChange={e => setBulkConfig({...bulkConfig, tipoReunion: e.target.value})}>
-                        <option value="semanal">Reunión Semanal</option>
-                        <option value="retiro">Retiro</option>
-                        <option value="festivo">Festividad</option>
-                        <option value="formacion">Taller/Formación</option>
-                     </select>
-                  </div>
-               </div>
-                <div style={{ marginBottom: '1.5rem', background: '#FFF7ED', padding: '1rem', borderRadius: '12px', border: '1px solid #FFEDD5' }}>
-                   <label style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#9A3412', display: 'block', marginBottom: '8px' }}>Invitados (Personas sin cuenta JUFRA):</label>
-                   <div style={{ display: 'flex', gap: '8px' }}>
-                      <input 
-                        type="text" 
-                        placeholder="Nombre completo del invitado..." 
-                        value={bulkGuestName} 
-                        onChange={e => setBulkGuestName(e.target.value)}
-                        onKeyPress={e => e.key === 'Enter' && (setBulkGuests([...bulkGuests, bulkGuestName]), setBulkGuestName(''))}
-                        style={{ flex: 1, padding: '0.6rem', borderRadius: '8px', border: '1px solid #FB923C' }} 
-                      />
-                      <button 
-                        onClick={() => { if(bulkGuestName.trim()){ setBulkGuests([...bulkGuests, bulkGuestName.trim()]); setBulkGuestName(''); } }}
-                        style={{ padding: '0 15px', background: '#FB923C', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
-                      >
-                        Añadir
-                      </button>
-                   </div>
-                   {bulkGuests.length > 0 && (
-                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '10px' }}>
-                        {bulkGuests.map((g, gi) => (
-                          <span key={gi} style={{ background: 'white', padding: '3px 10px', borderRadius: '15px', fontSize: '0.75rem', border: '1px solid #FFEDD5', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                             {g} <span onClick={() => setBulkGuests(bulkGuests.filter((_, i) => i !== gi))} style={{ cursor: 'pointer', color: '#F44336', fontWeight: 'bold' }}>×</span>
-                          </span>
-                        ))}
-                     </div>
-                   )}
-                </div>
-
-               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1rem', display: 'flex', justifyContent: 'space-between' }}>
-                  <span>REGISTRA EL ESTADO DE LOS HERMANOS:</span>
-                  <span style={{ fontWeight: 'bold' }}>{bulkList.filter(h => h.estado && h.estado !== 'falta').length} marcados + {bulkGuests.length} invitados</span>
-               </p>
-               <div style={{ flex: 1, overflowY: 'auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem', padding: '1rem', background: '#F9FAFB', borderRadius: '15px', border: '1px solid var(--border)' }}>
-                  {bulkList.map((h, i) => (
-                    <div key={h._id} style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '12px', background: 'white', borderRadius: '12px', border: h.estado && h.estado !== 'falta' ? '1px solid var(--primary)' : '1px solid #E5E7EB', boxShadow: '0 2px 4px rgba(0,0,0,0.03)' }}>
-                       <span style={{ fontSize: '0.95rem', fontWeight: 'bold', color: 'var(--text-main)' }}>{h.nombre} {h.apellido}</span>
-                        <select 
-                        value={h.estado || 'falta'} 
-                        onChange={(e) => {
-                          const nl = [...bulkList];
-                          nl[i].estado = e.target.value;
-                          setBulkList(nl);
-                        }}
-                        style={{ 
-                          padding: '6px', 
-                          borderRadius: '8px', 
-                          border: '1px solid #D1D5DB', 
-                          fontSize: '0.85rem',
-                          background: h.estado === 'presente' ? '#ECFDF5' : 
-                                    (h.estado === 'falta' ? '#FEF2F2' : 
-                                    (h.estado === 'permiso' ? '#FFFBEB' : 
-                                    '#EEF2FF')),
-                          color: h.estado === 'presente' ? '#065F46' : 
-                                 (h.estado === 'falta' ? '#991B1B' : 
-                                 (h.estado === 'permiso' ? '#92400E' : 
-                                 '#3730A3')),
-                          fontWeight: 'bold'
-                        }}
-                       >
-                          <option value="presente">✅ Presente</option>
-                          <option value="falta">❌ Falta</option>
-                          <option value="permiso">📝 Permiso</option>
-                          <option value="tardanza">⏰ Tardanza</option>
-                        </select>
-                    </div>
-                  ))}
-               </div>
-
-               <div style={{ display: 'flex', gap: '1rem', marginTop: '2.5rem', justifyContent: 'flex-end' }}>
-                  <button onClick={() => setShowBulkAsistencia(false)} className="btn" style={{ background: 'var(--border)' }}>Cancelar</button>
-                  <button onClick={handleSaveBulkAsistencia} className="btn btn-primary" style={{ padding: '0.8rem 2.5rem' }}>💾 Guardar Lista Final</button>
-               </div>
-            </div>
-          </div>
-        )}
-
-        {/* Export Modal Window */}
-        {isExportModalOpen && (
-          <div className="modal-overlay">
-            <div className="modal-content animate-fade">
-              <h2>Configuración de Reporte (Excel)</h2>
-              <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
-                Selecciona las fechas. Si dejas los campos vacíos, Descargarás <b>todo el historial completo</b> de la base de datos.
-              </p>
-              <form onSubmit={handleExportAsistencia}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                  <div className="input-group">
-                    <label>Desde (Fecha Inicial)</label>
-                    <input type="date" value={exportDates.start} onChange={e => setExportDates({...exportDates, start: e.target.value})} />
-                  </div>
-                  <div className="input-group">
-                    <label>Hasta (Fecha Final)</label>
-                    <input type="date" value={exportDates.end} onChange={e => setExportDates({...exportDates, end: e.target.value})} />
-                  </div>
-                </div>
-                
-                <div className="modal-actions" style={{ marginTop: '2rem' }}>
-                  <button type="button" className="btn btn-logout" style={{ width: 'auto'}} onClick={() => setIsExportModalOpen(false)}>Cancelar</button>
-                  <button type="submit" className="btn" style={{ background: '#1D6F42', color: 'white', border: 'none' }}>Generar y Descargar 📊</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
       </main>
     </div>
   );

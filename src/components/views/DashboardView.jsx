@@ -1,11 +1,39 @@
-import React, { useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   PieChart, Pie, Cell, Legend, AreaChart, Area 
 } from 'recharts';
+import api from '../../config/api';
 
-const DashboardView = ({ loading, data, user, formatSafeDate, setActiveTab, handleApprove, ActivityIndicator, setIsModalOpen }) => {
-  
+const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, setIsModalOpen }) => {
+  const [data, setData] = useState({ hermanos: [], anuncios: [], eventos: [], asistencias: [] });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const [hermanosRes, anunciosRes, eventosRes, asisRes] = await Promise.all([
+          api.get('/hermanos?todos=true'),
+          api.get('/anuncios'),
+          api.get('/eventos?todos=true'),
+          api.get('/asistencia')
+        ]);
+        setData({
+          hermanos: hermanosRes.data.hermanos || [],
+          anuncios: anunciosRes.data.anuncios || [],
+          eventos: eventosRes.data.eventos || [],
+          asistencias: asisRes.data.asistencias || (Array.isArray(asisRes.data) ? asisRes.data : [])
+        });
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
   // Procesamiento de Datos para Gráficos
   const chartData = useMemo(() => {
     if (!data) return { attendance: [], distribution: [], birthdays: [] };
