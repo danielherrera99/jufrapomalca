@@ -614,36 +614,6 @@ const Dashboard = ({ user, onLogout }) => {
           </div>
         </header>
 
-        {activeTab === 'Hermanos' && (
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
-            <button 
-              className={`btn ${hermanosFilter === 'pendientes' ? 'btn-primary' : ''}`} 
-              onClick={() => setHermanosFilter('pendientes')}
-              style={{ background: hermanosFilter !== 'pendientes' ? 'var(--surface)' : '', color: hermanosFilter !== 'pendientes' ? 'var(--text-main)' : '', border: '1px solid var(--border)', flex: 1, position: 'relative' }}
-            >
-              Nuevas Solicitudes (Pendientes)
-              {Array.isArray(data) && data.filter(h => !h.activo).length > 0 && (
-                <span style={{ marginLeft: '8px', background: 'var(--accent)', color: 'white', padding: '2px 8px', borderRadius: '10px', fontSize: '0.7rem', fontWeight: 'bold' }}>
-                  {data.filter(h => !h.activo).length}
-                </span>
-              )}
-            </button>
-            <button 
-              className={`btn ${hermanosFilter === 'activos' ? 'btn-primary' : ''}`} 
-              onClick={() => setHermanosFilter('activos')}
-              style={{ background: hermanosFilter !== 'activos' ? 'var(--surface)' : '', color: hermanosFilter !== 'activos' ? 'var(--text-main)' : '', border: '1px solid var(--border)', flex: 1 }}
-            >
-              Hermanos Activos
-            </button>
-            <button 
-              className={`btn ${hermanosFilter === 'todos' ? 'btn-primary' : ''}`} 
-              onClick={() => setHermanosFilter('todos')}
-              style={{ background: hermanosFilter !== 'todos' ? 'var(--surface)' : '', color: hermanosFilter !== 'todos' ? 'var(--text-main)' : '', border: '1px solid var(--border)', flex: 1 }}
-            >
-              Ver Todos
-            </button>
-          </div>
-        )}
         
         <div className="mt-4">
           <Routes>
