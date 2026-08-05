@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import api from '../../config/api';
 
 // Lista oficial de departamentos del Perú
@@ -10,7 +10,9 @@ const DEPARTAMENTOS_PERU = [
   'Tumbes', 'Ucayali'
 ].sort();
 
-const FraternidadesAdminView = ({ fraternidades = [], loading, fetchData }) => {
+const FraternidadesAdminView = ({ ActivityIndicator }) => {
+  const [fraternidades, setFraternidades] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [zonaFilter, setZonaFilter] = useState('todas');
   const [deptoFilter, setDeptoFilter] = useState('todos');
@@ -29,6 +31,22 @@ const FraternidadesAdminView = ({ fraternidades = [], loading, fetchData }) => {
     telefono: '',
     enlaceSocial: ''
   });
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response = await api.get('/fraternidades');
+      setFraternidades(response.data.fraternidades || []);
+    } catch (error) {
+      console.error('Error fetching fraternidades:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   // Calcular estadísticas para los KPI
   const stats = useMemo(() => {

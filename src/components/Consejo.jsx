@@ -1,6 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import api from '../config/api';
 
-const Consejo = ({ miembrosData }) => {
+const Consejo = () => {
+  const [miembrosData, setMiembrosData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchData = async () => {
+    try {
+      const response = await api.get('/hermanos?todos=true');
+      setMiembrosData(response.data.hermanos || []);
+    } catch (err) {
+      console.error('Error fetching consejo:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  if (loading) return <div className="animate-fade" style={{ textAlign: 'center', padding: '3rem' }}>Cargando consejo...</div>;
+
   // Filtrar solo los que tienen cargo
   const miembros = miembrosData.filter(h => h.cargo && h.cargo !== 'ninguno');
 

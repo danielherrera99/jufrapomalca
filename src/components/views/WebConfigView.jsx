@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../config/api';
 
-const WebConfigView = ({ loading, setLoading }) => {
+const WebConfigView = () => {
+  const [loading, setLoading] = useState(false);
   const [config, setConfig] = useState({
     heroTitle: '',
     heroSubtitle: '',

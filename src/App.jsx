@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import api from './config/api';
-import ItemReadModal from './components/ItemReadModal';
 import Consejo from './components/Consejo';
 import AnunciosView from './components/views/AnunciosView';
 import EventosView from './components/views/EventosView';
@@ -265,15 +264,11 @@ const Dashboard = ({ user, onLogout }) => {
   }, [location.pathname]);
 
   const setActiveTab = (tabId) => {
-    setData([]);
     setSearchTerm('');
     if (tabId === 'Dashboard') navigate('/dashboard');
     else navigate(`/dashboard/${tabId.toLowerCase()}`);
   };
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [readItem, setReadItem] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const formatSafeDate = (dateStr, fmt = 'dd MMM yyyy') => {
@@ -294,239 +289,7 @@ const Dashboard = ({ user, onLogout }) => {
     }
   };
 
-  // Mover auxiliares aquí
-  const getTipoIcon = (tipo) => {
-    switch (tipo) {
-        case 'urgente': return '🚨';
-        case 'evento': return '📅';
-        case 'formacion': return '📖';
-        case 'apostolado': return '🙏';
-        default: return '📢';
-    }
-  };
 
-  const getActaColor = (tipo) => {
-    switch (tipo) {
-      case 'consejo': return '#0288D1';
-      case 'fraternidad': return '#388E3C';
-      case 'formacion': return '#F57C00';
-      case 'extraordinaria': return '#D32F2F';
-      default: return '#757575';
-    }
-  };
-
-
-
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      let endpoint = '';
-      if (activeTab === 'Hermanos') endpoint = '/hermanos?todos=true';
-      else if (activeTab === 'Anuncios') endpoint = '/anuncios';
-      else if (activeTab === 'Eventos') endpoint = '/eventos?todos=true';
-      else if (activeTab === 'Servicios') endpoint = '/servicios';
-      else if (activeTab === 'Peticiones') endpoint = '/peticiones';
-      else if (activeTab === 'Solicitudes') endpoint = '/solicitudes';
-      else if (activeTab === 'Formacion') endpoint = '/formacion';
-      else if (activeTab === 'Actas') endpoint = '/actas';
-      else if (activeTab === 'Documentos') endpoint = '/documentos';
-      else if (activeTab === 'Galeria') endpoint = '/galeria';
-      else if (activeTab === 'Cantos') endpoint = '/cantos';
-      else if (activeTab === 'Asistencia') {
-        const [herRes] = await Promise.all([
-          api.get('/hermanos?todos=true')
-        ]);
-        setData({
-          asistencias: [],
-          hermanos: herRes.data.hermanos || []
-        });
-        setLoading(false);
-        return;
-      }
-      else if (activeTab === 'Consejo') endpoint = '/hermanos?todos=true';
-      else if (activeTab === 'Espiritu') endpoint = '/espiritualidad';
-      else if (activeTab === 'Mensajes') endpoint = '/mensajes/admin/todas';
-      else if (activeTab === 'Perfil') endpoint = '/auth/perfil';
-      else if (activeTab === 'Chat') endpoint = '/mensajes/conversaciones';
-      else if (activeTab === 'Fraternidades') endpoint = '/fraternidades';
-      else if (activeTab === 'GaleriaWeb') endpoint = '/galeria';
-      else if (activeTab === 'Comunicacion') {
-        const [herRes] = await Promise.all([
-          api.get('/hermanos?todos=true')
-        ]);
-        setData({
-          hermanos: herRes.data.hermanos || []
-        });
-        setLoading(false);
-        return;
-      }
-      else if (activeTab === 'Dashboard') {
-        const [hermanosRes, anunciosRes, eventosRes, asisRes] = await Promise.all([
-          api.get('/hermanos?todos=true'),
-          api.get('/anuncios'),
-          api.get('/eventos?todos=true'),
-          api.get('/asistencia')
-        ]);
-        setData({
-          hermanos: hermanosRes.data.hermanos || [],
-          anuncios: anunciosRes.data.anuncios || [],
-          eventos: eventosRes.data.eventos || [],
-          asistencias: asisRes.data.asistencias || []
-        });
-        setLoading(false);
-        return;
-      }
-      else if (activeTab === 'Mapa') {
-        const [eventosRes, anunciosRes, serviciosRes] = await Promise.all([
-          api.get('/eventos'),
-          api.get('/anuncios'),
-          api.get('/servicios')
-        ]);
-        setData({
-          eventos: eventosRes.data.eventos || [],
-          anuncios: anunciosRes.data.anuncios || [],
-          servicios: serviciosRes.data.servicios || []
-        });
-        setLoading(false);
-        return;
-      }
-
-      if (endpoint) {
-        const response = await api.get(endpoint);
-        // Map the responses correctly based on typical properties
-        const resData = response.data;
-        setData(resData.usuario || resData.conversaciones || resData.items || resData.galeria || resData.asistencias || resData.hermanos || resData.anuncios || resData.eventos || resData.servicios || resData.peticiones || resData.solicitudes || resData.data || resData.temas || resData.actas || resData.documentos || resData.fotos || resData.cantos || (Array.isArray(resData) ? resData : []));
-      } else {
-        setData([]); // Modulo sin endpoint programado aún
-      }
-    } catch (err) {
-      console.error('Error fetching data:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, [activeTab]);
-
-  const [isProfileEditing, setIsProfileEditing] = useState(false);
-  const [profileData, setProfileData] = useState({});
-
-  const handleUpdatePerfil = async (e) => {
-    e.preventDefault();
-    try {
-      // 1. Update basic info
-      await api.put('/auth/perfil', profileData);
-      
-      // 2. Update photo if provided
-      if (profileData.nuevaFotoFile) {
-        const formData = new FormData();
-        formData.append('foto', profileData.nuevaFotoFile);
-        await api.post('/auth/foto', formData);
-      }
-      
-      alert('Perfil actualizado con éxito ✅');
-      setIsProfileEditing(false);
-      fetchData();
-    } catch (err) {
-      alert('Error al actualizar perfil: ' + (err.response?.data?.message || err.message));
-    }
-  };
-
-  const [chatMessages, setChatMessages] = useState([]);
-  const [chatLoading, setChatLoading] = useState(false);
-  const [activeChat, setActiveChat] = useState(null);
-  const [nuevoMensaje, setNuevoMensaje] = useState("");
-  const [showSearchChat, setShowSearchChat] = useState(false);
-
-
-  const openChatPersonal = async (user2) => {
-    setActiveChat(user2);
-    setChatLoading(true);
-    try {
-      const response = await api.get(`/mensajes/chat/${user2._id}`);
-      if (response.data.success) {
-        setChatMessages(response.data.mensajes);
-      }
-    } catch (error) {
-       console.error("Error al cargar chat personal", error);
-    } finally {
-      setChatLoading(false);
-    }
-  };
-
-  const handleSendChat = async (e) => {
-    if (e) e.preventDefault();
-    if (!nuevoMensaje.trim() || !activeChat) return;
-
-    try {
-      const resp = await api.post('/mensajes/enviar', { destinatarioId: activeChat._id, contenido: nuevoMensaje });
-      if (resp.data.success) {
-        setChatMessages([...chatMessages, resp.data.mensaje]);
-        setNuevoMensaje("");
-      }
-    } catch (error) {
-       alert("Error al enviar mensaje");
-    }
-  };
-
-  const openChatAdmin = async (conv) => {
-    setReadItem({ ...conv, type: 'chat' });
-    setChatLoading(true);
-    try {
-      const response = await api.get(`/mensajes/admin/chat/${conv.usuario1._id}/${conv.usuario2._id}`);
-      if (response.data.success) {
-        setChatMessages(response.data.mensajes);
-      }
-    } catch (error) {
-       console.error("Error al cargar chat", error);
-    } finally {
-      setChatLoading(false);
-    }
-  };
-
-  const handleApprove = async (id, e) => {
-    e.stopPropagation();
-    try {
-      await api.put(`/hermanos/${id}`, { activo: true });
-      fetchData();
-    } catch (error) {
-      alert(`Error al aprobar: ${error.response?.data?.message || error.message}`);
-    }
-  };
-
-  const handleDelete = async (id, moduloRuta) => {
-    if (window.confirm('¿Estás totalmente seguro de que deseas eliminar esto?')) {
-      try {
-        await api.delete(`/${moduloRuta}/${id}`);
-        fetchData();
-      } catch (err) {
-        alert(`Error al intentar eliminar: ${err.message}`);
-      }
-    }
-  };
-
-  const handleOrar = async (id, e) => {
-    if (e) e.stopPropagation();
-    try {
-      await api.put(`/peticiones/${id}/orar`);
-      fetchData();
-    } catch (error) {
-      console.error('Error al registrar oración:', error);
-    }
-  };
-
-  const handleParticipar = async (id, e) => {
-    if (e) e.stopPropagation();
-    try {
-      const { data } = await api.put(`/servicios/${id}/participar`);
-      alert(data.message);
-      fetchData();
-    } catch (error) {
-      alert(error.response?.data?.message || 'Error al procesar inscripción');
-    }
-  };
 
   return (
     <div className="dashboard-layout">
@@ -632,47 +395,22 @@ const Dashboard = ({ user, onLogout }) => {
           <Route path="asistencia" element={<AsistenciaView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
           <Route path="solicitudes" element={<SolicitudesView formatSafeDate={formatSafeDate} />} />
           <Route path="mapa" element={<MapaView ActivityIndicator={ActivityIndicator} setActiveTab={setActiveTab} />} />
-          <Route path="chat" element={
-            <MisMensajesView 
-              openChatPersonal={openChatPersonal}
-              SafeImage={SafeImage}
-              activeChat={activeChat}
-              user={user}
-              formatSafeDate={formatSafeDate}
-              chatLoading={chatLoading}
-              chatMessages={chatMessages}
-              handleSendChat={handleSendChat}
-              nuevoMensaje={nuevoMensaje}
-              setNuevoMensaje={setNuevoMensaje}
-            />
-          } />
+          <Route path="chat" element={<MisMensajesView ActivityIndicator={ActivityIndicator} SafeImage={SafeImage} user={user} formatSafeDate={formatSafeDate} />} />
           <Route path="perfil" element={<PerfilView ActivityIndicator={ActivityIndicator} SafeImage={SafeImage} />} />
-          <Route path="redes" element={<RedesAdminView loading={loading} fetchData={fetchData} />} />
-          <Route path="webconfig" element={<WebConfigView loading={loading} setLoading={setLoading} />} />
-          <Route path="ofsconfig" element={<OfsConfigView loading={loading} setLoading={setLoading} />} />
-          <Route path="fraternidades" element={<FraternidadesAdminView fraternidades={data || []} loading={loading} fetchData={fetchData} />} />
-          <Route path="consejo" element={<Consejo miembrosData={data || []} />} />
-          <Route path="comunicacion" element={<ComunicacionView loading={loading} setLoading={setLoading} hermanos={data?.hermanos || []} />} />
-          <Route path="mensajes" element={<MensajesAdminView loading={loading} ActivityIndicator={ActivityIndicator} data={data} openChatAdmin={openChatAdmin} formatSafeDate={formatSafeDate} />} />
+          <Route path="redes" element={<RedesAdminView />} />
+          <Route path="webconfig" element={<WebConfigView />} />
+          <Route path="ofsconfig" element={<OfsConfigView />} />
+          <Route path="fraternidades" element={<FraternidadesAdminView />} />
+          <Route path="consejo" element={<Consejo />} />
+          <Route path="comunicacion" element={<ComunicacionView ActivityIndicator={ActivityIndicator} />} />
+          <Route path="mensajes" element={<MensajesAdminView ActivityIndicator={ActivityIndicator} formatSafeDate={formatSafeDate} />} />
           <Route path="espiritu" element={<EspirituView />} />
           <Route path="asistente" element={<AsistenteIAView />} />
-          <Route path="galeriaweb" element={<GaleriaWebAdminView data={data} loading={loading} fetchData={fetchData} />} />
+          <Route path="galeriaweb" element={<GaleriaWebAdminView />} />
         </Routes>
         </div>
 
-        {/* Read Item Modal */}
-        <ItemReadModal 
-          readItem={readItem}
-          setReadItem={setReadItem}
-          activeTab={activeTab}
-          chatMessages={chatMessages}
-          setChatMessages={setChatMessages}
-          chatLoading={chatLoading}
-          formatSafeDate={formatSafeDate}
-          getTipoIcon={getTipoIcon}
-          SafeImage={SafeImage}
-          ActivityIndicator={ActivityIndicator}
-        />
+
 
       </main>
     </div>

@@ -1,13 +1,70 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import api from '../../config/api';
 
 const MisMensajesView = ({ 
-  loading, ActivityIndicator, data, showSearchChat, setShowSearchChat, openChatPersonal, 
-  SafeImage, activeChat, user, formatSafeDate, chatLoading, chatMessages, 
-  handleSendChat, nuevoMensaje, setNuevoMensaje 
+  ActivityIndicator, 
+  SafeImage, user, formatSafeDate
 }) => {
-  if (loading) return <div style={{ textAlign: 'center', padding: '5rem' }}><ActivityIndicator /> Conectando al servidor...</div>;
+  const [conversaciones, setConversaciones] = useState([]);
+  const [hermanos, setHermanos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatLoading, setChatLoading] = useState(false);
+  const [activeChat, setActiveChat] = useState(null);
+  const [nuevoMensaje, setNuevoMensaje] = useState("");
+  const [showSearchChat, setShowSearchChat] = useState(false);
 
-  const conversaciones = Array.isArray(data) ? data : [];
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const [convRes, herRes] = await Promise.all([
+        api.get('/mensajes/conversaciones'),
+        api.get('/hermanos?todos=true')
+      ]);
+      setConversaciones(convRes.data.conversaciones || []);
+      setHermanos(herRes.data.hermanos || []);
+    } catch (err) {
+      console.error('Error fetching chats:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const openChatPersonal = async (user2) => {
+    setActiveChat(user2);
+    setChatLoading(true);
+    try {
+      const response = await api.get(`/mensajes/chat/${user2._id}`);
+      if (response.data.success) {
+        setChatMessages(response.data.mensajes);
+      }
+    } catch (error) {
+       console.error("Error al cargar chat personal", error);
+    } finally {
+      setChatLoading(false);
+    }
+  };
+
+  const handleSendChat = async (e) => {
+    if (e) e.preventDefault();
+    if (!nuevoMensaje.trim() || !activeChat) return;
+
+    try {
+      const resp = await api.post('/mensajes/enviar', { destinatarioId: activeChat._id, contenido: nuevoMensaje });
+      if (resp.data.success) {
+        setChatMessages([...chatMessages, resp.data.mensaje]);
+        setNuevoMensaje("");
+      }
+    } catch (error) {
+       alert("Error al enviar mensaje");
+    }
+  };
+
+  if (loading) return <div style={{ textAlign: 'center', padding: '5rem' }}><ActivityIndicator /> Cargando conversaciones...</div>;
 
   return (
     <div className="animate-fade" style={{ display: 'flex', height: 'calc(100vh - 220px)', border: '1px solid var(--border)', borderRadius: '20px', overflow: 'hidden', boxShadow: 'var(--shadow-lg)', background: 'white' }}>
@@ -29,7 +86,7 @@ const MisMensajesView = ({
               <div style={{ padding: '1rem' }}>
                  <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '10px' }}>BUSCAR HERMANO PARA CHATEAR:</p>
                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    {(data.hermanos || []).slice(0, 10).map(h => (
+                    {hermanos.slice(0, 10).map(h => (
                       <div key={h._id} onClick={() => { openChatPersonal(h); setShowSearchChat(false); }} className="zoom-hover" style={{ padding: '8px 12px', background: 'white', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', border: '1px solid var(--border)' }}>
                          <div style={{ width: '35px', height: '35px', borderRadius: '50%', background: 'var(--secondary)', overflow: 'hidden' }}>
                             <SafeImage src={h.foto} />

@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../../config/api';
 
-const ComunicacionView = ({ loading, setLoading, hermanos = [] }) => {
+const ComunicacionView = ({ ActivityIndicator }) => {
+  const [hermanos, setHermanos] = useState([]);
+  const [loadingPage, setLoadingPage] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     filtro: 'todos',
     asunto: '',
@@ -9,6 +12,21 @@ const ComunicacionView = ({ loading, setLoading, hermanos = [] }) => {
     correoManual: '',
     usuarioId: ''
   });
+
+  const fetchData = async () => {
+    try {
+      const response = await api.get('/hermanos?todos=true');
+      setHermanos(response.data.hermanos || []);
+    } catch (err) {
+      console.error('Error fetching hermanos:', err);
+    } finally {
+      setLoadingPage(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,7 +64,10 @@ const ComunicacionView = ({ loading, setLoading, hermanos = [] }) => {
   };
 
   // Filtrar solo hermanos que tengan correo para la lista individual
+  // Filtrar solo hermanos que tengan correo para la lista individual
   const hermanosConCorreo = hermanos.filter(h => h.email);
+
+  if (loadingPage) return <div className="animate-fade" style={{ textAlign: 'center', padding: '3rem' }}><ActivityIndicator /> Cargando contactos...</div>;
 
   return (
     <div className="animate-fade" style={{ maxWidth: '800px', margin: '0 auto' }}>
