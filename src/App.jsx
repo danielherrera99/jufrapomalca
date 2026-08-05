@@ -265,7 +265,6 @@ const Dashboard = ({ user, onLogout }) => {
 
   const setActiveTab = (tabId) => {
     setData([]);
-    setSelectedAsistenciaDate(null);
     setSearchTerm('');
     if (tabId === 'Dashboard') navigate('/dashboard');
     else navigate(`/dashboard/${tabId.toLowerCase()}`);
