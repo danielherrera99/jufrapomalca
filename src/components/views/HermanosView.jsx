@@ -99,24 +99,32 @@ const HermanosView = ({ handleApprove }) => {
         </div>
       </div>
 
-      <div className="tabs-container" style={{ marginBottom: '1.5rem' }}>
+      <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
         <button 
-          className={`tab-btn ${hermanosFilter === 'todos' ? 'active' : ''}`}
+          className={`btn ${hermanosFilter === 'todos' ? 'btn-primary' : ''}`}
           onClick={() => setHermanosFilter('todos')}
+          style={{ background: hermanosFilter !== 'todos' ? 'var(--surface)' : '', color: hermanosFilter !== 'todos' ? 'var(--text-main)' : '', border: '1px solid var(--border)', flex: 1 }}
         >
           Todos los Registros
         </button>
         <button 
-          className={`tab-btn ${hermanosFilter === 'activos' ? 'active' : ''}`}
+          className={`btn ${hermanosFilter === 'activos' ? 'btn-primary' : ''}`}
           onClick={() => setHermanosFilter('activos')}
+          style={{ background: hermanosFilter !== 'activos' ? 'var(--surface)' : '', color: hermanosFilter !== 'activos' ? 'var(--text-main)' : '', border: '1px solid var(--border)', flex: 1 }}
         >
           Hermanos Activos
         </button>
         <button 
-          className={`tab-btn ${hermanosFilter === 'inactivos' ? 'active' : ''}`}
+          className={`btn ${hermanosFilter === 'inactivos' ? 'btn-primary' : ''}`}
           onClick={() => setHermanosFilter('inactivos')}
+          style={{ background: hermanosFilter !== 'inactivos' ? 'var(--surface)' : '', color: hermanosFilter !== 'inactivos' ? 'var(--text-main)' : '', border: '1px solid var(--border)', flex: 1, position: 'relative' }}
         >
           Solicitudes Pendientes
+          {Array.isArray(data) && data.filter(h => !h.activo).length > 0 && (
+            <span style={{ marginLeft: '8px', background: 'var(--accent)', color: 'white', padding: '2px 8px', borderRadius: '10px', fontSize: '0.7rem', fontWeight: 'bold' }}>
+              {data.filter(h => !h.activo).length}
+            </span>
+          )}
         </button>
       </div>
 
