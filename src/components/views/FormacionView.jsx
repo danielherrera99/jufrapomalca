@@ -21,7 +21,7 @@ const FormacionView = () => {
     try {
       const response = await api.get('/formacion');
       const resData = response.data;
-      setData(resData.formacion || (Array.isArray(resData) ? resData : []));
+      setData(resData.temas || (Array.isArray(resData) ? resData : []));
     } catch (err) {
       console.error('Error fetching formacion:', err);
     } finally {

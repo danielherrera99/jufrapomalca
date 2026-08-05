@@ -36,7 +36,7 @@ const FraternidadesAdminView = ({ ActivityIndicator }) => {
     setLoading(true);
     try {
       const response = await api.get('/fraternidades');
-      setFraternidades(response.data.fraternidades || []);
+      setFraternidades(response.data.data || []);
     } catch (error) {
       console.error('Error fetching fraternidades:', error);
     } finally {
