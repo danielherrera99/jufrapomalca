@@ -213,6 +213,10 @@ const Login = ({ onLogin }) => {
           </div>
 
           <button type="submit" className="btn btn-primary w-full">Ingresar al Panel</button>
+          
+          <a href="/" className="btn btn-ghost w-full" style={{ marginTop: '1rem', textDecoration: 'none', display: 'block', textAlign: 'center' }}>
+            ← Volver a la página principal
+          </a>
         </form>
       </div>
     </div>
