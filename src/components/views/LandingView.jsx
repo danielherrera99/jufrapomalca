@@ -647,6 +647,12 @@ const LandingView = () => {
                   </div>
                 </div>
               </div>
+
+              <div style={{ marginTop: '2rem' }}>
+                <Link to="/celebraciones" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none', padding: '0.8rem 1.5rem', borderRadius: '50px', background: 'var(--primary)', color: 'white', fontWeight: 'bold', boxShadow: '0 5px 15px rgba(0,0,0,0.1)' }}>
+                  Ver más celebraciones <span>→</span>
+                </Link>
+              </div>
             </div>
 
             {/* Imagen Representativa (Placeholder) */}
@@ -654,7 +660,7 @@ const LandingView = () => {
               <div style={{ width: '100%', height: '400px', background: 'var(--secondary)', borderRadius: '20px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.1)', position: 'relative' }}>
                 {/* Puedes reemplazar la URL de la imagen aquí cuando tengas una foto real de la fraternidad */}
                 <img 
-                  src="/assets/hero_jufra_background.png" 
+                  src="/hero_jufra_background.png" 
                   alt="Fraternidad JUFRA Pomalca" 
                   style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.9 }} 
                 />
