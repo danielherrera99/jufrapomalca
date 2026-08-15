@@ -609,6 +609,66 @@ const LandingView = () => {
           </div>
         </section>
 
+        {/* Sección Nuestras Celebraciones */}
+        <section id="celebraciones" className="section-padding" style={{ background: '#FFFFFF' }}>
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <span style={{ color: 'var(--primary)', fontWeight: 'bold', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Vida Fraterna</span>
+            <h2 className="section-title" style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>Nuestras Celebraciones</h2>
+            <p style={{ color: 'var(--text-muted)', maxWidth: '700px', margin: '0 auto' }}>
+              Nos reunimos constantemente para celebrar nuestra fe y compartir como hermanos. Conoce el propósito de nuestros encuentros:
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', maxWidth: '1200px', margin: '0 auto', padding: '0 1rem' }}>
+            
+            {/* Qué */}
+            <div className="celebracion-card" style={{ background: '#FAF6F0', borderRadius: '15px', padding: '1.5rem', borderTop: '4px solid var(--primary)', boxShadow: '0 5px 15px rgba(0,0,0,0.03)' }}>
+              <div style={{ fontSize: '2.5rem', marginBottom: '0.8rem' }}>🎉</div>
+              <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.1rem', fontWeight: 'bold' }}>¿Qué celebramos?</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
+                Encuentros de formación, oración fraterna, Eucaristías y jornadas de servicio social.
+              </p>
+            </div>
+
+            {/* Por qué */}
+            <div className="celebracion-card" style={{ background: '#FAF6F0', borderRadius: '15px', padding: '1.5rem', borderTop: '4px solid var(--secondary)', boxShadow: '0 5px 15px rgba(0,0,0,0.03)' }}>
+              <div style={{ fontSize: '2.5rem', marginBottom: '0.8rem' }}>❤️</div>
+              <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.1rem', fontWeight: 'bold' }}>¿Por qué?</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
+                Porque sentimos el llamado de Dios a vivir el Santo Evangelio a ejemplo de San Francisco.
+              </p>
+            </div>
+
+            {/* Para qué */}
+            <div className="celebracion-card" style={{ background: '#FAF6F0', borderRadius: '15px', padding: '1.5rem', borderTop: '4px solid var(--tertiary)', boxShadow: '0 5px 15px rgba(0,0,0,0.03)' }}>
+              <div style={{ fontSize: '2.5rem', marginBottom: '0.8rem' }}>🕊️</div>
+              <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.1rem', fontWeight: 'bold' }}>¿Para qué?</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
+                Para crecer humana y espiritualmente, siendo instrumentos de paz y bien en nuestra sociedad.
+              </p>
+            </div>
+
+            {/* Cuándo */}
+            <div className="celebracion-card" style={{ background: '#FAF6F0', borderRadius: '15px', padding: '1.5rem', borderTop: '4px solid #FF9800', boxShadow: '0 5px 15px rgba(0,0,0,0.03)' }}>
+              <div style={{ fontSize: '2.5rem', marginBottom: '0.8rem' }}>🗓️</div>
+              <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.1rem', fontWeight: 'bold' }}>¿Cuándo?</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
+                Todos los sábados a partir de las 5:00 PM. (Horario referencial).
+              </p>
+            </div>
+
+            {/* Dónde */}
+            <div className="celebracion-card" style={{ background: '#FAF6F0', borderRadius: '15px', padding: '1.5rem', borderTop: '4px solid #E91E63', boxShadow: '0 5px 15px rgba(0,0,0,0.03)' }}>
+              <div style={{ fontSize: '2.5rem', marginBottom: '0.8rem' }}>📍</div>
+              <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.1rem', fontWeight: 'bold' }}>¿Dónde?</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
+                En los salones de la Parroquia de Pomalca o lugares designados por la fraternidad.
+              </p>
+            </div>
+
+          </div>
+        </section>
+
         {/* Sección JUFRA en el Perú (Mapa & Directorio Nacional) */}
         <section id="nacional" className="jufra-peru-section section-padding">
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
