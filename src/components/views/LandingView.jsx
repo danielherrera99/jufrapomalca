@@ -501,6 +501,46 @@ const LandingView = () => {
           </div>
         </section>
 
+        {/* Sección Etapas de un joven franciscano */}
+        <section id="etapas" className="section-padding" style={{ background: '#FFFFFF' }}>
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <span style={{ color: 'var(--primary)', fontWeight: 'bold', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Formación</span>
+            <h2 className="section-title" style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>Etapas de un joven franciscano</h2>
+            <p style={{ color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto' }}>
+              El camino vocacional en la Juventud Franciscana se vive de manera progresiva, madurando en la fe y en el compromiso fraterno a través de tres grandes etapas.
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', justifyContent: 'center', maxWidth: '1000px', margin: '0 auto', padding: '0 1rem' }}>
+            {/* Iniciado */}
+            <div className="etapa-card" style={{ flex: '1 1 250px', background: '#FAF6F0', borderRadius: '15px', padding: '2rem', textAlign: 'center', borderTop: '5px solid var(--tertiary)', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🌱</div>
+              <h3 style={{ color: 'var(--text-color)', marginBottom: '1rem', fontSize: '1.4rem' }}>Iniciado</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: '1.6' }}>
+                Tiempo de acercamiento, descubrimiento y conocimiento inicial de la Fraternidad y del hermoso carisma franciscano.
+              </p>
+            </div>
+
+            {/* Aceptado */}
+            <div className="etapa-card" style={{ flex: '1 1 250px', background: '#FAF6F0', borderRadius: '15px', padding: '2rem', textAlign: 'center', borderTop: '5px solid var(--secondary)', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🌿</div>
+              <h3 style={{ color: 'var(--text-color)', marginBottom: '1rem', fontSize: '1.4rem' }}>Aceptado</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: '1.6' }}>
+                Etapa de formación y discernimiento profundo de la vocación, participando activamente en la vida y misión fraterna.
+              </p>
+            </div>
+
+            {/* Comprometido */}
+            <div className="etapa-card" style={{ flex: '1 1 250px', background: '#FAF6F0', borderRadius: '15px', padding: '2rem', textAlign: 'center', borderTop: '5px solid var(--primary)', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🌳</div>
+              <h3 style={{ color: 'var(--text-color)', marginBottom: '1rem', fontSize: '1.4rem' }}>Comprometido</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: '1.6' }}>
+                Promesa formal ante Dios y la Iglesia de vivir el Santo Evangelio a la manera de San Francisco de Asís.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* Sección JUFRA en el Perú (Mapa & Directorio Nacional) */}
         <section id="nacional" className="jufra-peru-section section-padding">
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
