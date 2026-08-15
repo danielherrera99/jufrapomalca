@@ -541,6 +541,55 @@ const LandingView = () => {
           </div>
         </section>
 
+        {/* Sección Símbolos Franciscanos */}
+        <section id="simbolos" className="section-padding" style={{ background: '#FAF6F0' }}>
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <span style={{ color: 'var(--tertiary)', fontWeight: 'bold', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Nuestra Identidad</span>
+            <h2 className="section-title" style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>Símbolos Franciscanos</h2>
+            <p style={{ color: 'var(--text-muted)', maxWidth: '700px', margin: '0 auto' }}>
+              Estos son los principales símbolos que nos identifican y acompañan nuestra espiritualidad como hermanos de la Orden Franciscana.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '2rem', maxWidth: '1100px', margin: '0 auto', padding: '0 1rem' }}>
+            {/* La Tau */}
+            <div className="simbolo-card" style={{ background: '#FFFFFF', borderRadius: '15px', padding: '2rem', textAlign: 'center', boxShadow: '0 5px 20px rgba(0,0,0,0.04)' }}>
+              <div style={{ fontSize: '3.5rem', marginBottom: '1rem', color: 'var(--secondary)' }}>T</div>
+              <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.3rem' }}>La Tau</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
+                Es el signo de salvación y humildad que San Francisco adoptó como propia firma. Representa la cruz y nuestro profundo deseo de conversión.
+              </p>
+            </div>
+
+            {/* Cristo de San Damián */}
+            <div className="simbolo-card" style={{ background: '#FFFFFF', borderRadius: '15px', padding: '2rem', textAlign: 'center', boxShadow: '0 5px 20px rgba(0,0,0,0.04)' }}>
+              <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>✝️</div>
+              <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.3rem' }}>Cristo de San Damián</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
+                Es el ícono bizantino desde el cual Jesús le habló a Francisco pidiéndole: "Ve y repara mi Iglesia".
+              </p>
+            </div>
+
+            {/* Corona Seráfica */}
+            <div className="simbolo-card" style={{ background: '#FFFFFF', borderRadius: '15px', padding: '2rem', textAlign: 'center', boxShadow: '0 5px 20px rgba(0,0,0,0.04)' }}>
+              <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>📿</div>
+              <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.3rem' }}>Corona Seráfica</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
+                Conocida también como el Rosario Franciscano. Consiste en 7 misterios que meditan sobre las 7 alegrías de la Virgen María.
+              </p>
+            </div>
+
+            {/* Escapulario */}
+            <div className="simbolo-card" style={{ background: '#FFFFFF', borderRadius: '15px', padding: '2rem', textAlign: 'center', boxShadow: '0 5px 20px rgba(0,0,0,0.04)' }}>
+              <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>🛡️</div>
+              <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.3rem' }}>El Escapulario</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
+                Es una forma abreviada de llevar el hábito de penitencia. Significa consagración, devoción mariana y pertenencia a la gran familia franciscana.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* Sección JUFRA en el Perú (Mapa & Directorio Nacional) */}
         <section id="nacional" className="jufra-peru-section section-padding">
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
