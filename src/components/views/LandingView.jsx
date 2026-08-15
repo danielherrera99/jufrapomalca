@@ -619,51 +619,50 @@ const LandingView = () => {
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', maxWidth: '1200px', margin: '0 auto', padding: '0 1rem' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '3rem', maxWidth: '1100px', margin: '0 auto', padding: '0 1rem', alignItems: 'center' }}>
             
-            {/* Qué */}
-            <div className="celebracion-card" style={{ background: '#FAF6F0', borderRadius: '15px', padding: '1.5rem', borderTop: '4px solid var(--primary)', boxShadow: '0 5px 15px rgba(0,0,0,0.03)' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '0.8rem' }}>🎉</div>
-              <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.1rem', fontWeight: 'bold' }}>¿Qué celebramos?</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
-                Encuentros de formación, oración fraterna, Eucaristías y jornadas de servicio social.
+            {/* Texto y Propósito */}
+            <div style={{ flex: '1 1 500px' }}>
+              <h3 style={{ color: 'var(--text-color)', fontSize: '1.8rem', marginBottom: '1rem' }}>
+                Un espacio de fraternidad, oración y servicio
+              </h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+                Nos reunimos semana a semana porque sentimos el llamado profundo de Dios a vivir el Santo Evangelio a ejemplo de San Francisco de Asís. Nuestros encuentros están diseñados para crecer humana y espiritualmente, compartiendo momentos de formación, Eucaristía y proyección social, convirtiéndonos en verdaderos instrumentos de paz y bien.
               </p>
+              
+              <div style={{ background: '#FAF6F0', borderRadius: '15px', padding: '1.5rem', borderLeft: '5px solid var(--primary)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.8rem' }}>
+                  <span style={{ fontSize: '1.5rem', marginRight: '1rem' }}>🗓️</span>
+                  <div>
+                    <h4 style={{ color: 'var(--text-color)', fontSize: '1rem', margin: 0 }}>¿Cuándo nos reunimos?</h4>
+                    <p style={{ color: 'var(--text-muted)', margin: 0, fontSize: '0.9rem' }}>Todos los sábados a partir de las 5:00 PM</p>
+                  </div>
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ fontSize: '1.5rem', marginRight: '1rem' }}>📍</span>
+                  <div>
+                    <h4 style={{ color: 'var(--text-color)', fontSize: '1rem', margin: 0 }}>¿Dónde nos encontramos?</h4>
+                    <p style={{ color: 'var(--text-muted)', margin: 0, fontSize: '0.9rem' }}>En los salones de la Parroquia de Pomalca</p>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Por qué */}
-            <div className="celebracion-card" style={{ background: '#FAF6F0', borderRadius: '15px', padding: '1.5rem', borderTop: '4px solid var(--secondary)', boxShadow: '0 5px 15px rgba(0,0,0,0.03)' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '0.8rem' }}>❤️</div>
-              <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.1rem', fontWeight: 'bold' }}>¿Por qué?</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
-                Porque sentimos el llamado de Dios a vivir el Santo Evangelio a ejemplo de San Francisco.
-              </p>
-            </div>
-
-            {/* Para qué */}
-            <div className="celebracion-card" style={{ background: '#FAF6F0', borderRadius: '15px', padding: '1.5rem', borderTop: '4px solid var(--tertiary)', boxShadow: '0 5px 15px rgba(0,0,0,0.03)' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '0.8rem' }}>🕊️</div>
-              <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.1rem', fontWeight: 'bold' }}>¿Para qué?</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
-                Para crecer humana y espiritualmente, siendo instrumentos de paz y bien en nuestra sociedad.
-              </p>
-            </div>
-
-            {/* Cuándo */}
-            <div className="celebracion-card" style={{ background: '#FAF6F0', borderRadius: '15px', padding: '1.5rem', borderTop: '4px solid #FF9800', boxShadow: '0 5px 15px rgba(0,0,0,0.03)' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '0.8rem' }}>🗓️</div>
-              <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.1rem', fontWeight: 'bold' }}>¿Cuándo?</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
-                Todos los sábados a partir de las 5:00 PM. (Horario referencial).
-              </p>
-            </div>
-
-            {/* Dónde */}
-            <div className="celebracion-card" style={{ background: '#FAF6F0', borderRadius: '15px', padding: '1.5rem', borderTop: '4px solid #E91E63', boxShadow: '0 5px 15px rgba(0,0,0,0.03)' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '0.8rem' }}>📍</div>
-              <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.1rem', fontWeight: 'bold' }}>¿Dónde?</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
-                En los salones de la Parroquia de Pomalca o lugares designados por la fraternidad.
-              </p>
+            {/* Imagen Representativa (Placeholder) */}
+            <div style={{ flex: '1 1 400px', display: 'flex', justifyContent: 'center' }}>
+              <div style={{ width: '100%', height: '400px', background: 'var(--secondary)', borderRadius: '20px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.1)', position: 'relative' }}>
+                {/* Puedes reemplazar la URL de la imagen aquí cuando tengas una foto real de la fraternidad */}
+                <img 
+                  src="/assets/hero_jufra_background.png" 
+                  alt="Fraternidad JUFRA Pomalca" 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.9 }} 
+                />
+                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(transparent, rgba(0,0,0,0.7))', padding: '2rem 1.5rem 1.5rem' }}>
+                  <p style={{ color: '#fff', margin: 0, fontWeight: 'bold', fontSize: '1.1rem' }}>¡Paz y Bien!</p>
+                  <p style={{ color: '#ddd', margin: 0, fontSize: '0.9rem' }}>Te esperamos para vivir el carisma franciscano.</p>
+                </div>
+              </div>
             </div>
 
           </div>
