@@ -15,6 +15,7 @@ const QuienesSomosView = () => {
   const [formData, setFormData] = useState({
     nombre: '',
     rol: '',
+    descripcion: '',
     categoria: 'Consejo Local', // 'Consejo Local' o 'Hermanos'
     orden: 0,
     fotoUrl: '',
@@ -50,6 +51,7 @@ const QuienesSomosView = () => {
       setFormData({
         nombre: item.nombre || '',
         rol: item.rol || '',
+        descripcion: item.descripcion || '',
         categoria: item.categoria || 'Consejo Local',
         orden: item.orden || 0,
         fotoUrl: item.foto_url || item.fotoUrl || '',
@@ -61,6 +63,7 @@ const QuienesSomosView = () => {
       setFormData({
         nombre: '',
         rol: '',
+        descripcion: '',
         categoria: 'Consejo Local',
         orden: 0,
         fotoUrl: '',
@@ -187,6 +190,11 @@ const QuienesSomosView = () => {
               <div className="form-group" style={{ marginBottom: '15px' }}>
                 <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Rol / Cargo / Etapa</label>
                 <input type="text" name="rol" value={formData.rol} onChange={handleInputChange} className="form-control" style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd' }} placeholder="Ej: Ministro o Etapa de Iniciación" />
+              </div>
+
+              <div className="form-group" style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Descripción (Opcional)</label>
+                <textarea name="descripcion" value={formData.descripcion} onChange={handleInputChange} className="form-control" style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd', minHeight: '80px', resize: 'vertical' }} placeholder="Pequeña descripción, frase o reseña del hermano..." />
               </div>
 
               <div className="form-group" style={{ marginBottom: '15px' }}>

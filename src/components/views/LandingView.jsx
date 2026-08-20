@@ -605,6 +605,11 @@ const LandingView = () => {
                     </div>
                     <div className="hermano-name">{item.nombre}</div>
                     <div className="hermano-legend">{item.rol}</div>
+                    {item.descripcion && (
+                      <div style={{ marginTop: '0.8rem', fontSize: '0.85rem', color: 'var(--text-muted)', fontStyle: 'italic', lineHeight: '1.4' }}>
+                        "{item.descripcion}"
+                      </div>
+                    )}
                   </div>
                 ))
               ) : (
@@ -632,6 +637,11 @@ const LandingView = () => {
                       </div>
                       <div className="hermano-name">{item.nombre}</div>
                       <div className="hermano-legend">{item.rol}</div>
+                      {item.descripcion && (
+                        <div style={{ marginTop: '0.8rem', fontSize: '0.85rem', color: 'var(--text-muted)', fontStyle: 'italic', lineHeight: '1.4' }}>
+                          "{item.descripcion}"
+                        </div>
+                      )}
                     </div>
                   ))
                 ) : (
