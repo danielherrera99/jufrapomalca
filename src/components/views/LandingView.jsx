@@ -578,45 +578,42 @@ const LandingView = () => {
 
             {/* Organigrama del Consejo */}
             <h3 style={{ textAlign: 'center', color: 'var(--primary)', marginBottom: '2rem', fontFamily: 'var(--font-serif)', fontSize: '1.8rem' }}>Consejo Local</h3>
-            <div className="organigrama-container">
+            <div className="hermanos-grid">
               
-              <div className="org-level">
-                <div className="org-card">
-                  <div className="org-avatar"><SafeImage src="/images/placeholder-user.png" alt="Ministro" /></div>
-                  <div className="org-name">Fray Ejemplo</div>
-                  <div className="org-role">Ministro</div>
-                </div>
+              <div className="hermano-card">
+                <div className="hermano-avatar"><SafeImage src="/images/placeholder-user.png" alt="Ministro" /></div>
+                <div className="hermano-name">Fray Ejemplo</div>
+                <div className="hermano-legend">Ministro</div>
               </div>
 
-              <div className="org-level">
-                <div className="org-card">
-                  <div className="org-avatar"><SafeImage src="/images/placeholder-user.png" alt="Viceministro" /></div>
-                  <div className="org-name">Hermano 2</div>
-                  <div className="org-role">Viceministro</div>
-                </div>
-                <div className="org-card">
-                  <div className="org-avatar"><SafeImage src="/images/placeholder-user.png" alt="Responsable de Formación" /></div>
-                  <div className="org-name">Hermana 3</div>
-                  <div className="org-role">Resp. Formación</div>
-                </div>
+              <div className="hermano-card">
+                <div className="hermano-avatar"><SafeImage src="/images/placeholder-user.png" alt="Viceministro" /></div>
+                <div className="hermano-name">Hermano 2</div>
+                <div className="hermano-legend">Viceministro</div>
               </div>
 
-              <div className="org-level">
-                <div className="org-card">
-                  <div className="org-avatar"><SafeImage src="/images/placeholder-user.png" alt="Secretario" /></div>
-                  <div className="org-name">Hermano 4</div>
-                  <div className="org-role">Secretario</div>
-                </div>
-                <div className="org-card">
-                  <div className="org-avatar"><SafeImage src="/images/placeholder-user.png" alt="Tesorero" /></div>
-                  <div className="org-name">Hermana 5</div>
-                  <div className="org-role">Tesorero</div>
-                </div>
-                <div className="org-card">
-                  <div className="org-avatar"><SafeImage src="/images/placeholder-user.png" alt="Animador Fraterno" /></div>
-                  <div className="org-name">Hermano 6</div>
-                  <div className="org-role">Animador Fraterno</div>
-                </div>
+              <div className="hermano-card">
+                <div className="hermano-avatar"><SafeImage src="/images/placeholder-user.png" alt="Responsable de Formación" /></div>
+                <div className="hermano-name">Hermana 3</div>
+                <div className="hermano-legend">Resp. Formación</div>
+              </div>
+
+              <div className="hermano-card">
+                <div className="hermano-avatar"><SafeImage src="/images/placeholder-user.png" alt="Secretario" /></div>
+                <div className="hermano-name">Hermano 4</div>
+                <div className="hermano-legend">Secretario</div>
+              </div>
+
+              <div className="hermano-card">
+                <div className="hermano-avatar"><SafeImage src="/images/placeholder-user.png" alt="Tesorero" /></div>
+                <div className="hermano-name">Hermana 5</div>
+                <div className="hermano-legend">Tesorero</div>
+              </div>
+
+              <div className="hermano-card">
+                <div className="hermano-avatar"><SafeImage src="/images/placeholder-user.png" alt="Animador Fraterno" /></div>
+                <div className="hermano-name">Hermano 6</div>
+                <div className="hermano-legend">Animador Fraterno</div>
               </div>
 
             </div>
