@@ -22,6 +22,40 @@
   color: white;
   margin-bottom: 15px;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 10001;
+}
+
+.social-links-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px) scale(0.8);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  max-height: 0;
+}
+
+.social-links-container.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  max-height: 400px;
+}
+
+.toggle-social {
+  background: #8b5a2b;
+  box-shadow: 0 8px 32px rgba(139, 90, 43, 0.3);
+  margin-bottom: 15px;
+  z-index: 10001;
+}
+
+.toggle-social.active {
+  background: #ff5252;
+  box-shadow: 0 8px 32px rgba(255, 82, 82, 0.3);
+  transform: rotate(90deg);
 }
 
 .whatsapp-bubble:hover {
@@ -292,7 +326,7 @@
   align-items: center;
   justify-content: center;
   color: white;
-  margin-bottom: 15px;
+  /* margin-bottom is removed from here since container handles gap */
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
