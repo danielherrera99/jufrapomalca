@@ -1,4 +1,4 @@
-import { getImageUrl } from '../config/api';
+import { getImageUrl } from '../../config/api';
 import React from 'react';
 
 const GaleriaList = ({ filteredData, setReadItem, SafeImage, formatSafeDate, handleDelete }) => {

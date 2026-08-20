@@ -1,4 +1,4 @@
-import { getImageUrl } from './config/api';
+import { getImageUrl } from '../config/api';
 import React, { useState } from 'react';
 
 const SafeImage = ({ src, style, fallbackIcon }) => {
