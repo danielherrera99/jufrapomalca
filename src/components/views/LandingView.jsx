@@ -314,7 +314,7 @@ const LandingView = () => {
 
           <div className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
             <a href="#inicio" className={activeSection === 'inicio' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Inicio</a>
-            <a href="#mision" className={activeSection === 'mision' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Misión</a>
+            <a href="#mision" className={activeSection === 'mision' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Misión y Visión</a>
             <a href="#historia" className={activeSection === 'historia' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Nuestro Camino</a>
             <a href="#nacional" className={activeSection === 'nacional' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>JUFRA en el Perú</a>
             <a href="#galeria" className={activeSection === 'galeria' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Galería</a>
@@ -357,7 +357,7 @@ const LandingView = () => {
                   <path d="M12 2v20M5 7h14" />
                 </svg>
               </div>
-              <h3 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>Espiritualidad</h3>
+              <h3 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>Misión</h3>
               <p style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>{config.mision || 'Cultivando la fe a través de la oración y el encuentro fraterno.'}</p>
             </div>
             
@@ -367,7 +367,7 @@ const LandingView = () => {
                   <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
                 </svg>
               </div>
-              <h3 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>Formación</h3>
+              <h3 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>Visión</h3>
               <p style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>{config.vision || 'Preparándonos para ser instrumentos de paz en el mundo actual.'}</p>
             </div>
             
@@ -380,7 +380,7 @@ const LandingView = () => {
                   <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                 </svg>
               </div>
-              <h3 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>Fraternidad</h3>
+              <h3 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>Valores</h3>
               <p style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>{config.valores || 'Viviendo en comunidad, compartiendo la alegría de ser hermanos.'}</p>
             </div>
           </section>
