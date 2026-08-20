@@ -1,3 +1,4 @@
+import { getImageUrl } from '../config/api';
 import React, { useState, useEffect } from 'react';
 import api from '../config/api';
 
@@ -51,7 +52,7 @@ const Consejo = () => {
         <div key={miembro._id} className="glass-card animate-fade zoom-hover" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1.5rem', position: 'relative' }}>
           <div style={{ width: '80px', height: '80px', borderRadius: '40px', background: 'var(--primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.8rem', fontWeight: 'bold', boxShadow: '0 4px 15px rgba(0,0,0,0.1)', overflow: 'hidden' }}>
             {miembro.foto ? (
-              <img src={miembro.foto} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src={getImageUrl(miembro.foto)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             ) : (
               (miembro.nombre?.charAt(0) + miembro.apellido?.charAt(0))
             )}

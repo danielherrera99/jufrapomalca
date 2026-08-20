@@ -1,3 +1,4 @@
+import { getImageUrl } from './config/api';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import api from './config/api';
@@ -104,7 +105,7 @@ const SafeImage = ({ src, style, fallbackIcon }) => {
       </div>
     );
   }
-  return <img src={src} style={{ ...style, objectFit: 'cover', display: 'block' }} onError={() => setError(true)} alt="Anuncio" />;
+  return <img src={getImageUrl(src)} style={{ ...style, objectFit: 'cover', display: 'block' }} onError={() => setError(true)} alt="Anuncio" />;
 };;
 
 import './App.css';

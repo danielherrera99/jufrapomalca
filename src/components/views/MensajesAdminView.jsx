@@ -1,3 +1,4 @@
+import { getImageUrl } from '../../config/api';
 import React, { useState, useEffect } from 'react';
 import api from '../../config/api';
 
@@ -55,10 +56,10 @@ const MensajesAdminView = ({ ActivityIndicator, formatSafeDate }) => {
           >
             <div style={{ display: 'flex', position: 'relative', width: '80px', height: '50px' }}>
                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--primary)', position: 'absolute', left: 0, zIndex: 2, border: '2px solid white', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {conv.usuario1?.foto ? <img src={conv.usuario1.foto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="User 1" /> : <span style={{ color: 'white', fontWeight: 'bold' }}>{conv.usuario1?.nombre?.charAt(0)}</span>}
+                  {conv.usuario1?.foto ? <img src={getImageUrl(conv.usuario1.foto)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="User 1" /> : <span style={{ color: 'white', fontWeight: 'bold' }}>{conv.usuario1?.nombre?.charAt(0)}</span>}
                </div>
                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--secondary)', position: 'absolute', right: 0, zIndex: 1, border: '2px solid white', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {conv.usuario2?.foto ? <img src={conv.usuario2.foto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="User 2" /> : <span style={{ color: 'white', fontWeight: 'bold' }}>{conv.usuario2?.nombre?.charAt(0)}</span>}
+                  {conv.usuario2?.foto ? <img src={getImageUrl(conv.usuario2.foto)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="User 2" /> : <span style={{ color: 'white', fontWeight: 'bold' }}>{conv.usuario2?.nombre?.charAt(0)}</span>}
                </div>
             </div>
             <div style={{ flex: 1, overflow: 'hidden' }}>

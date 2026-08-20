@@ -1,3 +1,4 @@
+import { getImageUrl } from '../../config/api';
 import React, { useState, useEffect } from 'react';
 import api from '../../config/api';
 import { format, parseISO } from 'date-fns';
@@ -177,7 +178,7 @@ const PerfilView = ({ ActivityIndicator, SafeImage }) => {
                 <div style={{ textAlign: 'center', padding: '2rem', background: 'var(--surface)', borderRadius: '20px', border: '2px dashed var(--border)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                    <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', color: 'var(--primary)' }}>🆔 Mi Credencial Digital</h3>
                    {user.codigoQR ? (
-                     <img src={user.codigoQR} style={{ width: '180px', height: '180px', marginBottom: '1rem' }} alt="QR Identidad" />
+                     <img src={getImageUrl(user.codigoQR)} style={{ width: '180px', height: '180px', marginBottom: '1rem' }} alt="QR Identidad" />
                    ) : (
                      <div style={{ width: '180px', height: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f5f5', marginBottom: '1rem' }}><ActivityIndicator /></div>
                    )}

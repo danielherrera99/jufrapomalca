@@ -1,3 +1,4 @@
+import { getImageUrl } from '../../config/api';
 import React, { useState, useEffect } from 'react';
 import api from '../../config/api';
 
@@ -117,7 +118,7 @@ const GaleriaWebAdminView = () => {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
             {items.map(item => (
               <div key={item.id} style={{ border: '1px solid #ddd', borderRadius: '10px', overflow: 'hidden', background: '#fff' }}>
-                <img src={item.archivo_url || item.archivoUrl} alt={item.titulo} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
+                <img src={getImageUrl(item.archivo_url || item.archivoUrl)} alt={item.titulo} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
                 <div style={{ padding: '15px' }}>
                   <h3 style={{ margin: '0 0 10px 0' }}>{item.titulo}</h3>
                   <p style={{ margin: '0 0 10px 0', color: '#666', fontSize: '0.9rem' }}>{item.descripcion}</p>

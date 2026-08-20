@@ -1,3 +1,4 @@
+import { getImageUrl } from '../config/api';
 import React from 'react';
 
 const GaleriaList = ({ filteredData, setReadItem, SafeImage, formatSafeDate, handleDelete }) => {
@@ -76,11 +77,11 @@ const GaleriaList = ({ filteredData, setReadItem, SafeImage, formatSafeDate, han
           <div style={{ position: 'relative', height: '220px', overflow: 'hidden' }}>
             {item.tipoArchivo === 'video' ? (
               <div style={{ height: '100%', background: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <video src={item.archivoUrl} style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7 }} />
+                <video src={getImageUrl(item.archivoUrl)} style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7 }} />
                 <div style={{ position: 'absolute', background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(5px)', padding: '0.8rem', borderRadius: '50%', color: 'white', fontSize: '1.5rem', border: '2px solid white' }}>▶️</div>
               </div>
             ) : (
-              <SafeImage src={item.archivoUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <SafeImage src={getImageUrl(item.archivoUrl)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             )}
             
             {/* Overlay Gradient */}

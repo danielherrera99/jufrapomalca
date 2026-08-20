@@ -1,3 +1,4 @@
+import { getImageUrl } from '../../config/api';
 import React, { useState, useEffect } from 'react';
 import api from '../../config/api';
 
@@ -133,7 +134,7 @@ const RedesAdminView = () => {
               <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginLeft: 'auto' }}>{post.date_text}</span>
             </div>
             {post.image_url && (
-              <img src={post.image_url} alt="Thumbnail" style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: '8px' }} />
+              <img src={getImageUrl(post.image_url)} alt="Thumbnail" style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: '8px' }} />
             )}
             <p style={{ fontSize: '0.9rem', margin: 0, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
               {post.content}

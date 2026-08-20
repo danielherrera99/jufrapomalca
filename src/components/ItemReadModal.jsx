@@ -1,3 +1,4 @@
+import { getImageUrl } from '../config/api';
 import React from 'react';
 import api from '../config/api';
 
@@ -205,9 +206,9 @@ const ItemReadModal = ({
           <>
             <div style={{ padding: '0', background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '400px', position: 'relative' }}>
               {readItem.tipoArchivo === 'video' ? (
-                <video src={readItem.archivoUrl} controls autoPlay style={{ maxWidth: '100%', maxHeight: '70vh' }} />
+                <video src={getImageUrl(readItem.archivoUrl)} controls autoPlay style={{ maxWidth: '100%', maxHeight: '70vh' }} />
               ) : (
-                <img src={readItem.archivoUrl} alt={readItem.titulo} style={{ maxWidth: '100%', maxHeight: '75vh', objectFit: 'contain' }} />
+                <img src={getImageUrl(readItem.archivoUrl)} alt={readItem.titulo} style={{ maxWidth: '100%', maxHeight: '75vh', objectFit: 'contain' }} />
               )}
               <button 
                 onClick={() => setReadItem(null)}

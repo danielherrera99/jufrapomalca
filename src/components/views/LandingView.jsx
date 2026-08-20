@@ -1,3 +1,4 @@
+import { getImageUrl } from '../../config/api';
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../config/api';
@@ -1100,7 +1101,7 @@ const LandingView = () => {
           <div className="gallery-grid">
             {filteredGalleryItems.map(item => (
               <div key={item.id} className="gallery-card zoom-hover">
-                <img src={item.archivoUrl} alt={item.titulo} className="gallery-img" />
+                <img src={getImageUrl(item.archivoUrl)} alt={item.titulo} className="gallery-img" />
                 <div className="gallery-overlay">
                   <span className="gallery-overlay-cat">{item.categoria}</span>
                   <h4 className="gallery-overlay-title">{item.titulo}</h4>

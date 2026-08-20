@@ -13,4 +13,14 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+export const getImageUrl = (url) => {
+  if (!url) return '';
+  if (url.startsWith('http') || url.startsWith('data:')) {
+    return url;
+  }
+  const baseUrl = import.meta.env.VITE_API_URL || 'https://api-jufra.onrender.com/api';
+  const serverUrl = baseUrl.replace(/\/api\/?$/, '');
+  return `${serverUrl}${url.startsWith('/') ? '' : '/'}${url}`;
+};
+
 export default api;

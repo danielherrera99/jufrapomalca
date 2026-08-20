@@ -1,3 +1,4 @@
+import { getImageUrl } from './config/api';
 import React, { useState } from 'react';
 
 const SafeImage = ({ src, style, fallbackIcon }) => {
@@ -10,7 +11,7 @@ const SafeImage = ({ src, style, fallbackIcon }) => {
       </div>
     );
   }
-  return <img src={src} style={{ ...style, objectFit: 'cover', display: 'block' }} onError={() => setError(true)} alt="Imagen" />;
+  return <img src={getImageUrl(src)} style={{ ...style, objectFit: 'cover', display: 'block' }} onError={() => setError(true)} alt="Imagen" />;
 };
 
 export default SafeImage;
