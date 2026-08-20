@@ -1,6 +1,7 @@
 /* src/components/FloatingChat.jsx */
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import api from '../config/api';
 import './FloatingChat.css';
 
 const FloatingChat = () => {
@@ -10,6 +11,7 @@ const FloatingChat = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [config, setConfig] = useState({});
   const messagesEndRef = useRef(null);
   
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
@@ -21,6 +23,20 @@ const FloatingChat = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const res = await api.get('/web-config');
+        if (res.data.success) {
+          setConfig(res.data.data);
+        }
+      } catch (error) {
+        console.error("Error cargando web config en chat:", error);
+      }
+    };
+    fetchConfig();
+  }, []);
 
   const handleSend = async (e) => {
     if (e) e.preventDefault();
@@ -58,7 +74,7 @@ const FloatingChat = () => {
       
       {/* Botón Flotante de Facebook */}
       <a 
-        href="https://facebook.com/jufrapomalca" 
+        href={config.facebookUrl || "https://facebook.com/jufrapomalca"} 
         target="_blank" 
         rel="noopener noreferrer"
         className="social-bubble facebook"
@@ -70,7 +86,7 @@ const FloatingChat = () => {
       </a>
       {/* Botón Flotante de Instagram */}
       <a 
-        href="https://instagram.com/jufra.pomalca" 
+        href={config.instagramUrl || "https://instagram.com/jufra.pomalca"} 
         target="_blank" 
         rel="noopener noreferrer"
         className="social-bubble instagram"
@@ -82,7 +98,7 @@ const FloatingChat = () => {
       </a>
       {/* Botón Flotante de TikTok */}
       <a 
-        href="https://tiktok.com/@jufra.pomalca" 
+        href={config.tiktokUrl || "https://tiktok.com/@jufra.pomalca"} 
         target="_blank" 
         rel="noopener noreferrer"
         className="social-bubble tiktok"
@@ -92,9 +108,22 @@ const FloatingChat = () => {
           <svg viewBox="0 0 24 24" fill="currentColor" height="20" width="20"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.06-2.89-.53-4.09-1.37-.76-.53-1.43-1.22-1.93-2.02v6.18c.1 2.62-1.12 5.25-3.32 6.66-2.22 1.43-5.23 1.58-7.6 1.05-2.37-.53-4.52-2.23-5.46-4.53-1-2.45-.63-5.48 1.01-7.58 1.62-2.07 4.34-3.13 6.94-2.82 1.08.13 2.15.53 3.03 1.18V.02zm-3.24 10.74c-1.42-.23-2.92.36-3.72 1.57-.8 1.21-.83 2.89-.09 4.14.74 1.25 2.19 1.95 3.62 1.81 1.42-.14 2.7-1.15 3.12-2.52.42-1.37-.01-2.96-1.08-3.87-.73-.61-1.67-.98-2.63-1.13z"/></svg>
         </span>
       </a>
+      {/* Botón Flotante de YouTube */}
+      <a 
+        href={config.youtubeUrl || "https://youtube.com/@jufrapomalca"} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="social-bubble youtube"
+        title="YouTube"
+        style={{ background: '#FF0000', color: 'white' }}
+      >
+        <span className="icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" height="20" width="20"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.377.55a3.016 3.016 0 0 0-2.122 2.136C0 8.07 0 12 0 12s0 3.93.501 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.55 9.377.55 9.377.55s7.505 0 9.377-.55a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        </span>
+      </a>
       {/* Botón Flotante de WhatsApp */}
       <a 
-        href="https://wa.me/51981574685?text=¡Paz%20y%20bien!%20Me%20gustaría%20recibir%20información%20sobre%20la%20fraternidad." 
+        href={config.whatsappUrl || "https://wa.me/51981574685?text=¡Paz%20y%20bien!%20Me%20gustaría%20recibir%20información%20sobre%20la%20fraternidad."} 
         target="_blank" 
         rel="noopener noreferrer"
         className="whatsapp-bubble"
