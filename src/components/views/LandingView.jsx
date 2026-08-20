@@ -386,48 +386,6 @@ const LandingView = () => {
           </section>
         </div>
 
-        {/* Familia Franciscana Section */}
-        <section id="familia" className="section-padding" style={{ background: '#FFFAF3', position: 'relative', overflow: 'hidden' }}>
-          <div className="flex-responsive" style={{ maxWidth: '1100px', margin: '0 auto', alignItems: 'center', gap: '4rem' }}>
-            <div style={{ flex: '1.2', minWidth: '300px' }}>
-              <span style={{ color: 'var(--secondary)', fontWeight: 'bold', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Familia Global</span>
-              <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '1.5rem', marginTop: '0.5rem' }}>Nuestra Familia Franciscana</h2>
-              <h4 style={{ color: 'var(--primary)', marginBottom: '1.5rem', fontSize: '1.3rem', fontFamily: 'var(--font-serif)', fontStyle: 'italic' }}>{config.familiaTitulo || 'Orden Franciscana Seglar (OFS) y JUFRA Global'}</h4>
-              <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.9', textAlign: 'justify' }}>
-                {config.familiaDescripcion || 'Caminamos junto a nuestros hermanos mayores de la OFS, compartiendo el mismo ideal de vida y misión en la Iglesia. Asimismo, formamos parte de una inmensa fraternidad de jóvenes presente en los cinco continentes, compartiendo el carisma de San Francisco de Asís a nivel internacional.'}
-              </p>
-              <div style={{ marginTop: '2.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                <Link to="/familia-ofs" target="_blank" className="btn btn-ghost zoom-hover" style={{ padding: '1rem 2.5rem', textDecoration: 'none' }}>
-                  Conocer más de la OFS
-                </Link>
-                <a href="https://youfra.net/es/inicio/" target="_blank" rel="noopener noreferrer" className="btn btn-primary zoom-hover" style={{ padding: '1rem 2.5rem', textDecoration: 'none' }}>
-                  JUFRA en el Mundo 🌐
-                </a>
-              </div>
-            </div>
-            <div style={{ flex: '0.8', minWidth: '280px', textAlign: 'center', position: 'relative', display: 'flex', justifyContent: 'center' }}>
-               <div style={{ 
-                 width: '350px', 
-                 height: '350px', 
-                 background: 'var(--primary)', 
-                 borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%', 
-                 opacity: 0.08, 
-                 position: 'absolute', 
-                 top: '50%', 
-                 left: '50%', 
-                 transform: 'translate(-50%, -50%)',
-                 zIndex: 1 
-               }}></div>
-                <img 
-                  src="/escudo_ofs.jpg" 
-                  alt="Escudo OFS" 
-                  className="zoom-hover"
-                  style={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: '260px', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(139, 69, 19, 0.15))' }} 
-                />
-            </div>
-          </div>
-        </section>
-
         {/* Quote Section */}
         <section className="testimonial-section section-padding" style={{ background: 'var(--primary)', color: 'white' }}>
           <div className="testimonial-card" style={{ background: 'transparent', boxShadow: 'none' }}>
@@ -1176,6 +1134,49 @@ const LandingView = () => {
                   })}
                 </div>
               )}
+            </div>
+          </div>
+        </section>
+
+        
+        {/* Familia Franciscana Section */}
+        <section id="familia" className="section-padding" style={{ background: '#FFFAF3', position: 'relative', overflow: 'hidden' }}>
+          <div className="flex-responsive" style={{ maxWidth: '1100px', margin: '0 auto', alignItems: 'center', gap: '4rem' }}>
+            <div style={{ flex: '1.2', minWidth: '300px' }}>
+              <span style={{ color: 'var(--secondary)', fontWeight: 'bold', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Familia Global</span>
+              <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '1.5rem', marginTop: '0.5rem' }}>Nuestra Familia Franciscana</h2>
+              <h4 style={{ color: 'var(--primary)', marginBottom: '1.5rem', fontSize: '1.3rem', fontFamily: 'var(--font-serif)', fontStyle: 'italic' }}>{config.familiaTitulo || 'Orden Franciscana Seglar (OFS) y JUFRA Global'}</h4>
+              <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.9', textAlign: 'justify' }}>
+                {config.familiaDescripcion || 'Caminamos junto a nuestros hermanos mayores de la OFS, compartiendo el mismo ideal de vida y misión en la Iglesia. Asimismo, formamos parte de una inmensa fraternidad de jóvenes presente en los cinco continentes, compartiendo el carisma de San Francisco de Asís a nivel internacional.'}
+              </p>
+              <div style={{ marginTop: '2.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                <Link to="/familia-ofs" target="_blank" className="btn btn-ghost zoom-hover" style={{ padding: '1rem 2.5rem', textDecoration: 'none' }}>
+                  Conocer más de la OFS
+                </Link>
+                <a href="https://youfra.net/es/inicio/" target="_blank" rel="noopener noreferrer" className="btn btn-primary zoom-hover" style={{ padding: '1rem 2.5rem', textDecoration: 'none' }}>
+                  JUFRA en el Mundo 🌐
+                </a>
+              </div>
+            </div>
+            <div style={{ flex: '0.8', minWidth: '280px', textAlign: 'center', position: 'relative', display: 'flex', justifyContent: 'center' }}>
+               <div style={{ 
+                 width: '350px', 
+                 height: '350px', 
+                 background: 'var(--primary)', 
+                 borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%', 
+                 opacity: 0.08, 
+                 position: 'absolute', 
+                 top: '50%', 
+                 left: '50%', 
+                 transform: 'translate(-50%, -50%)',
+                 zIndex: 1 
+               }}></div>
+                <img 
+                  src="/escudo_ofs.jpg" 
+                  alt="Escudo OFS" 
+                  className="zoom-hover"
+                  style={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: '260px', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(139, 69, 19, 0.15))' }} 
+                />
             </div>
           </div>
         </section>
