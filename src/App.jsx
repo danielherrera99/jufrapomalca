@@ -343,7 +343,7 @@ const Dashboard = ({ user, onLogout }) => {
 
           {/* GRUPO: GESTIÓN WEB */}
           <div className="nav-section-title" style={{ marginTop: '1.5rem' }}>GESTIÓN WEB</div>
-          {modules.filter(m => ['Solicitudes', 'Redes', 'GaleriaWeb', 'WebConfig', 'OfsConfig', 'Fraternidades'].includes(m.id)).map((mod) => (
+          {modules.filter(m => ['Solicitudes', 'Redes', 'GaleriaWeb', 'QuienesSomos', 'WebConfig', 'OfsConfig', 'Fraternidades'].includes(m.id)).map((mod) => (
              <a key={mod.id} href="#" onClick={(e) => { e.preventDefault(); setActiveTab(mod.id); setIsSidebarOpen(false); }}
               className={`nav-link ${activeTab === mod.id ? 'active' : ''}`}
             >
