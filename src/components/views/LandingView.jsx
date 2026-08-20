@@ -568,6 +568,83 @@ const LandingView = () => {
           </div>
         </section>
 
+        
+        {/* Sección Quiénes Somos */}
+        <section id="quienes-somos" className="section-padding" style={{ background: '#fdfbf7', position: 'relative' }}>
+          <div className="container">
+            <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+              <span style={{ color: 'var(--secondary)', fontWeight: 'bold', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Nuestra Fraternidad</span>
+              <h2 className="section-title">Quiénes Somos</h2>
+            </div>
+
+            {/* Organigrama del Consejo */}
+            <h3 style={{ textAlign: 'center', color: 'var(--primary)', marginBottom: '2rem', fontFamily: 'var(--font-serif)', fontSize: '1.8rem' }}>Consejo Local</h3>
+            <div className="organigrama-container">
+              
+              <div className="org-level">
+                <div className="org-card">
+                  <div className="org-avatar"><SafeImage src="/images/placeholder-user.png" alt="Ministro" /></div>
+                  <div className="org-name">Fray Ejemplo</div>
+                  <div className="org-role">Ministro</div>
+                </div>
+              </div>
+
+              <div className="org-level">
+                <div className="org-card">
+                  <div className="org-avatar"><SafeImage src="/images/placeholder-user.png" alt="Viceministro" /></div>
+                  <div className="org-name">Hermano 2</div>
+                  <div className="org-role">Viceministro</div>
+                </div>
+                <div className="org-card">
+                  <div className="org-avatar"><SafeImage src="/images/placeholder-user.png" alt="Responsable de Formación" /></div>
+                  <div className="org-name">Hermana 3</div>
+                  <div className="org-role">Resp. Formación</div>
+                </div>
+              </div>
+
+              <div className="org-level">
+                <div className="org-card">
+                  <div className="org-avatar"><SafeImage src="/images/placeholder-user.png" alt="Secretario" /></div>
+                  <div className="org-name">Hermano 4</div>
+                  <div className="org-role">Secretario</div>
+                </div>
+                <div className="org-card">
+                  <div className="org-avatar"><SafeImage src="/images/placeholder-user.png" alt="Tesorero" /></div>
+                  <div className="org-name">Hermana 5</div>
+                  <div className="org-role">Tesorero</div>
+                </div>
+                <div className="org-card">
+                  <div className="org-avatar"><SafeImage src="/images/placeholder-user.png" alt="Animador Fraterno" /></div>
+                  <div className="org-name">Hermano 6</div>
+                  <div className="org-role">Animador Fraterno</div>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Cuadrícula de Nuestros Hermanos */}
+            <div style={{ marginTop: '5rem' }}>
+              <h3 style={{ textAlign: 'center', color: 'var(--primary)', marginBottom: '1rem', fontFamily: 'var(--font-serif)', fontSize: '1.8rem' }}>Nuestros Hermanos</h3>
+              <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginBottom: '2rem', maxWidth: '600px', margin: '0 auto 2rem auto' }}>
+                Conoce a los jóvenes que actualmente forman parte de la JUFRA Pomalca, viviendo su compromiso en diferentes etapas de formación.
+              </p>
+              
+              <div className="hermanos-grid">
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+                  <div key={item} className="hermano-card">
+                    <div className="hermano-avatar">
+                      <SafeImage src="/images/placeholder-user.png" alt={`Hermano ${item}`} />
+                    </div>
+                    <div className="hermano-name">Hermano {item}</div>
+                    <div className="hermano-legend">{item % 3 === 0 ? "Promesado" : item % 2 === 0 ? "Etapa de Iniciación" : "Etapa de Aceptación"}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        </section>
+
         {/* Sección Nuestras Celebraciones */}
         <section id="celebraciones" className="section-padding" style={{ background: '#FFFFFF' }}>
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
