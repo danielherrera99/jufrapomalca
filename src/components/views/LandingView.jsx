@@ -636,7 +636,7 @@ const LandingView = () => {
                   <span style={{ fontSize: '1.5rem', marginRight: '1rem' }}>🗓️</span>
                   <div>
                     <h4 style={{ color: 'var(--text-color)', fontSize: '1rem', margin: 0 }}>¿Cuándo nos reunimos?</h4>
-                    <p style={{ color: 'var(--text-muted)', margin: 0, fontSize: '0.9rem' }}>Todos los sábados a partir de las 5:00 PM</p>
+                    <p style={{ color: 'var(--text-muted)', margin: 0, fontSize: '0.9rem' }}>Todos los domingos a partir de las 5:00 PM</p>
                   </div>
                 </div>
                 
