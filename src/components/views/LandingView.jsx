@@ -3,8 +3,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../config/api';
 import { DEPARTAMENTOS_MAPA } from '../../config/mapData';
-
-
+import SafeImage from '../SafeImage';
 const LandingView = () => {
   const [config, setConfig] = useState({
     heroTitle: 'JUFRA Pomalca',
