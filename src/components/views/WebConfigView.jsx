@@ -22,7 +22,8 @@ const WebConfigView = () => {
     facebookUrl: '',
     instagramUrl: '',
     whatsappUrl: '',
-    tiktokUrl: ''
+    tiktokUrl: '',
+    youtubeUrl: ''
   });
 
   useEffect(() => {
@@ -240,6 +241,19 @@ const WebConfigView = () => {
                     value={config.tiktokUrl || ''} 
                     onChange={e => setConfig({...config, tiktokUrl: e.target.value})} 
                     placeholder="Ej: https://tiktok.com/@jufra.pomalca"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="row" style={{ gap: '1rem', display: 'flex', flexWrap: 'wrap', marginTop: '1rem' }}>
+              <div className="col" style={{ flex: 1, minWidth: '200px', maxWidth: '50%' }}>
+                <div className="input-group">
+                  <label>Enlace de YouTube:</label>
+                  <input 
+                    type="url" 
+                    value={config.youtubeUrl || ''} 
+                    onChange={e => setConfig({...config, youtubeUrl: e.target.value})} 
+                    placeholder="Ej: https://youtube.com/@jufrapomalca"
                   />
                 </div>
               </div>

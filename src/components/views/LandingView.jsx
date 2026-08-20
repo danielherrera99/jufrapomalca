@@ -21,7 +21,8 @@ const LandingView = () => {
     facebookUrl: '',
     instagramUrl: '',
     whatsappUrl: '',
-    tiktokUrl: ''
+    tiktokUrl: '',
+    youtubeUrl: ''
   });
   const [eventos, setEventos] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
