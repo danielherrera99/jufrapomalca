@@ -46,9 +46,9 @@ const LandingView = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('inicio');
 
-  // Galería
   const [activeCategory, setActiveCategory] = useState('todas');
   const [galleryItems, setGalleryItems] = useState([]);
+  const [miembros, setMiembros] = useState([]);
 
   useEffect(() => {
     const fetchGaleria = async () => {
@@ -61,7 +61,20 @@ const LandingView = () => {
         console.error('Error fetching galeria', err);
       }
     };
+    
+    const fetchMiembros = async () => {
+      try {
+        const { data } = await api.get('/quienes-somos');
+        if (data.success) {
+          setMiembros(data.data);
+        }
+      } catch (err) {
+        console.error('Error fetching quienes somos', err);
+      }
+    };
+
     fetchGaleria();
+    fetchMiembros();
   }, []);
 
   const [activeSocialTab, setActiveSocialTab] = useState('facebook');
@@ -580,43 +593,23 @@ const LandingView = () => {
             {/* Organigrama del Consejo */}
             <h3 style={{ textAlign: 'center', color: 'var(--primary)', marginBottom: '2rem', fontFamily: 'var(--font-serif)', fontSize: '1.8rem' }}>Consejo Local</h3>
             <div className="hermanos-grid">
-              
-              <div className="hermano-card">
-                <div className="hermano-avatar"><SafeImage src="/images/placeholder-user.png" alt="Ministro" /></div>
-                <div className="hermano-name">Fray Ejemplo</div>
-                <div className="hermano-legend">Ministro</div>
-              </div>
-
-              <div className="hermano-card">
-                <div className="hermano-avatar"><SafeImage src="/images/placeholder-user.png" alt="Viceministro" /></div>
-                <div className="hermano-name">Hermano 2</div>
-                <div className="hermano-legend">Viceministro</div>
-              </div>
-
-              <div className="hermano-card">
-                <div className="hermano-avatar"><SafeImage src="/images/placeholder-user.png" alt="Responsable de Formación" /></div>
-                <div className="hermano-name">Hermana 3</div>
-                <div className="hermano-legend">Resp. Formación</div>
-              </div>
-
-              <div className="hermano-card">
-                <div className="hermano-avatar"><SafeImage src="/images/placeholder-user.png" alt="Secretario" /></div>
-                <div className="hermano-name">Hermano 4</div>
-                <div className="hermano-legend">Secretario</div>
-              </div>
-
-              <div className="hermano-card">
-                <div className="hermano-avatar"><SafeImage src="/images/placeholder-user.png" alt="Tesorero" /></div>
-                <div className="hermano-name">Hermana 5</div>
-                <div className="hermano-legend">Tesorero</div>
-              </div>
-
-              <div className="hermano-card">
-                <div className="hermano-avatar"><SafeImage src="/images/placeholder-user.png" alt="Animador Fraterno" /></div>
-                <div className="hermano-name">Hermano 6</div>
-                <div className="hermano-legend">Animador Fraterno</div>
-              </div>
-
+              {miembros.filter(m => m.categoria === 'Consejo Local').length > 0 ? (
+                miembros.filter(m => m.categoria === 'Consejo Local').map((item) => (
+                  <div key={item.id} className="hermano-card">
+                    <div className="hermano-avatar">
+                      {item.foto_url || item.fotoUrl ? (
+                        <SafeImage src={getImageUrl(item.foto_url || item.fotoUrl)} alt={item.nombre} />
+                      ) : (
+                        <SafeImage src="/images/placeholder-user.png" alt={item.nombre} />
+                      )}
+                    </div>
+                    <div className="hermano-name">{item.nombre}</div>
+                    <div className="hermano-legend">{item.rol}</div>
+                  </div>
+                ))
+              ) : (
+                <p style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#888' }}>No hay miembros registrados en el Consejo Local.</p>
+              )}
             </div>
 
             {/* Cuadrícula de Nuestros Hermanos */}
@@ -627,15 +620,23 @@ const LandingView = () => {
               </p>
               
               <div className="hermanos-grid">
-                {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
-                  <div key={item} className="hermano-card">
-                    <div className="hermano-avatar">
-                      <SafeImage src="/images/placeholder-user.png" alt={`Hermano ${item}`} />
+                {miembros.filter(m => m.categoria === 'Hermanos').length > 0 ? (
+                  miembros.filter(m => m.categoria === 'Hermanos').map((item) => (
+                    <div key={item.id} className="hermano-card">
+                      <div className="hermano-avatar">
+                        {item.foto_url || item.fotoUrl ? (
+                          <SafeImage src={getImageUrl(item.foto_url || item.fotoUrl)} alt={item.nombre} />
+                        ) : (
+                          <SafeImage src="/images/placeholder-user.png" alt={item.nombre} />
+                        )}
+                      </div>
+                      <div className="hermano-name">{item.nombre}</div>
+                      <div className="hermano-legend">{item.rol}</div>
                     </div>
-                    <div className="hermano-name">Hermano {item}</div>
-                    <div className="hermano-legend">{item % 3 === 0 ? "Promesado" : item % 2 === 0 ? "Etapa de Iniciación" : "Etapa de Aceptación"}</div>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <p style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#888' }}>No hay hermanos registrados aún.</p>
+                )}
               </div>
             </div>
 

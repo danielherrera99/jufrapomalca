@@ -31,6 +31,7 @@ import SolicitudesView from './components/views/SolicitudesView';
 import FraternidadesAdminView from './components/views/FraternidadesAdminView';
 import RedesAdminView from './components/views/RedesAdminView';
 import GaleriaWebAdminView from './components/views/GaleriaWebAdminView';
+import QuienesSomosView from './components/views/QuienesSomosView';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import 'leaflet/dist/leaflet.css';
@@ -248,6 +249,7 @@ const modules = [
   { id: 'Asistente', label: 'Asistente IA', icon: '🤖' },
   { id: 'Redes', label: 'Redes Sociales', icon: '📱' },
   { id: 'GaleriaWeb', label: 'Galería Web', icon: '🌐' },
+  { id: 'QuienesSomos', label: 'Quiénes Somos', icon: '👥' },
   { id: 'WebConfig', label: 'Web Institucional', icon: '🌐' },
   { id: 'OfsConfig', label: 'Configuración OFS', icon: '☦️' },
   { id: 'Fraternidades', label: 'JUFRA Perú', icon: '🇵🇪' },
@@ -413,6 +415,7 @@ const Dashboard = ({ user, onLogout }) => {
           <Route path="espiritu" element={<EspirituView />} />
           <Route path="asistente" element={<AsistenteIAView />} />
           <Route path="galeriaweb" element={<GaleriaWebAdminView />} />
+          <Route path="quienessomos" element={<QuienesSomosView />} />
         </Routes>
         </div>
 
