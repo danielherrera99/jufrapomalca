@@ -6,24 +6,26 @@ import {
 import api from '../../config/api';
 
 const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, setIsModalOpen }) => {
-  const [data, setData] = useState({ hermanos: [], anuncios: [], eventos: [], asistencias: [] });
+  const [data, setData] = useState({ hermanos: [], anuncios: [], eventos: [], asistencias: [], metricas: null });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [hermanosRes, anunciosRes, eventosRes, asisRes] = await Promise.all([
+        const [hermanosRes, anunciosRes, eventosRes, asisRes, metricasRes] = await Promise.all([
           api.get('/hermanos?todos=true'),
           api.get('/anuncios'),
           api.get('/eventos?todos=true'),
-          api.get('/asistencia')
+          api.get('/asistencia'),
+          api.get('/metricas-sociales').catch(() => ({ data: { data: {} } }))
         ]);
         setData({
           hermanos: hermanosRes.data.hermanos || [],
           anuncios: anunciosRes.data.anuncios || [],
           eventos: eventosRes.data.eventos || [],
-          asistencias: asisRes.data.asistencias || (Array.isArray(asisRes.data) ? asisRes.data : [])
+          asistencias: asisRes.data.asistencias || (Array.isArray(asisRes.data) ? asisRes.data : []),
+          metricas: metricasRes?.data?.data || {}
         });
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
@@ -109,6 +111,47 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
                 <strong key={h._id}>{h.nombre} {h.apellido}{i < chartData.birthdays.length - 1 ? ', ' : ''}</strong>
               ))}
             </p>
+          </div>
+        </div>
+      )}
+      
+      {/* Impacto Digital (Métricas Sociales) */}
+      {data.metricas && Object.keys(data.metricas).length > 0 && (
+        <div style={{ marginBottom: '2rem' }}>
+          <h3 style={{ marginTop: 0, fontSize: '1.1rem', color: 'var(--primary)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            🌍 Nuestro Impacto Digital
+          </h3>
+          <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
+            {/* Tarjeta YouTube */}
+            <div className="glass-card zoom-hover" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'linear-gradient(135deg, #FEF2F2, #FEE2E2)', borderLeft: '5px solid #EF4444' }}>
+               <div style={{ fontSize: '2.5rem' }}>🔴</div>
+               <div>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>YOUTUBE (SUSCRIPTORES)</p>
+                  <h3 style={{ margin: 0, fontSize: '1.8rem', color: '#EF4444' }}>
+                    {data.metricas.youtube && data.metricas.youtube.length > 0 ? data.metricas.youtube[data.metricas.youtube.length - 1].seguidores : 0}
+                  </h3>
+               </div>
+            </div>
+            {/* Tarjeta Facebook */}
+            <div className="glass-card zoom-hover" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'linear-gradient(135deg, #EFF6FF, #DBEAFE)', borderLeft: '5px solid #3B82F6' }}>
+               <div style={{ fontSize: '2.5rem' }}>📘</div>
+               <div>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>FACEBOOK (SEGUIDORES)</p>
+                  <h3 style={{ margin: 0, fontSize: '1.8rem', color: '#3B82F6' }}>
+                    {data.metricas.facebook && data.metricas.facebook.length > 0 ? data.metricas.facebook[data.metricas.facebook.length - 1].seguidores : 0}
+                  </h3>
+               </div>
+            </div>
+            {/* Tarjeta Web */}
+            <div className="glass-card zoom-hover" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'linear-gradient(135deg, #F0FDF4, #DCFCE7)', borderLeft: '5px solid #22C55E' }}>
+               <div style={{ fontSize: '2.5rem' }}>🌐</div>
+               <div>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>VISITAS WEB (30 DÍAS)</p>
+                  <h3 style={{ margin: 0, fontSize: '1.8rem', color: '#22C55E' }}>
+                    {data.metricas.web && data.metricas.web.length > 0 ? data.metricas.web[data.metricas.web.length - 1].alcance : 0}
+                  </h3>
+               </div>
+            </div>
           </div>
         </div>
       )}
