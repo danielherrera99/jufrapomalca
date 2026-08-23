@@ -135,6 +135,19 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
                   </p>
                </div>
             </div>
+            {/* Tarjeta Instagram */}
+            <div className="glass-card zoom-hover" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'linear-gradient(135deg, #FDF2F8, #FCE7F3)', borderLeft: '5px solid #E1306C' }}>
+               <div style={{ fontSize: '2.5rem' }}>📸</div>
+               <div>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>INSTAGRAM (SEGUIDORES)</p>
+                  <h3 style={{ margin: 0, fontSize: '1.8rem', color: '#E1306C' }}>
+                    {data.metricas.instagram && data.metricas.instagram.length > 0 ? data.metricas.instagram[data.metricas.instagram.length - 1].seguidores : 0}
+                  </h3>
+                  <p style={{ margin: '5px 0 0 0', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                    📷 {data.metricas.instagram && data.metricas.instagram.length > 0 ? data.metricas.instagram[data.metricas.instagram.length - 1].interacciones : 0} posts
+                  </p>
+               </div>
+            </div>
             {/* Tarjeta YouTube */}
             <div className="glass-card zoom-hover" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'linear-gradient(135deg, #FEF2F2, #FEE2E2)', borderLeft: '5px solid #EF4444' }}>
                <div style={{ fontSize: '2.5rem' }}>🔴</div>
