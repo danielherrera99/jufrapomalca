@@ -11,8 +11,8 @@
   --shadow:
     rgba(139, 69, 19, 0.08) 0 4px 20px, rgba(139, 69, 19, 0.04) 0 4px 6px -2px;
 
-  --sans: 'Plus Jakarta Sans', system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: 'Libre Caslon Text', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
   font: 16px/145% var(--sans);
