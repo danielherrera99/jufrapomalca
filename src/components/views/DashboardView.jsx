@@ -130,6 +130,9 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
                   <h3 style={{ margin: 0, fontSize: '1.8rem', color: '#000000' }}>
                     {data.metricas.tiktok && data.metricas.tiktok.length > 0 ? data.metricas.tiktok[data.metricas.tiktok.length - 1].seguidores : 0}
                   </h3>
+                  <p style={{ margin: '5px 0 0 0', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                    ❤ {data.metricas.tiktok && data.metricas.tiktok.length > 0 ? data.metricas.tiktok[data.metricas.tiktok.length - 1].interacciones : 0} me gusta | 📹 {data.metricas.tiktok && data.metricas.tiktok.length > 0 ? data.metricas.tiktok[data.metricas.tiktok.length - 1].alcance : 0} videos
+                  </p>
                </div>
             </div>
             {/* Tarjeta YouTube */}
@@ -140,6 +143,9 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
                   <h3 style={{ margin: 0, fontSize: '1.8rem', color: '#EF4444' }}>
                     {data.metricas.youtube && data.metricas.youtube.length > 0 ? data.metricas.youtube[data.metricas.youtube.length - 1].seguidores : 0}
                   </h3>
+                  <p style={{ margin: '5px 0 0 0', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                    👁️ {data.metricas.youtube && data.metricas.youtube.length > 0 ? data.metricas.youtube[data.metricas.youtube.length - 1].alcance : 0} vistas | 📹 {data.metricas.youtube && data.metricas.youtube.length > 0 ? data.metricas.youtube[data.metricas.youtube.length - 1].interacciones : 0} videos
+                  </p>
                </div>
             </div>
             {/* Tarjeta Facebook */}
@@ -150,6 +156,9 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
                   <h3 style={{ margin: 0, fontSize: '1.8rem', color: '#3B82F6' }}>
                     {data.metricas.facebook && data.metricas.facebook.length > 0 ? data.metricas.facebook[data.metricas.facebook.length - 1].seguidores : 0}
                   </h3>
+                  <p style={{ margin: '5px 0 0 0', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                    📢 Alcance: {data.metricas.facebook && data.metricas.facebook.length > 0 ? data.metricas.facebook[data.metricas.facebook.length - 1].alcance : 0} | 💬 Int: {data.metricas.facebook && data.metricas.facebook.length > 0 ? data.metricas.facebook[data.metricas.facebook.length - 1].interacciones : 0}
+                  </p>
                </div>
             </div>
             {/* Tarjeta Web */}
