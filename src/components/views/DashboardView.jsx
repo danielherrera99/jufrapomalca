@@ -121,7 +121,17 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
           <h3 style={{ marginTop: 0, fontSize: '1.1rem', color: 'var(--primary)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
             🌍 Nuestro Impacto Digital
           </h3>
-          <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
+          <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
+            {/* Tarjeta TikTok */}
+            <div className="glass-card zoom-hover" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'linear-gradient(135deg, #F3F4F6, #E5E7EB)', borderLeft: '5px solid #000000' }}>
+               <div style={{ fontSize: '2.5rem' }}>🎵</div>
+               <div>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>TIKTOK (SEGUIDORES)</p>
+                  <h3 style={{ margin: 0, fontSize: '1.8rem', color: '#000000' }}>
+                    {data.metricas.tiktok && data.metricas.tiktok.length > 0 ? data.metricas.tiktok[data.metricas.tiktok.length - 1].seguidores : 0}
+                  </h3>
+               </div>
+            </div>
             {/* Tarjeta YouTube */}
             <div className="glass-card zoom-hover" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'linear-gradient(135deg, #FEF2F2, #FEE2E2)', borderLeft: '5px solid #EF4444' }}>
                <div style={{ fontSize: '2.5rem' }}>🔴</div>
