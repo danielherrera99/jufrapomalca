@@ -562,8 +562,11 @@ input:focus {
 }
 
 .landing-nav {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
   z-index: 1000;
   background: rgba(255, 248, 220, 0.85);
   backdrop-filter: blur(12px);
