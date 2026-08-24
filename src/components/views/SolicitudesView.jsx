@@ -184,41 +184,32 @@ const SolicitudesView = () => {
   }
 
   return (
-    <div className="animate-fade" style={{ maxWidth: '1000px', margin: '0 auto' }}>
-      
-      {/* Header and KPIs */}
-      <div className="glass-card" style={{ padding: '2rem', marginBottom: '2rem' }}>
-        <h2 style={{ fontSize: '1.8rem', color: 'var(--primary)', marginBottom: '0.5rem' }}>🌐 Solicitudes Web</h2>
-        <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-          Gestiona los prospectos e interesados que se registraron desde la página web principal.
-        </p>
-
-        {/* 1. KPIs Section */}
-        <div className="responsive-grid" style={{ '--grid-min': '180px', gap: '1rem' }}>
-          {/* KPI Total */}
-          <div className="glass-card" style={{ padding: '1.25rem', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.25rem', borderLeft: '4px solid var(--primary)', cursor: 'pointer', background: statusFilter === 'todas' ? 'rgba(139, 69, 19, 0.05)' : 'white' }} onClick={() => setStatusFilter('todas')}>
-            <span style={{ fontSize: '1.8rem' }}>📝</span>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 'bold', textTransform: 'uppercase' }}>Total</span>
-            <span style={{ fontSize: '1.8rem', fontWeight: '800', color: 'var(--primary)' }}>{stats.total}</span>
-          </div>
-          {/* KPI Pendientes */}
-          <div className="glass-card" style={{ padding: '1.25rem', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.25rem', borderLeft: '4px solid #FF9800', cursor: 'pointer', background: statusFilter === 'pendiente' ? 'rgba(255, 152, 0, 0.05)' : 'white' }} onClick={() => setStatusFilter('pendiente')}>
-            <span style={{ fontSize: '1.8rem' }}>⏳</span>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 'bold', textTransform: 'uppercase' }}>Pendientes</span>
-            <span style={{ fontSize: '1.8rem', fontWeight: '800', color: '#E65100' }}>{stats.pendiente}</span>
-          </div>
-          {/* KPI Contactados */}
-          <div className="glass-card" style={{ padding: '1.25rem', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.25rem', borderLeft: '4px solid #4CAF50', cursor: 'pointer', background: statusFilter === 'contactado' ? 'rgba(76, 175, 80, 0.05)' : 'white' }} onClick={() => setStatusFilter('contactado')}>
-            <span style={{ fontSize: '1.8rem' }}>✓</span>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 'bold', textTransform: 'uppercase' }}>Contactados</span>
-            <span style={{ fontSize: '1.8rem', fontWeight: '800', color: '#2E7D32' }}>{stats.contactado}</span>
-          </div>
-          {/* KPI Descartados */}
-          <div className="glass-card" style={{ padding: '1.25rem', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.25rem', borderLeft: '4px solid #F44336', cursor: 'pointer', background: statusFilter === 'descartado' ? 'rgba(244, 67, 54, 0.05)' : 'white' }} onClick={() => setStatusFilter('descartado')}>
-            <span style={{ fontSize: '1.8rem' }}>🗑️</span>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 'bold', textTransform: 'uppercase' }}>Descartados</span>
-            <span style={{ fontSize: '1.8rem', fontWeight: '800', color: '#C62828' }}>{stats.descartado}</span>
-          </div>
+    <div className="animate-fade">
+      {/* 1. KPIs Section */}
+      <div className="responsive-grid" style={{ '--grid-min': '180px', gap: '1.5rem', marginBottom: '2rem' }}>
+        {/* KPI Total */}
+        <div className="glass-card" style={{ padding: '1.25rem', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.25rem', borderLeft: '4px solid var(--primary)', cursor: 'pointer' }} onClick={() => setStatusFilter('todas')}>
+          <span style={{ fontSize: '1.8rem' }}>📝</span>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 'bold', textTransform: 'uppercase' }}>Total</span>
+          <span style={{ fontSize: '1.8rem', fontWeight: '800', color: 'var(--primary)' }}>{stats.total}</span>
+        </div>
+        {/* KPI Pendientes */}
+        <div className="glass-card" style={{ padding: '1.25rem', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.25rem', borderLeft: '4px solid #FF9800', cursor: 'pointer' }} onClick={() => setStatusFilter('pendiente')}>
+          <span style={{ fontSize: '1.8rem' }}>⏳</span>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 'bold', textTransform: 'uppercase' }}>Pendientes</span>
+          <span style={{ fontSize: '1.8rem', fontWeight: '800', color: '#E65100' }}>{stats.pendiente}</span>
+        </div>
+        {/* KPI Contactados */}
+        <div className="glass-card" style={{ padding: '1.25rem', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.25rem', borderLeft: '4px solid #4CAF50', cursor: 'pointer' }} onClick={() => setStatusFilter('contactado')}>
+          <span style={{ fontSize: '1.8rem' }}>✓</span>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 'bold', textTransform: 'uppercase' }}>Contactados</span>
+          <span style={{ fontSize: '1.8rem', fontWeight: '800', color: '#2E7D32' }}>{stats.contactado}</span>
+        </div>
+        {/* KPI Descartados */}
+        <div className="glass-card" style={{ padding: '1.25rem', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.25rem', borderLeft: '4px solid #F44336', cursor: 'pointer' }} onClick={() => setStatusFilter('descartado')}>
+          <span style={{ fontSize: '1.8rem' }}>🗑️</span>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 'bold', textTransform: 'uppercase' }}>Descartados</span>
+          <span style={{ fontSize: '1.8rem', fontWeight: '800', color: '#C62828' }}>{stats.descartado}</span>
         </div>
       </div>
 
