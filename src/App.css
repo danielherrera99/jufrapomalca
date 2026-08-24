@@ -197,6 +197,14 @@ input, textarea, select {
   transition: border-color 0.2s, box-shadow 0.2s;
   color: var(--text-main);
   background-color: var(--surface);
+  box-sizing: border-box;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 100px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 input:focus {
