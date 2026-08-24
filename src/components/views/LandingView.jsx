@@ -314,9 +314,8 @@ const LandingView = () => {
 
   return (
     <>
-      <div className="landing-page animate-fade">
-        {/* Navegación Pública */}
-        <nav className={`landing-nav ${isScrolled ? 'scrolled' : ''}`}>
+      {/* Navegación Pública */}
+      <nav className={`landing-nav ${isScrolled ? 'scrolled' : ''}`}>
           <Link to="/" className="logo">
             JUFRA POMALCA
           </Link>
@@ -336,6 +335,7 @@ const LandingView = () => {
           </div>
         </nav>
 
+      <div className="landing-page animate-fade">
         {/* Hero Section */}
         <header 
           id="inicio" 
