@@ -7,6 +7,33 @@ const RedesAdminView = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingPost, setEditingPost] = useState(null);
+  const [metricas, setMetricas] = useState(null);
+  const [postsModal, setPostsModal] = useState({ isOpen: false, plataforma: null, data: [], loading: false });
+
+  const formatSafeDate = (dateString, formatStr) => {
+    if (!dateString) return '';
+    try {
+      const d = new Date(dateString);
+      return d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    } catch {
+      return '';
+    }
+  };
+
+  const openPostsModal = async (plataforma) => {
+    setPostsModal({ isOpen: true, plataforma, data: [], loading: true });
+    try {
+      const res = await api.get(`/metricas-sociales/publicaciones/${plataforma}`);
+      if (res.data.success) {
+        setPostsModal({ isOpen: true, plataforma, data: res.data.data, loading: false });
+      } else {
+        setPostsModal(prev => ({ ...prev, loading: false }));
+      }
+    } catch (e) {
+      console.error(e);
+      setPostsModal(prev => ({ ...prev, loading: false }));
+    }
+  };
   
   const [formData, setFormData] = useState({
     red_social: 'facebook',
@@ -25,8 +52,12 @@ const RedesAdminView = () => {
   const fetchPosts = async () => {
     try {
       setLoading(true);
-      const { data } = await api.get('/redes');
-      setPosts(data.posts || []);
+      const [postsRes, metricasRes] = await Promise.all([
+        api.get('/redes'),
+        api.get('/metricas-sociales').catch(() => ({ data: { data: {} } }))
+      ]);
+      setPosts(postsRes.data.posts || []);
+      setMetricas(metricasRes?.data?.data || {});
     } catch (err) {
       console.error('Error fetching redes:', err);
     } finally {
@@ -120,6 +151,83 @@ const RedesAdminView = () => {
           + Añadir Publicación
         </button>
       </div>
+
+      {/* Impacto Digital (Métricas Sociales) */}
+      {metricas && Object.keys(metricas).length > 0 && (
+        <div style={{ marginBottom: '2.5rem' }}>
+          <h3 style={{ marginTop: 0, fontSize: '1.1rem', color: 'var(--primary)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            🌍 Nuestro Impacto Digital
+          </h3>
+          <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
+            {/* Tarjeta TikTok */}
+            <div onClick={() => openPostsModal('tiktok')} className="glass-card zoom-hover" style={{ cursor: 'pointer', padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'linear-gradient(135deg, #F3F4F6, #E5E7EB)', borderLeft: '5px solid #000000' }}>
+               <div style={{ fontSize: '2.5rem' }}>🎵</div>
+               <div>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>TIKTOK (SEGUIDORES)</p>
+                  <h3 style={{ margin: 0, fontSize: '1.8rem', color: '#000000' }}>
+                    {metricas.tiktok && metricas.tiktok.length > 0 ? metricas.tiktok[metricas.tiktok.length - 1].seguidores : 0}
+                  </h3>
+                  <p style={{ margin: '5px 0 0 0', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                    ❤ {metricas.tiktok && metricas.tiktok.length > 0 ? metricas.tiktok[metricas.tiktok.length - 1].interacciones : 0} me gusta | 📹 {metricas.tiktok && metricas.tiktok.length > 0 ? metricas.tiktok[metricas.tiktok.length - 1].alcance : 0} videos
+                  </p>
+               </div>
+            </div>
+            {/* Tarjeta Instagram */}
+            <div onClick={() => openPostsModal('instagram')} className="glass-card zoom-hover" style={{ cursor: 'pointer', padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'linear-gradient(135deg, #FDF2F8, #FCE7F3)', borderLeft: '5px solid #E1306C' }}>
+               <div style={{ fontSize: '2.5rem' }}>📸</div>
+               <div>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>INSTAGRAM (SEGUIDORES)</p>
+                  <h3 style={{ margin: 0, fontSize: '1.8rem', color: '#E1306C' }}>
+                    {metricas.instagram && metricas.instagram.length > 0 ? metricas.instagram[metricas.instagram.length - 1].seguidores : 0}
+                  </h3>
+                  <p style={{ margin: '5px 0 0 0', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                    📷 {metricas.instagram && metricas.instagram.length > 0 ? metricas.instagram[metricas.instagram.length - 1].interacciones : 0} posts
+                  </p>
+               </div>
+            </div>
+            {/* Tarjeta YouTube */}
+            <div onClick={() => openPostsModal('youtube')} className="glass-card zoom-hover" style={{ cursor: 'pointer', padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'linear-gradient(135deg, #FEF2F2, #FEE2E2)', borderLeft: '5px solid #EF4444' }}>
+               <div style={{ fontSize: '2.5rem' }}>🔴</div>
+               <div>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>YOUTUBE (SUSCRIPTORES)</p>
+                  <h3 style={{ margin: 0, fontSize: '1.8rem', color: '#EF4444' }}>
+                    {metricas.youtube && metricas.youtube.length > 0 ? metricas.youtube[metricas.youtube.length - 1].seguidores : 0}
+                  </h3>
+                  <p style={{ margin: '5px 0 0 0', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                    👁️ {metricas.youtube && metricas.youtube.length > 0 ? metricas.youtube[metricas.youtube.length - 1].alcance : 0} vistas | 📹 {metricas.youtube && metricas.youtube.length > 0 ? metricas.youtube[metricas.youtube.length - 1].interacciones : 0} videos
+                  </p>
+               </div>
+            </div>
+            {/* Tarjeta Facebook */}
+            <div onClick={() => openPostsModal('facebook')} className="glass-card zoom-hover" style={{ cursor: 'pointer', padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'linear-gradient(135deg, #EFF6FF, #DBEAFE)', borderLeft: '5px solid #3B82F6' }}>
+               <div style={{ fontSize: '2.5rem' }}>📘</div>
+               <div>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>FACEBOOK (SEGUIDORES)</p>
+                  <h3 style={{ margin: 0, fontSize: '1.8rem', color: '#3B82F6' }}>
+                    {metricas.facebook && metricas.facebook.length > 0 ? metricas.facebook[metricas.facebook.length - 1].seguidores : 0}
+                  </h3>
+                  <p style={{ margin: '5px 0 0 0', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                    📢 Alcance: {metricas.facebook && metricas.facebook.length > 0 ? metricas.facebook[metricas.facebook.length - 1].alcance : 0} | 💬 Int: {metricas.facebook && metricas.facebook.length > 0 ? metricas.facebook[metricas.facebook.length - 1].interacciones : 0}
+                  </p>
+               </div>
+            </div>
+            {/* Tarjeta Web */}
+            <div className="glass-card zoom-hover" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'linear-gradient(135deg, #F0FDF4, #DCFCE7)', borderLeft: '5px solid #22C55E' }}>
+               <div style={{ fontSize: '2.5rem' }}>🌐</div>
+               <div>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>VISITAS WEB (30 DÍAS)</p>
+                  <h3 style={{ margin: 0, fontSize: '1.8rem', color: '#22C55E' }}>
+                    {metricas.web && metricas.web.length > 0 ? metricas.web[metricas.web.length - 1].alcance : 0}
+                  </h3>
+               </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      <h3 style={{ marginTop: 0, fontSize: '1.1rem', color: 'var(--primary)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        🖼️ Carrusel de la Web Principal
+      </h3>
 
       <div className="responsive-grid" style={{ '--grid-min': '300px' }}>
         {posts.map(post => (
@@ -253,6 +361,51 @@ const RedesAdminView = () => {
           </div>
         </div>
       )}
+
+      {/* Modal de Publicaciones Sociales */}
+      {postsModal.isOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content animate-fade" style={{ width: '90%', maxWidth: '800px', maxHeight: '90vh', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+              <h2 style={{ margin: 0, textTransform: 'capitalize', color: 'var(--primary)' }}>Publicaciones de {postsModal.plataforma}</h2>
+              <button onClick={() => setPostsModal({ ...postsModal, isOpen: false })} className="btn" style={{ background: '#EF4444', color: 'white', padding: '5px 10px' }}>Cerrar</button>
+            </div>
+            
+            {postsModal.loading ? (
+              <div style={{ textAlign: 'center', padding: '3rem' }}>Cargando publicaciones...</div>
+            ) : postsModal.data.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>No hay publicaciones guardadas para esta plataforma.</div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.5rem' }}>
+                {postsModal.data.map(post => (
+                  <div key={post.post_id} className="glass-card" style={{ padding: '1rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
+                    {post.imagen_url && (
+                      <div style={{ height: '140px', width: '100%', marginBottom: '1rem', borderRadius: '8px', overflow: 'hidden', backgroundColor: '#f0f0f0' }}>
+                        <img src={post.imagen_url} alt="Miniatura" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      </div>
+                    )}
+                    <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      {post.titulo}
+                    </h4>
+                    <p style={{ margin: '0 0 1rem 0', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                      {formatSafeDate(post.fecha_publicacion, 'dd MMM yyyy - HH:mm')}
+                    </p>
+                    <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '1rem' }}>
+                      <span title="Vistas">👁️ {post.vistas}</span>
+                      <span title="Likes">👍 {post.likes}</span>
+                      <span title="Comentarios">💬 {post.comentarios}</span>
+                    </div>
+                    <a href={post.url} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ textAlign: 'center', padding: '8px', fontSize: '0.8rem' }}>
+                      Ver Original
+                    </a>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
