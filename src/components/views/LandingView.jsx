@@ -328,9 +328,9 @@ const LandingView = () => {
             <a href="#inicio" className={activeSection === 'inicio' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Inicio</a>
             <a href="#mision" className={activeSection === 'mision' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Misión y Visión</a>
             <a href="#historia" className={activeSection === 'historia' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Nuestro Camino</a>
-            <a href="#nacional" className={activeSection === 'nacional' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>JUFRA en el Perú</a>
+            <a href="#quienes-somos" className={activeSection === 'quienes-somos' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Quiénes Somos</a>
             <a href="#galeria" className={activeSection === 'galeria' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Galería</a>
-            <a href="#eventos" className={activeSection === 'eventos' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Eventos</a>
+            <a href="#nacional" className={activeSection === 'nacional' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>JUFRA en el Perú</a>
             <a href="#contacto" className={activeSection === 'contacto' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Contacto</a>
           </div>
         </nav>
