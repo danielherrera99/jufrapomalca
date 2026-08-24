@@ -89,7 +89,7 @@ const LandingView = () => {
   useEffect(() => {
     const fetchRedes = async () => {
       try {
-        const { data } = await api.get('/redes');
+        const { data } = await api.get('/redes/landing');
         if (data.posts) {
           const activePosts = data.posts.filter(p => p.activo !== false);
           setSocialPosts({

@@ -141,6 +141,20 @@ const RedesAdminView = () => {
     }
   };
 
+  const handleToggleScrapedActivo = async (post, plataforma) => {
+    try {
+      const newState = post.activo === false ? 'true' : 'false';
+      await api.put(`/metricas-sociales/publicaciones/${post.post_id}`, { activo: newState });
+      // Update local state without closing modal
+      setPostsModal(prev => ({
+        ...prev,
+        data: prev.data.map(p => p.post_id === post.post_id ? { ...p, activo: newState === 'true' } : p)
+      }));
+    } catch (err) {
+      alert('Error cambiando el estado: ' + err.message);
+    }
+  };
+
   const handleToggleActivo = async (post) => {
     try {
       const data = new FormData();
@@ -412,14 +426,25 @@ const RedesAdminView = () => {
                     <p style={{ margin: '0 0 1rem 0', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                       {formatSafeDate(post.fecha_publicacion, 'dd MMM yyyy - HH:mm')}
                     </p>
-                    <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--primary)', marginBottom: '1rem' }}>
-                      <span title="Vistas">👁️ {post.vistas}</span>
-                      <span title="Likes">👍 {post.likes}</span>
-                      <span title="Comentarios">💬 {post.comentarios}</span>
+                    <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--primary)' }}>
+                        <span title="Vistas">👁️ {post.vistas}</span>
+                        <span title="Likes">👍 {post.likes}</span>
+                        <span title="Comentarios">💬 {post.comentarios}</span>
+                      </div>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <button 
+                          className="btn" 
+                          style={{ flex: 1, padding: '8px', fontSize: '0.8rem', background: post.activo === true ? '#10B981' : '#9CA3AF', color: 'white' }} 
+                          onClick={() => handleToggleScrapedActivo(post, postsModal.plataforma)}
+                        >
+                          {post.activo === true ? 'Ocultar (En Web)' : 'Mostrar (No en Web)'}
+                        </button>
+                        <a href={post.url} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '0.8rem' }}>
+                          Ver Original
+                        </a>
+                      </div>
                     </div>
-                    <a href={post.url} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ textAlign: 'center', padding: '8px', fontSize: '0.8rem' }}>
-                      Ver Original
-                    </a>
                   </div>
                 ))}
               </div>
