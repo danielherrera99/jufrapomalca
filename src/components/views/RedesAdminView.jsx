@@ -141,6 +141,21 @@ const RedesAdminView = () => {
     }
   };
 
+  const handleToggleActivo = async (post) => {
+    try {
+      const data = new FormData();
+      // If it is false, we make it true. If it is null/undefined, we treat it as true, so we make it false.
+      const newState = post.activo === false ? 'true' : 'false';
+      data.append('activo', newState);
+      await api.put(`/redes/${post.id}`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      fetchPosts();
+    } catch (err) {
+      alert('Error cambiando el estado: ' + err.message);
+    }
+  };
+
   if (loading) return <div style={{ padding: '2rem', textAlign: 'center' }}>Cargando publicaciones...</div>;
 
   return (
@@ -248,6 +263,13 @@ const RedesAdminView = () => {
               {post.content}
             </p>
             <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '10px' }}>
+              <button 
+                className="btn" 
+                style={{ flex: 1, padding: '0.5rem', fontSize: '0.8rem', background: post.activo === false ? '#9CA3AF' : '#10B981', color: 'white' }} 
+                onClick={() => handleToggleActivo(post)}
+              >
+                {post.activo === false ? 'Mostrar (Inactivo)' : 'Ocultar (Activo)'}
+              </button>
               <button className="btn" style={{ flex: 1, padding: '0.5rem', fontSize: '0.8rem' }} onClick={() => handleOpenModal(post)}>Editar</button>
               <button className="btn btn-logout" style={{ flex: 1, padding: '0.5rem', fontSize: '0.8rem' }} onClick={() => handleDelete(post.id)}>Eliminar</button>
             </div>
