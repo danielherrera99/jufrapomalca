@@ -150,8 +150,6 @@ const LandingView = () => {
       }
     };
 
-    fetchGaleria();
-    fetchMiembros();
     fetchRedes();
     fetchEventos();
   }, []);
