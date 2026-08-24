@@ -61,8 +61,21 @@ const EventosNewModal = ({ newItem, setNewItem, MapPicker }) => {
             <option value="todos">🔄 Ambos (App y Web)</option>
             <option value="app">📱 Solo App (Interno)</option>
             <option value="web">🌐 Solo Web (Público)</option>
+            <option value="consejo">Solo Consejo 🔒</option>
           </select>
         </div>
+      </div>
+
+      <div className="input-group" style={{ marginTop: '1rem' }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+          <input 
+            type="checkbox" 
+            checked={newItem.publicar_web || false}
+            onChange={e => setNewItem({...newItem, publicar_web: e.target.checked})}
+            style={{ width: '18px', height: '18px' }}
+          />
+          <strong>🌐 Publicar en la Web Principal</strong> (Aparecerá en "Próximos Encuentros")
+        </label>
       </div>
 
       <div className="input-group" style={{ marginTop: '1rem' }}>

@@ -138,9 +138,23 @@ const LandingView = () => {
         console.error('Error fetching redes', err);
       }
     };
-    fetchRedes();
-  }, []);
 
+    const fetchEventos = async () => {
+      try {
+        const { data } = await api.get('/eventos/web');
+        if (data.eventos) {
+          setEventos(data.eventos);
+        }
+      } catch (err) {
+        console.error('Error fetching eventos', err);
+      }
+    };
+
+    fetchGaleria();
+    fetchMiembros();
+    fetchRedes();
+    fetchEventos();
+  }, []);
   const filteredGalleryItems = activeCategory === 'todas'
     ? galleryItems
     : galleryItems.filter(item => item.categoria === activeCategory);

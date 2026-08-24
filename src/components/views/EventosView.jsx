@@ -84,11 +84,12 @@ const EventosView = () => {
       formData.append('visibilidad', newItem.visibilidad || 'todos');
       formData.append('lat', newItem.lat || -6.745);
       formData.append('lng', newItem.lng || -79.824);
+      formData.append('publicar_web', newItem.publicar_web ? 'true' : 'false');
       if (newItem.imagenFile) formData.append('imagen', newItem.imagenFile);
 
       await api.post('/eventos', formData);
       setIsModalOpen(false);
-      setNewItem({ titulo: '', contenido: '', fecha: '', hora: '', lugar: '', tipo: 'reunion', lat: '', lng: '', imagenFile: null, previewImagen: '' });
+      setNewItem({ titulo: '', contenido: '', fecha: '', hora: '', lugar: '', tipo: 'reunion', lat: '', lng: '', imagenFile: null, previewImagen: '', publicar_web: false });
       fetchData();
     } catch (error) {
       alert(`Error al crear el registro: ${error.response?.data?.message || error.message}`);
@@ -108,6 +109,7 @@ const EventosView = () => {
       formData.append('visibilidad', selectedItem.visibilidad || 'todos');
       if (selectedItem.ubicacion?.lat) formData.append('lat', selectedItem.ubicacion.lat);
       if (selectedItem.ubicacion?.lng) formData.append('lng', selectedItem.ubicacion.lng);
+      formData.append('publicar_web', selectedItem.publicar_web ? 'true' : 'false');
       if (selectedItem.nuevaImagenFile) formData.append('imagen', selectedItem.nuevaImagenFile);
 
       await api.put(`/eventos/${selectedItem._id}`, formData);

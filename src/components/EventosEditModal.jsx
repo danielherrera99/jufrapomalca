@@ -71,6 +71,19 @@ const EventosEditModal = ({ selectedItem, setSelectedItem, MapPicker, getSafeDat
             <option value="web">🌐 Solo Web (Público)</option>
           </select>
         </div>
+
+        <div className="input-group" style={{ gridColumn: '1 / -1' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+            <input 
+              type="checkbox" 
+              checked={selectedItem.publicar_web || false}
+              onChange={e => setSelectedItem({...selectedItem, publicar_web: e.target.checked})}
+              style={{ width: '18px', height: '18px' }}
+            />
+            <strong>🌐 Publicar en la Web Principal</strong> (Aparecerá en "Próximos Encuentros")
+          </label>
+        </div>
+
         <div className="input-group">
           <label>Lugar</label>
           <input 
