@@ -1524,12 +1524,25 @@ const LandingView = () => {
                     <div style={{ fontWeight: '600', color: 'var(--text-main)' }}>{selectedEvento.hora || 'Por confirmar'}</div>
                   </div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%' }}>
-                  <span style={{ fontSize: '1.5rem' }}>📍</span>
-                  <div>
-                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 'bold' }}>Lugar</div>
-                    <div style={{ fontWeight: '600', color: 'var(--text-main)' }}>{selectedEvento.lugar || 'Fraternidad Pomalca'}</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <span style={{ fontSize: '1.5rem' }}>📍</span>
+                    <div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 'bold' }}>Lugar</div>
+                      <div style={{ fontWeight: '600', color: 'var(--text-main)' }}>{selectedEvento.lugar || 'Fraternidad Pomalca'}</div>
+                    </div>
                   </div>
+                  {selectedEvento.latitud && selectedEvento.longitud && (
+                    <a 
+                      href={`https://www.google.com/maps?q=${selectedEvento.latitud},${selectedEvento.longitud}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="btn btn-ghost"
+                      style={{ fontSize: '0.8rem', padding: '0.5rem 1rem', borderRadius: '50px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}
+                    >
+                      🗺️ Ver en mapa
+                    </a>
+                  )}
                 </div>
               </div>
 
