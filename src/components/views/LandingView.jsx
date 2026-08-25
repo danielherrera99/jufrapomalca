@@ -25,6 +25,7 @@ const LandingView = () => {
     youtubeUrl: ''
   });
   const [eventos, setEventos] = useState([]);
+  const [selectedEvento, setSelectedEvento] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Estados para JUFRA en el Perú
@@ -960,7 +961,7 @@ const LandingView = () => {
                         <span style={{ opacity: 0.7 }}>📍</span> {event.lugar || 'Fraternidad Pomalca'}
                       </p>
                     </div>
-                    <button className="btn btn-ghost" style={{ borderRadius: '50px', padding: '0.6rem 1.5rem', fontSize: '0.85rem' }}>Ver detalles</button>
+                    <button onClick={() => setSelectedEvento(event)} className="btn btn-ghost" style={{ borderRadius: '50px', padding: '0.6rem 1.5rem', fontSize: '0.85rem' }}>Ver detalles</button>
                   </div>
                 );
               })
@@ -1478,6 +1479,71 @@ const LandingView = () => {
                 </form>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {selectedEvento && (
+        <div className="modal-overlay" onClick={() => setSelectedEvento(null)} style={{ zIndex: 2000 }}>
+          <div className="modal-content animate-fade" onClick={e => e.stopPropagation()} style={{ maxWidth: '600px', borderRadius: '25px', overflow: 'hidden', padding: 0 }}>
+            {selectedEvento.imagenUrl ? (
+              <div style={{ height: '250px', position: 'relative' }}>
+                <SafeImage src={getImageUrl(selectedEvento.imagenUrl)} alt={selectedEvento.titulo} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(to bottom, transparent, rgba(0,0,0,0.8))' }}></div>
+                <button onClick={() => setSelectedEvento(null)} style={{ position: 'absolute', top: '15px', right: '15px', background: 'rgba(255,255,255,0.2)', border: 'none', color: 'white', width: '35px', height: '35px', borderRadius: '50%', cursor: 'pointer', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>×</button>
+                <div style={{ position: 'absolute', bottom: '20px', left: '20px', right: '20px' }}>
+                  <span style={{ display: 'inline-block', background: 'var(--secondary)', color: 'var(--text-main)', padding: '0.3rem 1rem', borderRadius: '50px', fontSize: '0.8rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '10px' }}>
+                    {selectedEvento.tipo || 'Encuentro'}
+                  </span>
+                  <h3 style={{ color: 'white', fontSize: '1.8rem', margin: 0, textShadow: '0 2px 5px rgba(0,0,0,0.3)' }}>{selectedEvento.titulo}</h3>
+                </div>
+              </div>
+            ) : (
+              <div style={{ padding: '2rem 2rem 0', position: 'relative' }}>
+                <button onClick={() => setSelectedEvento(null)} style={{ position: 'absolute', top: '20px', right: '20px', background: '#F5F5F5', border: 'none', color: 'var(--text-main)', width: '35px', height: '35px', borderRadius: '50%', cursor: 'pointer', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>×</button>
+                <span style={{ display: 'inline-block', background: 'var(--secondary)', color: 'var(--text-main)', padding: '0.3rem 1rem', borderRadius: '50px', fontSize: '0.8rem', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '10px' }}>
+                  {selectedEvento.tipo || 'Encuentro'}
+                </span>
+                <h3 style={{ color: 'var(--primary)', fontSize: '1.8rem', margin: 0 }}>{selectedEvento.titulo}</h3>
+              </div>
+            )}
+            
+            <div style={{ padding: '2rem' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', marginBottom: '2rem', padding: '1rem', background: '#F9FAFB', borderRadius: '15px', border: '1px solid var(--border)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{ fontSize: '1.5rem' }}>📅</span>
+                  <div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 'bold' }}>Fecha</div>
+                    <div style={{ fontWeight: '600', color: 'var(--text-main)' }}>{new Date(selectedEvento.fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{ fontSize: '1.5rem' }}>⏰</span>
+                  <div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 'bold' }}>Hora</div>
+                    <div style={{ fontWeight: '600', color: 'var(--text-main)' }}>{selectedEvento.hora || 'Por confirmar'}</div>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%' }}>
+                  <span style={{ fontSize: '1.5rem' }}>📍</span>
+                  <div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 'bold' }}>Lugar</div>
+                    <div style={{ fontWeight: '600', color: 'var(--text-main)' }}>{selectedEvento.lugar || 'Fraternidad Pomalca'}</div>
+                  </div>
+                </div>
+              </div>
+
+              {selectedEvento.descripcion && (
+                <div style={{ marginBottom: '2rem' }}>
+                  <h4 style={{ color: 'var(--text-main)', marginBottom: '10px', fontSize: '1.1rem' }}>Sobre este encuentro:</h4>
+                  <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', whiteSpace: 'pre-line' }}>{selectedEvento.descripcion}</p>
+                </div>
+              )}
+
+              <div style={{ textAlign: 'center' }}>
+                <button onClick={() => setSelectedEvento(null)} className="btn btn-primary" style={{ width: '100%', borderRadius: '15px', padding: '1rem', fontSize: '1rem', fontWeight: 'bold' }}>Cerrar</button>
+              </div>
+            </div>
           </div>
         </div>
       )}
