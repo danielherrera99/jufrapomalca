@@ -1,19 +1,33 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 
 const LocationListener = ({ onChange }) => {
-  useMapEvents({
+  const onChangeRef = useRef(onChange);
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
+
+  const handlers = useMemo(() => ({
     click(e) {
-      onChange(Number(e.latlng.lat.toFixed(6)), Number(e.latlng.lng.toFixed(6)));
-    },
-  });
+      if (onChangeRef.current) {
+        onChangeRef.current(Number(e.latlng.lat.toFixed(6)), Number(e.latlng.lng.toFixed(6)));
+      }
+    }
+  }), []);
+
+  useMapEvents(handlers);
   return null;
 };
 
 const MapPicker = ({ lat, lng, onChange }) => {
   const defaultPosition = [-6.764, -79.866]; 
-  const position = [lat || defaultPosition[0], lng || defaultPosition[1]];
+  const position = useMemo(() => [lat || defaultPosition[0], lng || defaultPosition[1]], [lat, lng]);
   const markerRef = useRef(null);
+  const onChangeRef = useRef(onChange);
+
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
 
   const eventHandlers = useMemo(
     () => ({
@@ -21,11 +35,13 @@ const MapPicker = ({ lat, lng, onChange }) => {
         const marker = markerRef.current;
         if (marker != null) {
           const newPos = marker.getLatLng();
-          onChange(Number(newPos.lat.toFixed(6)), Number(newPos.lng.toFixed(6)));
+          if (onChangeRef.current) {
+            onChangeRef.current(Number(newPos.lat.toFixed(6)), Number(newPos.lng.toFixed(6)));
+          }
         }
       },
     }),
-    [onChange]
+    []
   );
 
   return (
