@@ -68,55 +68,57 @@ const ItemReadModal = ({
             </div>
           </>
         ) : activeTab === 'Eventos' ? (
-          <div style={{ overflowY: 'auto', paddingRight: '0.5rem', flex: 1 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '2px solid var(--border)', paddingBottom: '1.5rem', marginBottom: '1.5rem' }}>
-              <div style={{ flex: 1 }}>
-                <span style={{ fontSize: '0.85rem', background: 'linear-gradient(135deg, var(--primary), var(--secondary))', color: 'white', padding: '6px 14px', borderRadius: '20px', fontWeight: 'bold', textTransform: 'uppercase', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
-                  📅 DETALLE DEL EVENTO
-                </span>
-                <h2 style={{ margin: '1rem 0 0.5rem 0', color: 'var(--text-main)', fontSize: '2rem', lineHeight: '1.3', fontWeight: '800' }}>{readItem.titulo}</h2>
-                <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', alignItems: 'center', marginTop: '0.8rem' }}>
-                   <span style={{ fontSize: '1.1rem', color: '#EF4444', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <span style={{ fontSize: '1.3rem' }}>🕒</span> {readItem.hora || 'Todo el día'}
-                   </span>
-                   <span style={{ fontSize: '1.1rem', color: 'var(--text-main)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <span style={{ fontSize: '1.3rem' }}>📍</span> {readItem.lugar || 'Sede Jufra'}
-                   </span>
-                </div>
-              </div>
-              <button className="btn zoom-hover" style={{ background: 'var(--surface)', color: 'var(--text-main)', border: '1px solid var(--border)', padding: '0.6rem 1.2rem', borderRadius: '12px', fontWeight: 'bold' }} onClick={() => window.print()}>🖨️ Imprimir</button>
-            </div>
-
-            {readItem.imagenUrl && (
-              <div style={{ width: '100%', height: '350px', backgroundImage: `url(${readItem.imagenUrl})`, backgroundSize: 'cover', backgroundPosition: 'center', borderRadius: '16px', margin: '0 0 2rem 0', boxShadow: '0 8px 25px rgba(0,0,0,0.15)' }}></div>
-            )}
-            
-            <div style={{ background: 'var(--surface)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--border)', boxShadow: '0 4px 15px rgba(0,0,0,0.03)' }}>
-               <h3 style={{ margin: '0 0 1rem 0', color: 'var(--primary)', fontSize: '1.3rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  📝 Acerca de este evento
-               </h3>
-               <p style={{ fontSize: '1.15rem', color: 'var(--text-main)', lineHeight: '1.8', whiteSpace: 'pre-line', fontStyle: 'italic', margin: 0, opacity: 0.9 }}>
-                  {readItem.descripcion || 'Sin descripción detallada.'}
-               </p>
-            </div>
-
-            {readItem.ubicacion && readItem.ubicacion.lat && (
-               <div style={{ marginTop: '1.5rem', background: 'linear-gradient(to right, rgba(0,0,0,0.02), rgba(0,0,0,0.05))', padding: '1.5rem 2rem', borderRadius: '16px', border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-                  <div>
-                     <h4 style={{ margin: '0 0 0.4rem 0', color: 'var(--primary)', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        🛰️ Ubicación Satelital
-                     </h4>
-                     <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '1rem' }}>Míralo exactamente en el Mapa Interactivo</p>
+          <>
+            <div style={{ overflowY: 'auto', paddingRight: '0.5rem', flex: 1 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '2px solid var(--border)', paddingBottom: '1.5rem', marginBottom: '1.5rem' }}>
+                <div style={{ flex: 1 }}>
+                  <span style={{ fontSize: '0.85rem', background: 'linear-gradient(135deg, var(--primary), var(--secondary))', color: 'white', padding: '6px 14px', borderRadius: '20px', fontWeight: 'bold', textTransform: 'uppercase', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
+                    📅 DETALLE DEL EVENTO
+                  </span>
+                  <h2 style={{ margin: '1rem 0 0.5rem 0', color: 'var(--text-main)', fontSize: '2rem', lineHeight: '1.3', fontWeight: '800' }}>{readItem.titulo}</h2>
+                  <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', alignItems: 'center', marginTop: '0.8rem' }}>
+                     <span style={{ fontSize: '1.1rem', color: '#EF4444', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ fontSize: '1.3rem' }}>🕒</span> {readItem.hora || 'Todo el día'}
+                     </span>
+                     <span style={{ fontSize: '1.1rem', color: 'var(--text-main)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ fontSize: '1.3rem' }}>📍</span> {readItem.lugar || 'Sede Jufra'}
+                     </span>
                   </div>
-                  <a href={`https://www.google.com/maps/search/?api=1&query=${readItem.ubicacion.lat},${readItem.ubicacion.lng}`} target="_blank" rel="noreferrer" className="btn zoom-hover" style={{ textDecoration: 'none', background: 'linear-gradient(135deg, #10B981, #059669)', color: 'white', fontWeight: 'bold', padding: '0.8rem 1.8rem', borderRadius: '30px', boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)', transition: 'all 0.3s ease' }}>
-                     🗺️ Abrir en Google Maps
-                  </a>
-               </div>
-            )}
-          </div>
-          <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'flex-end', borderTop: '2px solid var(--border)', paddingTop: '1.5rem' }}>
-             <button className="btn btn-primary zoom-hover" style={{ padding: '0.8rem 2.5rem', borderRadius: '30px', fontSize: '1.1rem', boxShadow: '0 4px 15px rgba(0,0,0,0.2)' }} onClick={() => setReadItem(null)}>❌ Cerrar</button>
-          </div>
+                </div>
+                <button className="btn zoom-hover" style={{ background: 'var(--surface)', color: 'var(--text-main)', border: '1px solid var(--border)', padding: '0.6rem 1.2rem', borderRadius: '12px', fontWeight: 'bold' }} onClick={() => window.print()}>🖨️ Imprimir</button>
+              </div>
+
+              {readItem.imagenUrl && (
+                <div style={{ width: '100%', height: '350px', backgroundImage: `url(${readItem.imagenUrl})`, backgroundSize: 'cover', backgroundPosition: 'center', borderRadius: '16px', margin: '0 0 2rem 0', boxShadow: '0 8px 25px rgba(0,0,0,0.15)' }}></div>
+              )}
+              
+              <div style={{ background: 'var(--surface)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--border)', boxShadow: '0 4px 15px rgba(0,0,0,0.03)' }}>
+                 <h3 style={{ margin: '0 0 1rem 0', color: 'var(--primary)', fontSize: '1.3rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    📝 Acerca de este evento
+                 </h3>
+                 <p style={{ fontSize: '1.15rem', color: 'var(--text-main)', lineHeight: '1.8', whiteSpace: 'pre-line', fontStyle: 'italic', margin: 0, opacity: 0.9 }}>
+                    {readItem.descripcion || 'Sin descripción detallada.'}
+                 </p>
+              </div>
+
+              {readItem.ubicacion && readItem.ubicacion.lat && (
+                 <div style={{ marginTop: '1.5rem', background: 'linear-gradient(to right, rgba(0,0,0,0.02), rgba(0,0,0,0.05))', padding: '1.5rem 2rem', borderRadius: '16px', border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+                    <div>
+                       <h4 style={{ margin: '0 0 0.4rem 0', color: 'var(--primary)', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          🛰️ Ubicación Satelital
+                       </h4>
+                       <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '1rem' }}>Míralo exactamente en el Mapa Interactivo</p>
+                    </div>
+                    <a href={`https://www.google.com/maps/search/?api=1&query=${readItem.ubicacion.lat},${readItem.ubicacion.lng}`} target="_blank" rel="noreferrer" className="btn zoom-hover" style={{ textDecoration: 'none', background: 'linear-gradient(135deg, #10B981, #059669)', color: 'white', fontWeight: 'bold', padding: '0.8rem 1.8rem', borderRadius: '30px', boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)', transition: 'all 0.3s ease' }}>
+                       🗺️ Abrir en Google Maps
+                    </a>
+                 </div>
+              )}
+            </div>
+            <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'flex-end', borderTop: '2px solid var(--border)', paddingTop: '1.5rem' }}>
+               <button className="btn btn-primary zoom-hover" style={{ padding: '0.8rem 2.5rem', borderRadius: '30px', fontSize: '1.1rem', boxShadow: '0 4px 15px rgba(0,0,0,0.2)' }} onClick={() => setReadItem(null)}>❌ Cerrar</button>
+            </div>
+          </>
         ) : activeTab === 'Formacion' ? (
           <>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '2px solid var(--border)', paddingBottom: '1rem', marginBottom: '1.5rem' }}>
