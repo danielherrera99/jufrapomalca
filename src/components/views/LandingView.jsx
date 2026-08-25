@@ -944,7 +944,7 @@ const LandingView = () => {
             <h2 className="section-title" style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>Próximos Encuentros</h2>
             <p style={{ color: 'var(--text-muted)' }}>Espacios de alegría, formación y fe para toda la juventud.</p>
           </div>
-          <div style={{ maxWidth: '950px', margin: '0 auto', display: 'grid', gap: '1.5rem' }}>
+          <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '1.5rem', padding: '0 1rem' }}>
             {eventos.length > 0 ? (
               eventos.map(event => {
                 const { day, month } = formatDate(event.fecha);
