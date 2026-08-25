@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 const EventosNewModal = ({ newItem, setNewItem, MapPicker }) => {
+  const handleMapChange = useCallback((lat, lng) => {
+    setNewItem(prev => ({...prev, lat, lng}));
+  }, [setNewItem]);
+
   return (
     <>
       <div className="input-group">
@@ -127,7 +131,7 @@ const EventosNewModal = ({ newItem, setNewItem, MapPicker }) => {
          <MapPicker 
             lat={newItem.lat} 
             lng={newItem.lng} 
-            onChange={(lat, lng) => setNewItem({...newItem, lat, lng})} 
+            onChange={handleMapChange} 
          />
       </div>
     </>

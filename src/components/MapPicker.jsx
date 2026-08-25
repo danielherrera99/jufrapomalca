@@ -63,4 +63,4 @@ const MapPicker = ({ lat, lng, onChange }) => {
   );
 };
 
-export default MapPicker;
+export default React.memo(MapPicker);

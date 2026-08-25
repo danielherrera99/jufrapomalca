@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 const EventosEditModal = ({ selectedItem, setSelectedItem, MapPicker, getSafeDateForInput }) => {
+  const handleMapChange = useCallback((lat, lng) => {
+    setSelectedItem(prev => ({...prev, ubicacion: { ...prev?.ubicacion, lat, lng }}));
+  }, [setSelectedItem]);
+
   return (
     <>
       <div className="input-group">
@@ -123,7 +127,7 @@ const EventosEditModal = ({ selectedItem, setSelectedItem, MapPicker, getSafeDat
         <MapPicker 
            lat={selectedItem.ubicacion?.lat || -6.745} 
            lng={selectedItem.ubicacion?.lng || -79.824} 
-           onChange={(lat, lng) => setSelectedItem({...selectedItem, ubicacion: { ...selectedItem.ubicacion, lat, lng }})} 
+           onChange={handleMapChange} 
         />
       </div>
     </>
