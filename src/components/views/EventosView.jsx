@@ -6,7 +6,7 @@ import EventosEditModal from '../EventosEditModal';
 import ItemReadModal from '../ItemReadModal';
 import MapPicker from '../MapPicker';
 
-const EventosView = () => {
+const EventosView = ({ formatSafeDate, SafeImage, ActivityIndicator }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -213,7 +213,14 @@ const EventosView = () => {
       )}
 
       {readItem && (
-        <ItemReadModal readItem={readItem} setReadItem={setReadItem} />
+        <ItemReadModal 
+          readItem={readItem} 
+          setReadItem={setReadItem} 
+          activeTab="Eventos"
+          formatSafeDate={formatSafeDate}
+          SafeImage={SafeImage}
+          ActivityIndicator={ActivityIndicator}
+        />
       )}
     </div>
   );
