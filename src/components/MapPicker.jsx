@@ -1,6 +1,15 @@
 import React, { useRef, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 
+const LocationListener = ({ onChange }) => {
+  useMapEvents({
+    click(e) {
+      onChange(Number(e.latlng.lat.toFixed(6)), Number(e.latlng.lng.toFixed(6)));
+    },
+  });
+  return null;
+};
+
 const MapPicker = ({ lat, lng, onChange }) => {
   const defaultPosition = [-6.764, -79.866]; 
   const position = [lat || defaultPosition[0], lng || defaultPosition[1]];
@@ -19,20 +28,11 @@ const MapPicker = ({ lat, lng, onChange }) => {
     [onChange]
   );
 
-  const LocationListener = () => {
-    useMapEvents({
-      click(e) {
-        onChange(Number(e.latlng.lat.toFixed(6)), Number(e.latlng.lng.toFixed(6)));
-      },
-    });
-    return null;
-  };
-
   return (
     <div style={{ height: '230px', width: '100%', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border)', marginTop: '0.5rem', position: 'relative' }}>
       <MapContainer center={position} zoom={14} style={{ height: '100%', width: '100%' }}>
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        <LocationListener />
+        <LocationListener onChange={onChange} />
         {lat && lng && (
           <Marker 
             position={[lat, lng]} 
