@@ -1056,6 +1056,12 @@ const LandingView = () => {
                   </div>
                 )}
               </div>
+              
+              <div style={{ textAlign: 'center', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
+                <a href="https://youfra.net/es/inicio/" target="_blank" rel="noopener noreferrer" className="btn btn-primary zoom-hover" style={{ padding: '1rem 2.5rem', textDecoration: 'none', display: 'inline-block', width: '100%' }}>
+                  JUFRA en el Mundo 🌐
+                </a>
+              </div>
             </div>
 
             {/* Columna Derecha: Controles y Tarjetas de Directorio */}
@@ -1233,12 +1239,6 @@ const LandingView = () => {
                   })}
                 </div>
               )}
-            </div>
-            
-            <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-              <a href="https://youfra.net/es/inicio/" target="_blank" rel="noopener noreferrer" className="btn btn-primary zoom-hover" style={{ padding: '1rem 2.5rem', textDecoration: 'none', display: 'inline-block' }}>
-                JUFRA en el Mundo 🌐
-              </a>
             </div>
           </div>
         </section>
