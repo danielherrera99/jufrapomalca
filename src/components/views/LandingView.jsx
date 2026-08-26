@@ -1234,6 +1234,12 @@ const LandingView = () => {
                 </div>
               )}
             </div>
+            
+            <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+              <a href="https://youfra.net/es/inicio/" target="_blank" rel="noopener noreferrer" className="btn btn-primary zoom-hover" style={{ padding: '1rem 2.5rem', textDecoration: 'none', display: 'inline-block' }}>
+                JUFRA en el Mundo 🌐
+              </a>
+            </div>
           </div>
         </section>
 
@@ -1252,9 +1258,6 @@ const LandingView = () => {
                 <Link to="/familia" target="_blank" className="btn btn-ghost zoom-hover" style={{ padding: '1rem 2.5rem', textDecoration: 'none' }}>
                   Conocer más de la OFS
                 </Link>
-                <a href="https://youfra.net/es/inicio/" target="_blank" rel="noopener noreferrer" className="btn btn-primary zoom-hover" style={{ padding: '1rem 2.5rem', textDecoration: 'none' }}>
-                  JUFRA en el Mundo 🌐
-                </a>
               </div>
             </div>
             <div style={{ flex: '0.8', minWidth: '280px', textAlign: 'center', position: 'relative', display: 'flex', justifyContent: 'center' }}>
