@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../config/api';
 
-const OfsView = () => {
+const TerceraOrdenView = () => {
   const [config, setConfig] = useState({
     familiaTitulo: 'Fraternidad OFS Santa Isabel de Hungría',
     familiaDescripcion: 'Caminamos junto a nuestros hermanos mayores...',
@@ -63,7 +63,7 @@ const OfsView = () => {
     <div className="landing-page animate-fade">
       {/* Navegación */}
       <nav className="landing-nav">
-        <Link to="/" className="logo">FAMILIA FRANCISCANA</Link>
+        <Link to="/" className="logo">OFS CHICLAYO</Link>
         
         <button className="nav-toggle" onClick={() => setIsMenuOpen(!isMenuOpen)}>
           {isMenuOpen ? '✕' : '☰'}
@@ -71,8 +71,9 @@ const OfsView = () => {
 
         <div className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
           <Link to="/" onClick={() => setIsMenuOpen(false)}>Regresar a JUFRA</Link>
-          <a href="#ramas" onClick={() => setIsMenuOpen(false)}>Las Tres Ramas</a>
-          <a href="#ofs" onClick={() => setIsMenuOpen(false)}>OFS (Tercera Orden)</a>
+          <Link to="/familia" onClick={() => setIsMenuOpen(false)}>Familia Franciscana</Link>
+          <a href="#historia" onClick={() => setIsMenuOpen(false)}>Identidad</a>
+          <a href="#pilares" onClick={() => setIsMenuOpen(false)}>Vida Seglar</a>
           <a href="#oracion" onClick={() => setIsMenuOpen(false)}>Oración</a>
           <a href="#contacto" onClick={() => setIsMenuOpen(false)}>Contacto</a>
         </div>
@@ -172,62 +173,109 @@ const OfsView = () => {
         </section>
       )}
 
-      {/* Hero Section Familia Franciscana */}
+
+
+      {/* Hero Section OFS */}
       <header className="hero-section" style={{ 
-        background: 'linear-gradient(135deg, #4A3B2C 0%, #2C1E16 100%)',
-        minHeight: '50vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center',
-        padding: '2rem',
-        marginTop: '60px'
+        backgroundImage: `url('/hero_ofs_san_damian.png')`,
+        minHeight: '60vh'
       }}>
-        <div className="hero-content" style={{ maxWidth: '800px', zIndex: 2 }}>
-          <h1 className="hero-title" style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', color: '#FFF' }}>La Familia Franciscana</h1>
-          <p className="hero-subtitle" style={{ color: '#EAEAEA', fontSize: '1.2rem', marginTop: '1rem', opacity: 0.9 }}>
-            Un árbol con tres grandes ramas, nacido de la inspiración de San Francisco de Asís para vivir el Santo Evangelio.
+        <div className="hero-overlay"></div>
+        <div className="hero-content">
+          <h1 className="hero-title">{config.ofsHeroTitle || config.familiaTitulo}</h1>
+          <p className="hero-subtitle">
+            {config.ofsHeroSubtitle || 'Orden Franciscana Seglar: Viviendo el Evangelio en medio del mundo.'}
           </p>
+          <div className="flex-responsive" style={{ justifyContent: 'center' }}>
+            <button className="btn btn-primary" style={{ padding: '1rem 3rem' }}>
+              Conocer la Regla
+            </button>
+            <a href="#historia" className="btn btn-ghost" style={{ padding: '1rem 3rem', textDecoration: 'none' }}>
+              Nuestra Identidad
+            </a>
+          </div>
         </div>
       </header>
 
-      {/* Las Tres Ramas */}
-      <section id="ramas" className="section-padding" style={{ background: '#FAF6F0' }}>
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <span style={{ color: 'var(--tertiary)', fontWeight: 'bold', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Nuestra Historia</span>
-          <h2 className="section-title" style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>Las Tres Ramas</h2>
-          <p style={{ color: 'var(--text-muted)', maxWidth: '700px', margin: '0 auto' }}>
-            San Francisco de Asís fundó tres órdenes para acoger a todas las personas llamadas a seguir a Cristo según su forma de vida, sin importar su estado civil o condición.
+      {/* Sección Identidad */}
+      <section id="historia" className="section-padding" style={{ background: 'white' }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
+          <h2 className="section-title">¿Quiénes somos?</h2>
+          <p style={{ fontSize: 'clamp(1rem, 3vw, 1.25rem)', lineHeight: '1.8', color: 'var(--text-muted)' }}>
+            {config.quienesSomos}
           </p>
         </div>
+      </section>
 
-        <div className="features-grid" style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <div className="feature-card" style={{ background: 'white' }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>🟤</div>
-            <h3 style={{ color: 'var(--primary)' }}>Primera Orden</h3>
-            <p style={{ color: 'var(--text-muted)' }}>
-              Conformada por los hermanos religiosos. Se divide en Frailes Menores (OFM), Conventuales (OFMConv) y Capuchinos (OFMCap). Su vida está centrada en la fraternidad, la minoridad y la predicación.
-            </p>
+      {/* Pilares OFS */}
+      <section id="pilares" className="features-grid section-padding" style={{ background: 'rgba(139, 69, 19, 0.02)' }}>
+        <div className="feature-card">
+          <div className="feature-icon-wrapper">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
           </div>
-          <div className="feature-card" style={{ background: 'white' }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>⛪</div>
-            <h3 style={{ color: 'var(--primary)' }}>Segunda Orden</h3>
-            <p style={{ color: 'var(--text-muted)' }}>
-              Las Hermanas Clarisas, cofundadas con Santa Clara de Asís. Mujeres consagradas a Dios en la vida contemplativa, sosteniendo a la Iglesia y al mundo con su oración constante y pobreza.
-            </p>
+          <h3>Vida Secular</h3>
+          <p>Llevamos el espíritu de San Francisco a nuestras familias, trabajos y vida cotidiana, siendo luz en medio del mundo.</p>
+        </div>
+        <div className="feature-card">
+          <div className="feature-icon-wrapper">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
           </div>
-          <div className="feature-card" style={{ background: 'white', border: '2px solid var(--secondary)', boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>🌍</div>
-            <h3 style={{ color: 'var(--secondary)' }}>Tercera Orden</h3>
-            <p style={{ color: 'var(--text-muted)' }}>
-              Formada por la Tercera Orden Regular (TOR) y la <strong>Orden Franciscana Seglar (OFS)</strong>. La OFS está compuesta por hombres y mujeres que viven el carisma franciscano en su vida familiar y secular.
+          <h3>Fraternidad</h3>
+          <p>Nos reunimos como hermanos para apoyarnos en el camino espiritual y fortalecer nuestro compromiso cristiano.</p>
+        </div>
+        <div className="feature-card">
+          <div className="feature-icon-wrapper">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          </div>
+          <h3>Misión</h3>
+          <p>Somos instrumentos de paz, justicia y caridad, promoviendo los valores evangélicos en la sociedad actual.</p>
+        </div>
+      </section>
+
+      {/* Cita OFS */}
+      <section className="testimonial-section section-padding">
+        <div className="testimonial-card">
+          <p className="testimonial-text">
+            "Pasar del Evangelio a la vida y de la vida al Evangelio."
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
+            <div style={{ width: '40px', height: '1px', background: 'var(--secondary)' }}></div>
+            <p style={{ fontWeight: '800', color: 'var(--secondary)', textTransform: 'uppercase', letterSpacing: '2px' }}>
+              — Regla de la OFS
             </p>
-            <Link to="/ofs" className="btn btn-primary" style={{ display: 'inline-block', marginTop: '1rem', padding: '0.5rem 1.5rem', fontSize: '0.9rem', borderRadius: '20px', textDecoration: 'none' }}>Conocer la OFS ➔</Link>
+            <div style={{ width: '40px', height: '1px', background: 'var(--secondary)' }}></div>
           </div>
         </div>
       </section>
 
-
+      {/* Sección Ubicación / Mapa OFS */}
+      <section id="ubicacion" className="section-padding" style={{ textAlign: 'center', background: 'white', borderTop: '1px solid var(--border)' }}>
+        <h2 className="section-title">Nuestra Sede</h2>
+        <p style={{ color: 'var(--text-muted)', marginBottom: '3rem', maxWidth: '600px', margin: '0 auto 3rem' }}>
+          La fraternidad se reúne en el Convento San Antonio de Padua. ¡Te invitamos a conocernos!
+        </p>
+        <div className="map-container zoom-hover" style={{ maxWidth: '1000px', margin: '0 auto' }}>
+          <iframe 
+            src={`https://www.google.com/maps?q=${encodeURIComponent(config.ofsMapQuery || 'Convento San Antonio de Padua, Chiclayo')}&t=&z=16&ie=UTF8&iwloc=&output=embed`} 
+            width="100%" 
+            height="400" 
+            style={{ border: 0, borderRadius: '24px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }} 
+            allowFullScreen="" 
+            loading="lazy" 
+          ></iframe>
+        </div>
+        <div style={{ marginTop: '2rem' }}>
+          <a 
+            href={`https://www.google.com/maps/search/${encodeURIComponent(config.ofsMapQuery || 'Convento San Antonio de Padua, Chiclayo')}`} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="btn btn-ghost"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}
+          >
+            <span>📍</span> Abrir en Google Maps
+          </a>
+        </div>
+      </section>
 
       {/* Footer OFS */}
       <footer id="contacto" className="landing-footer section-padding">
@@ -256,4 +304,4 @@ const OfsView = () => {
   );
 };
 
-export default OfsView;
+export default TerceraOrdenView;
