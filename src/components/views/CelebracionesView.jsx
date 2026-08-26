@@ -35,7 +35,7 @@ const CelebracionesView = () => {
 
         <div className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
           <Link to="/" onClick={() => setIsMenuOpen(false)}>Inicio</Link>
-          <Link to="/familia-ofs" onClick={() => setIsMenuOpen(false)}>Familia OFS</Link>
+          <Link to="/familia" onClick={() => setIsMenuOpen(false)}>Familia OFS</Link>
         </div>
       </nav>
 

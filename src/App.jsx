@@ -486,7 +486,7 @@ function App() {
         <Routes>
           {/* Cara Pública */}
           <Route path="/" element={<LandingView />} />
-          <Route path="/familia-ofs" element={<OfsView />} />
+          <Route path="/familia" element={<OfsView />} />
           <Route path="/celebraciones" element={<CelebracionesView />} />
           
           {/* Panel de Administración (Privado) */}

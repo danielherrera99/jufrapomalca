@@ -200,7 +200,7 @@ const OfsConfigView = () => {
           </section>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
-            <button type="button" className="btn btn-ghost" onClick={() => window.open('/familia-ofs', '_blank')}>👁️ Ver Página</button>
+            <button type="button" className="btn btn-ghost" onClick={() => window.open('/familia', '_blank')}>👁️ Ver Página</button>
             <button type="submit" className="btn btn-primary" style={{ padding: '1rem 3rem' }} disabled={loading}>{loading ? 'Guardando...' : '💾 Guardar Cambios'}</button>
           </div>
         </form>
