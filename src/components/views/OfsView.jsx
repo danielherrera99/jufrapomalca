@@ -63,7 +63,7 @@ const OfsView = () => {
     <div className="landing-page animate-fade">
       {/* Navegación */}
       <nav className="landing-nav">
-        <Link to="/" className="logo">OFS CHICLAYO</Link>
+        <Link to="/" className="logo">FAMILIA FRANCISCANA</Link>
         
         <button className="nav-toggle" onClick={() => setIsMenuOpen(!isMenuOpen)}>
           {isMenuOpen ? '✕' : '☰'}
@@ -71,8 +71,8 @@ const OfsView = () => {
 
         <div className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
           <Link to="/" onClick={() => setIsMenuOpen(false)}>Regresar a JUFRA</Link>
-          <a href="#historia" onClick={() => setIsMenuOpen(false)}>Identidad</a>
-          <a href="#pilares" onClick={() => setIsMenuOpen(false)}>Vida Seglar</a>
+          <a href="#ramas" onClick={() => setIsMenuOpen(false)}>Las Tres Ramas</a>
+          <a href="#ofs" onClick={() => setIsMenuOpen(false)}>OFS (Tercera Orden)</a>
           <a href="#oracion" onClick={() => setIsMenuOpen(false)}>Oración</a>
           <a href="#contacto" onClick={() => setIsMenuOpen(false)}>Contacto</a>
         </div>
@@ -171,6 +171,63 @@ const OfsView = () => {
             </div>
         </section>
       )}
+
+      {/* Hero Section Familia Franciscana */}
+      <header className="hero-section" style={{ 
+        background: 'linear-gradient(135deg, #4A3B2C 0%, #2C1E16 100%)',
+        minHeight: '50vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+        padding: '2rem',
+        marginTop: '60px'
+      }}>
+        <div className="hero-content" style={{ maxWidth: '800px', zIndex: 2 }}>
+          <h1 className="hero-title" style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', color: '#FFF' }}>La Familia Franciscana</h1>
+          <p className="hero-subtitle" style={{ color: '#EAEAEA', fontSize: '1.2rem', marginTop: '1rem', opacity: 0.9 }}>
+            Un árbol con tres grandes ramas, nacido de la inspiración de San Francisco de Asís para vivir el Santo Evangelio.
+          </p>
+        </div>
+      </header>
+
+      {/* Las Tres Ramas */}
+      <section id="ramas" className="section-padding" style={{ background: '#FAF6F0' }}>
+        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+          <span style={{ color: 'var(--tertiary)', fontWeight: 'bold', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Nuestra Historia</span>
+          <h2 className="section-title" style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>Las Tres Ramas</h2>
+          <p style={{ color: 'var(--text-muted)', maxWidth: '700px', margin: '0 auto' }}>
+            San Francisco de Asís fundó tres órdenes para acoger a todas las personas llamadas a seguir a Cristo según su forma de vida, sin importar su estado civil o condición.
+          </p>
+        </div>
+
+        <div className="features-grid" style={{ maxWidth: '1100px', margin: '0 auto' }}>
+          <div className="feature-card" style={{ background: 'white' }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>🟤</div>
+            <h3 style={{ color: 'var(--primary)' }}>Primera Orden</h3>
+            <p style={{ color: 'var(--text-muted)' }}>
+              Conformada por los hermanos religiosos. Se divide en Frailes Menores (OFM), Conventuales (OFMConv) y Capuchinos (OFMCap). Su vida está centrada en la fraternidad, la minoridad y la predicación.
+            </p>
+          </div>
+          <div className="feature-card" style={{ background: 'white' }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>⛪</div>
+            <h3 style={{ color: 'var(--primary)' }}>Segunda Orden</h3>
+            <p style={{ color: 'var(--text-muted)' }}>
+              Las Hermanas Clarisas, cofundadas con Santa Clara de Asís. Mujeres consagradas a Dios en la vida contemplativa, sosteniendo a la Iglesia y al mundo con su oración constante y pobreza.
+            </p>
+          </div>
+          <div className="feature-card" style={{ background: 'white', border: '2px solid var(--secondary)', boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>🌍</div>
+            <h3 style={{ color: 'var(--secondary)' }}>Tercera Orden</h3>
+            <p style={{ color: 'var(--text-muted)' }}>
+              Formada por la Tercera Orden Regular (TOR) y la <strong>Orden Franciscana Seglar (OFS)</strong>. La OFS está compuesta por hombres y mujeres que viven el carisma franciscano en su vida familiar y secular.
+            </p>
+            <a href="#ofs" className="btn btn-primary" style={{ display: 'inline-block', marginTop: '1rem', padding: '0.5rem 1.5rem', fontSize: '0.9rem', borderRadius: '20px', textDecoration: 'none' }}>Conocer la OFS ➔</a>
+          </div>
+        </div>
+      </section>
+
+      <div id="ofs"></div>
 
       {/* Hero Section OFS */}
       <header className="hero-section" style={{ 
