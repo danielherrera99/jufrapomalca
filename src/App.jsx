@@ -22,6 +22,7 @@ import ComunicacionView from './components/views/ComunicacionView';
 import LandingView from './components/views/LandingView';
 import OfsView from './components/views/OfsView';
 import TerceraOrdenView from './components/views/TerceraOrdenView';
+import OfsChiclayoView from './components/views/OfsChiclayoView';
 import WebConfigView from './components/views/WebConfigView';
 import OfsConfigView from './components/views/OfsConfigView';
 import CelebracionesView from './components/views/CelebracionesView';
@@ -489,6 +490,7 @@ function App() {
           <Route path="/" element={<LandingView />} />
           <Route path="/familia" element={<OfsView />} />
           <Route path="/ofs" element={<TerceraOrdenView />} />
+          <Route path="/ofs/chiclayo" element={<OfsChiclayoView />} />
           <Route path="/celebraciones" element={<CelebracionesView />} />
           
           {/* Panel de Administración (Privado) */}

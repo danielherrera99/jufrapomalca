@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../config/api';
 
-const TerceraOrdenView = () => {
+const OfsChiclayoView = () => {
   const [config, setConfig] = useState({
     familiaTitulo: 'Fraternidad OFS Santa Isabel de Hungría',
     familiaDescripcion: 'Caminamos junto a nuestros hermanos mayores...',
@@ -71,7 +71,7 @@ const TerceraOrdenView = () => {
 
         <div className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
           <Link to="/" onClick={() => setIsMenuOpen(false)}>Regresar a JUFRA</Link>
-          <Link to="/familia" onClick={() => setIsMenuOpen(false)}>Familia Franciscana</Link>
+          <Link to="/ofs" onClick={() => setIsMenuOpen(false)}>OFS (Tercera Orden)</Link>
           <a href="#historia" onClick={() => setIsMenuOpen(false)}>Identidad</a>
           <a href="#pilares" onClick={() => setIsMenuOpen(false)}>Vida Seglar</a>
           <a href="#oracion" onClick={() => setIsMenuOpen(false)}>Oración</a>
@@ -182,14 +182,14 @@ const TerceraOrdenView = () => {
       }}>
         <div className="hero-overlay"></div>
         <div className="hero-content">
-          <h1 className="hero-title">Orden Franciscana Seglar</h1>
+          <h1 className="hero-title">{config.ofsHeroTitle || config.familiaTitulo}</h1>
           <p className="hero-subtitle">
-            Laicos comprometidos a vivir el Evangelio en medio del mundo, en familia y en fraternidad.
+            {config.ofsHeroSubtitle || 'Orden Franciscana Seglar: Viviendo el Evangelio en medio del mundo.'}
           </p>
           <div className="flex-responsive" style={{ justifyContent: 'center' }}>
-            <a href="#fraternidades" className="btn btn-primary" style={{ padding: '1rem 3rem', textDecoration: 'none' }}>
-              Encuentra tu Fraternidad
-            </a>
+            <button className="btn btn-primary" style={{ padding: '1rem 3rem' }}>
+              Conocer la Regla
+            </button>
             <a href="#historia" className="btn btn-ghost" style={{ padding: '1rem 3rem', textDecoration: 'none' }}>
               Nuestra Identidad
             </a>
@@ -248,48 +248,60 @@ const TerceraOrdenView = () => {
         </div>
       </section>
 
-      {/* Fraternidades Locales */}
-      <section id="fraternidades" className="section-padding" style={{ background: '#FAF6F0' }}>
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <span style={{ color: 'var(--tertiary)', fontWeight: 'bold', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Presencia Local</span>
-          <h2 className="section-title" style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>Nuestras Fraternidades</h2>
-          <p style={{ color: 'var(--text-muted)', maxWidth: '700px', margin: '0 auto' }}>
-            La Orden Franciscana Seglar está organizada en fraternidades locales. Encuentra la más cercana a ti y únete a nuestra familia.
-          </p>
+      {/* Sección Ubicación / Mapa OFS */}
+      <section id="ubicacion" className="section-padding" style={{ textAlign: 'center', background: 'white', borderTop: '1px solid var(--border)' }}>
+        <h2 className="section-title">Nuestra Sede</h2>
+        <p style={{ color: 'var(--text-muted)', marginBottom: '3rem', maxWidth: '600px', margin: '0 auto 3rem' }}>
+          La fraternidad se reúne en el Convento San Antonio de Padua. ¡Te invitamos a conocernos!
+        </p>
+        <div className="map-container zoom-hover" style={{ maxWidth: '1000px', margin: '0 auto' }}>
+          <iframe 
+            src={`https://www.google.com/maps?q=${encodeURIComponent(config.ofsMapQuery || 'Convento San Antonio de Padua, Chiclayo')}&t=&z=16&ie=UTF8&iwloc=&output=embed`} 
+            width="100%" 
+            height="400" 
+            style={{ border: 0, borderRadius: '24px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }} 
+            allowFullScreen="" 
+            loading="lazy" 
+          ></iframe>
         </div>
-
-        <div className="features-grid" style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <div className="feature-card" style={{ background: 'white', textAlign: 'center', padding: '3rem 2rem', boxShadow: '0 10px 30px rgba(0,0,0,0.05)', borderRadius: '15px' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📍</div>
-            <h3 style={{ color: 'var(--primary)', marginBottom: '0.5rem' }}>Fraternidad OFS Chiclayo</h3>
-            <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-              <strong>"Santa Isabel de Hungría"</strong><br/>
-              Convento San Antonio de Padua
-            </p>
-            <Link to="/ofs/chiclayo" className="btn btn-primary" style={{ padding: '0.8rem 2rem', textDecoration: 'none', borderRadius: '50px' }}>
-              Ver Información y Horarios ➔
-            </Link>
-          </div>
+        <div style={{ marginTop: '2rem' }}>
+          <a 
+            href={`https://www.google.com/maps/search/${encodeURIComponent(config.ofsMapQuery || 'Convento San Antonio de Padua, Chiclayo')}`} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="btn btn-ghost"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}
+          >
+            <span>📍</span> Abrir en Google Maps
+          </a>
         </div>
       </section>
 
-      {/* Footer General */}
+      {/* Footer OFS */}
       <footer id="contacto" className="landing-footer section-padding">
-        <div className="responsive-grid" style={{ maxWidth: '1200px', margin: '0 auto', textAlign: 'center' }}>
+        <div className="responsive-grid" style={{ maxWidth: '1200px', margin: '0 auto', textAlign: 'left', '--grid-min': '250px' }}>
           <div>
-            <h3 style={{ marginBottom: '1.5rem', fontFamily: 'var(--font-serif)' }}>Orden Franciscana Seglar</h3>
+            <h3 style={{ marginBottom: '1.5rem', fontFamily: 'var(--font-serif)' }}>OFS Chiclayo</h3>
             <p style={{ opacity: 0.7, fontSize: '0.95rem', lineHeight: '1.6' }}>
-              Viviendo el Evangelio en familia, en el trabajo y en la sociedad.
+              Fraternidad Santa Isabel de Hungría. Orden Franciscana Seglar del Perú.
             </p>
+          </div>
+          <div>
+            <h4 style={{ marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.9rem' }}>Ubicación</h4>
+            <p style={{ opacity: 0.8 }}>{config.footerDireccion}</p>
+          </div>
+          <div>
+            <h4 style={{ marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.9rem' }}>Contacto</h4>
+            <p style={{ opacity: 0.8 }}>📧 {config.footerEmail}<br/>📱 {config.footerTelefono}</p>
           </div>
         </div>
         
-        <div style={{ marginTop: '3rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '2rem', opacity: 0.5, fontSize: '0.85rem', textAlign: 'center' }}>
-          &copy; {new Date().getFullYear()} Orden Franciscana Seglar.
+        <div style={{ marginTop: '5rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '2rem', opacity: 0.5, fontSize: '0.85rem', textAlign: 'center' }}>
+          &copy; {new Date().getFullYear()} Orden Franciscana Seglar - Fraternidad Santa Isabel de Hungría.
         </div>
       </footer>
     </div>
   );
 };
 
-export default TerceraOrdenView;
+export default OfsChiclayoView;
