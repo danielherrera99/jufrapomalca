@@ -541,7 +541,7 @@ const LandingView = () => {
             {/* La Tau */}
             <div className="simbolo-card" style={{ background: '#FFFFFF', borderRadius: '15px', padding: '2rem', textAlign: 'center', boxShadow: '0 5px 20px rgba(0,0,0,0.04)' }}>
               <div style={{ marginBottom: '1rem', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <img src="/assets/simbolos/tau.jpg" alt="La Tau" style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', borderRadius: '10px' }} />
+                <img src="/assets/simbolos/tau.jpg" alt="La Tau" style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }} />
               </div>
               <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.3rem' }}>La Tau</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
@@ -552,7 +552,7 @@ const LandingView = () => {
             {/* Cristo de San Damián */}
             <div className="simbolo-card" style={{ background: '#FFFFFF', borderRadius: '15px', padding: '2rem', textAlign: 'center', boxShadow: '0 5px 20px rgba(0,0,0,0.04)' }}>
               <div style={{ marginBottom: '1rem', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <img src="/assets/simbolos/san_damian.jpg" alt="Cristo de San Damián" style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', borderRadius: '10px' }} />
+                <img src="/assets/simbolos/san_damian.jpg" alt="Cristo de San Damián" style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }} />
               </div>
               <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.3rem' }}>Cristo de San Damián</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
@@ -563,7 +563,7 @@ const LandingView = () => {
             {/* Corona Seráfica */}
             <div className="simbolo-card" style={{ background: '#FFFFFF', borderRadius: '15px', padding: '2rem', textAlign: 'center', boxShadow: '0 5px 20px rgba(0,0,0,0.04)' }}>
               <div style={{ marginBottom: '1rem', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <img src="/assets/simbolos/corona.png" alt="Corona Seráfica" style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', borderRadius: '10px' }} />
+                <img src="/assets/simbolos/corona.png" alt="Corona Seráfica" style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }} />
               </div>
               <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.3rem' }}>Corona Seráfica</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
@@ -574,7 +574,7 @@ const LandingView = () => {
             {/* Escapulario */}
             <div className="simbolo-card" style={{ background: '#FFFFFF', borderRadius: '15px', padding: '2rem', textAlign: 'center', boxShadow: '0 5px 20px rgba(0,0,0,0.04)' }}>
               <div style={{ marginBottom: '1rem', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <img src="/assets/simbolos/escapulario.png" alt="El Escapulario" style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', borderRadius: '10px' }} />
+                <img src="/assets/simbolos/escapulario.png" alt="El Escapulario" style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }} />
               </div>
               <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.3rem' }}>El Escapulario</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
@@ -585,7 +585,7 @@ const LandingView = () => {
             {/* Cordón de los 3 nudos */}
             <div className="simbolo-card" style={{ background: '#FFFFFF', borderRadius: '15px', padding: '2rem', textAlign: 'center', boxShadow: '0 5px 20px rgba(0,0,0,0.04)' }}>
               <div style={{ marginBottom: '1rem', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <img src="/assets/simbolos/cordon.png" alt="Cordón de los 3 Nudos" style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', borderRadius: '10px' }} />
+                <img src="/assets/simbolos/cordon.png" alt="Cordón de los 3 Nudos" style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }} />
               </div>
               <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.3rem' }}>Cordón de los 3 Nudos</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
