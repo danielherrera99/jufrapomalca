@@ -810,14 +810,14 @@ const LandingView = () => {
                   return (
                     <div key={post.id} className="zoom-hover" style={{ breakInside: 'avoid', marginBottom: '1.5rem', width: '100%', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                       <div style={{ display: 'flex', alignItems: 'center', padding: '1rem', gap: '10px' }}>
-                        <img src={post.pageIcon} alt="JUFRA" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+                        <img src={post.pageIcon} alt="JUFRA" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} />
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                           <span style={{ fontWeight: 'bold', fontSize: '0.95rem', color: '#050505' }}>{post.pageName}</span>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.8rem', color: '#65676B' }}><span>{post.date}</span><span>•</span><span>📘 Facebook</span></div>
                         </div>
                       </div>
                       <div style={{ padding: '0 1rem 0.5rem 1rem', fontSize: '0.95rem', color: '#050505', lineHeight: '1.4' }}>{post.content}</div>
-                      <div style={{ width: '100%', height: '220px', background: '#f0f2f5' }}><img src={post.image} alt="Post" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></div>
+                      <div style={{ width: '100%', height: '220px', background: '#f0f2f5' }}><img src={post.image} alt="Post" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} /></div>
                       <div style={{ padding: '0.5rem 1rem', display: 'flex', flexDirection: 'column' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: '#65676B', paddingBottom: '0.5rem', borderBottom: '1px solid #E4E6EB' }}>
                           <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>👍💙 {post.likes}</span><span>{post.comments} comentarios</span>
@@ -837,11 +837,11 @@ const LandingView = () => {
                   return (
                     <div key={post.id} className="zoom-hover" style={{ breakInside: 'avoid', marginBottom: '1.5rem', width: '100%', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column', border: '1px solid #efefef' }}>
                       <div style={{ display: 'flex', alignItems: 'center', padding: '0.8rem 1rem', gap: '10px' }}>
-                        <img src={post.userIcon} alt="Profile" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #E1306C', padding: '2px' }} />
+                        <img src={post.userIcon} alt="Profile" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #E1306C', padding: '2px' }} onError={(e) => { e.target.style.display = 'none'; }} />
                         <span style={{ fontWeight: '600', fontSize: '0.9rem', color: '#262626' }}>{post.username}</span>
                         <span style={{ marginLeft: 'auto', fontSize: '0.8rem', color: '#E1306C', fontWeight: 'bold' }}>📸 IG</span>
                       </div>
-                      <div style={{ width: '100%', height: '350px', background: '#fafafa' }}><img src={post.image} alt="Insta" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></div>
+                      <div style={{ width: '100%', height: '350px', background: '#fafafa' }}><img src={post.image} alt="Insta" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} /></div>
                       <div style={{ padding: '0.8rem 1rem' }}>
                         <div style={{ display: 'flex', gap: '1rem', marginBottom: '0.5rem', fontSize: '1.4rem' }}><span>❤️</span><span>💬</span><span>↗️</span></div>
                         <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#262626', marginBottom: '0.3rem' }}>{post.likes} Me gusta</div>
@@ -886,12 +886,12 @@ const LandingView = () => {
                   return (
                     <div key={video.id} className="zoom-hover" style={{ breakInside: 'avoid', marginBottom: '1.5rem', width: '100%', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                       <div style={{ position: 'relative', width: '100%', paddingTop: '56.25%', background: '#000' }}>
-                        <img src={video.thumbnail} alt="YouTube" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <img src={video.thumbnail} alt="YouTube" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} />
                         <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(255,0,0,0.8)', color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold' }}>▶️ YouTube</div>
                         <div style={{ position: 'absolute', bottom: '10px', right: '10px', background: 'rgba(0,0,0,0.8)', color: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem' }}>Vídeo</div>
                       </div>
                       <div style={{ display: 'flex', padding: '1rem', gap: '12px' }}>
-                        <img src={video.channelIcon} alt="Channel" style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }} />
+                        <img src={video.channelIcon} alt="Channel" style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} />
                         <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
                           <h4 style={{ margin: '0 0 4px 0', fontSize: '0.95rem', color: '#0f0f0f', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                             {video.title}
@@ -912,14 +912,14 @@ const LandingView = () => {
               {activeSocialTab === 'facebook' && socialPosts.facebook.map(post => (
                 <div key={post.id} className="zoom-hover" style={{ breakInside: 'avoid', marginBottom: '1.5rem', width: '100%', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ display: 'flex', alignItems: 'center', padding: '1rem', gap: '10px' }}>
-                    <img src={post.pageIcon} alt="JUFRA" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+                    <img src={post.pageIcon} alt="JUFRA" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} />
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                       <span style={{ fontWeight: 'bold', fontSize: '0.95rem', color: '#050505' }}>{post.pageName}</span>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.8rem', color: '#65676B' }}><span>{post.date}</span><span>•</span><span>🌎</span></div>
                     </div>
                   </div>
                   <div style={{ padding: '0 1rem 0.5rem 1rem', fontSize: '0.95rem', color: '#050505', lineHeight: '1.4' }}>{post.content}</div>
-                  <div style={{ width: '100%', height: '220px', background: '#f0f2f5' }}><img src={post.image} alt="Post" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></div>
+                  <div style={{ width: '100%', height: '220px', background: '#f0f2f5' }}><img src={post.image} alt="Post" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} /></div>
                   <div style={{ padding: '0.5rem 1rem', display: 'flex', flexDirection: 'column' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: '#65676B', paddingBottom: '0.5rem', borderBottom: '1px solid #E4E6EB' }}>
                       <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>👍💙 {post.likes}</span><span>{post.comments} comentarios</span>
@@ -936,10 +936,10 @@ const LandingView = () => {
               {activeSocialTab === 'instagram' && socialPosts.instagram.map(post => (
                 <div key={post.id} className="zoom-hover" style={{ breakInside: 'avoid', marginBottom: '1.5rem', width: '100%', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column', border: '1px solid #efefef' }}>
                   <div style={{ display: 'flex', alignItems: 'center', padding: '0.8rem 1rem', gap: '10px' }}>
-                    <img src={post.userIcon} alt="Profile" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #E1306C', padding: '2px' }} />
+                    <img src={post.userIcon} alt="Profile" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #E1306C', padding: '2px' }} onError={(e) => { e.target.style.display = 'none'; }} />
                     <span style={{ fontWeight: '600', fontSize: '0.9rem', color: '#262626' }}>{post.username}</span>
                   </div>
-                  <div style={{ width: '100%', height: '350px', background: '#fafafa' }}><img src={post.image} alt="Insta" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></div>
+                  <div style={{ width: '100%', height: '350px', background: '#fafafa' }}><img src={post.image} alt="Insta" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} /></div>
                   <div style={{ padding: '0.8rem 1rem' }}>
                     <div style={{ display: 'flex', gap: '1rem', marginBottom: '0.5rem', fontSize: '1.4rem' }}><span>❤️</span><span>💬</span><span>↗️</span></div>
                     <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#262626', marginBottom: '0.3rem' }}>{post.likes} Me gusta</div>
@@ -977,13 +977,13 @@ const LandingView = () => {
               {activeSocialTab === 'youtube' && socialPosts.youtube.map(video => (
                 <div key={video.id} className="zoom-hover" style={{ breakInside: 'avoid', marginBottom: '1.5rem', width: '100%', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ width: '100%', height: '200px', background: '#000', position: 'relative' }}>
-                    <img src={video.thumbnail} alt="YouTube" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={video.thumbnail} alt="YouTube" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} />
                     <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '50px', height: '35px', background: 'rgba(255,0,0,0.9)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <div style={{ width: 0, height: 0, borderTop: '8px solid transparent', borderBottom: '8px solid transparent', borderLeft: '12px solid white' }}></div>
                     </div>
                   </div>
                   <div style={{ display: 'flex', padding: '1rem', gap: '12px' }}>
-                    <img src={video.channelIcon} alt="Channel" style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }} />
+                    <img src={video.channelIcon} alt="Channel" style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} />
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                       <span style={{ fontWeight: '600', fontSize: '0.95rem', color: '#0f0f0f', lineHeight: '1.3', marginBottom: '4px' }}>{video.title}</span>
                       <span style={{ fontSize: '0.85rem', color: '#606060' }}>{video.channelName}</span>
