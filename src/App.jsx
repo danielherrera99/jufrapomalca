@@ -34,6 +34,7 @@ import FraternidadesAdminView from './components/views/FraternidadesAdminView';
 import RedesAdminView from './components/views/RedesAdminView';
 import GaleriaWebAdminView from './components/views/GaleriaWebAdminView';
 import QuienesSomosView from './components/views/QuienesSomosView';
+import JufraPeruView from './components/views/JufraPeruView';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import 'leaflet/dist/leaflet.css';
@@ -492,6 +493,7 @@ function App() {
           <Route path="/ofs" element={<TerceraOrdenView />} />
           <Route path="/ofs/chiclayo" element={<OfsChiclayoView />} />
           <Route path="/celebraciones" element={<CelebracionesView />} />
+          <Route path="/jufra-peru" element={<JufraPeruView />} />
           
           {/* Panel de Administración (Privado) */}
           <Route path="/admin" element={!user ? <Login onLogin={setUser} /> : <Navigate to="/dashboard" />} />

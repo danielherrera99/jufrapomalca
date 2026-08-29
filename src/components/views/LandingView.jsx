@@ -1176,10 +1176,13 @@ const LandingView = () => {
                 )}
               </div>
               
-              <div style={{ textAlign: 'center', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
-                <a href="https://youfra.net/es/inicio/" target="_blank" rel="noopener noreferrer" className="btn btn-primary zoom-hover" style={{ padding: '1rem 2.5rem', textDecoration: 'none', display: 'inline-block', width: '100%' }}>
+              <div style={{ display: 'flex', gap: '10px', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
+                <a href="https://youfra.net/es/inicio/" target="_blank" rel="noopener noreferrer" className="btn btn-primary zoom-hover" style={{ flex: 1, padding: '1rem', textDecoration: 'none', textAlign: 'center' }}>
                   JUFRA en el Mundo 🌐
                 </a>
+                <Link to="/jufra-peru" className="btn zoom-hover" style={{ flex: 1, padding: '1rem', textDecoration: 'none', textAlign: 'center', background: '#D97706', color: 'white' }}>
+                  JUFRA Perú 🇵🇪
+                </Link>
               </div>
             </div>
 
