@@ -89,7 +89,7 @@ const JufraPeruView = () => {
       </header>
 
       {/* Main Content */}
-      <main style={{ padding: '4rem 1rem', background: 'var(--bg)', minHeight: '50vh' }}>
+      <main style={{ padding: '4rem 1rem', background: '#FAF6F0', color: '#333', minHeight: '50vh' }}>
         <div className="container" id="directorio" style={{ maxWidth: '1000px', margin: '0 auto' }}>
           
           <div style={{ marginBottom: '3rem', textAlign: 'center' }}>
@@ -124,12 +124,12 @@ const JufraPeruView = () => {
                     </h3>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
                       {frats.map(f => (
-                        <div key={f._id || f.id || Math.random()} className="glass-card zoom-hover" style={{ padding: '1.5rem' }}>
+                        <div key={f._id || f.id || Math.random()} className="glass-card zoom-hover" style={{ padding: '1.5rem', background: '#FFF' }}>
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-                            <h4 style={{ margin: 0, color: 'var(--text)', fontSize: '1.1rem' }}>{f.nombre}</h4>
+                            <h4 style={{ margin: 0, color: '#1A1D20', fontSize: '1.1rem' }}>{f.nombre}</h4>
                           </div>
-                          <p style={{ margin: '0 0 0.2rem 0', fontSize: '0.9rem', color: 'var(--text-muted)' }}>📍 <strong>{f.departamento}</strong></p>
-                          {f.parroquia && <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem', color: 'var(--text-muted)' }}>⛪ {f.parroquia}</p>}
+                          <p style={{ margin: '0 0 0.2rem 0', fontSize: '0.9rem', color: '#4B5563' }}>📍 <strong>{f.departamento}</strong></p>
+                          {f.parroquia && <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem', color: '#4B5563' }}>⛪ {f.parroquia}</p>}
                           
                           {(f.contacto || f.telefono || f.enlaceSocial) && (
                             <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border)', fontSize: '0.9rem' }}>
