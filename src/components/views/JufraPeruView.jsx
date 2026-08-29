@@ -75,18 +75,14 @@ const JufraPeruView = () => {
 
       {/* Hero Section */}
       <header className="hero-section" style={{ 
-        background: 'linear-gradient(135deg, #7C2D12 0%, #431407 100%)',
+        backgroundImage: `url('/hero_jufra_background.png')`,
         minHeight: '40vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center',
-        padding: '2rem',
         marginTop: '60px'
       }}>
+        <div className="hero-overlay-cinematic"></div>
         <div className="hero-content" style={{ maxWidth: '800px', zIndex: 2 }}>
-          <h1 className="hero-title" style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', color: '#FFF' }}>JUFRA Perú</h1>
-          <p className="hero-subtitle" style={{ color: '#EAEAEA', fontSize: '1.2rem', marginTop: '1rem', opacity: 0.9 }}>
+          <h1 className="hero-title" style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)' }}>JUFRA Perú</h1>
+          <p className="hero-subtitle" style={{ fontSize: '1.2rem', marginTop: '1rem', opacity: 0.9 }}>
             Conoce todas las fraternidades locales de la Juventud Franciscana a nivel nacional y encuentra una cerca de ti.
           </p>
         </div>
