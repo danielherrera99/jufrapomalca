@@ -796,19 +796,15 @@ const LandingView = () => {
 
             {/* Carrusel (Masonry Look) */}
             <div style={{ 
-              columnCount: 'auto',
-              columnWidth: '260px',
-              columnGap: '1.5rem',
-              paddingBottom: '2rem',
-              padding: '1rem',
-            }} className="social-masonry-grid">
+              display: 'flex', gap: '1.5rem', overflowX: 'auto', paddingBottom: '2rem', scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch', padding: '1rem', scrollbarWidth: 'none', msOverflowStyle: 'none'
+            }} className="social-carousel hide-scrollbar">
               {activeSocialTab === 'todos' && socialPosts.todos.map(p => {
                 if (p.red_social === 'facebook') {
                   const post = {
                     id: p.id, pageName: p.author_name, pageIcon: p.author_icon, date: p.date_text, content: p.content, image: p.image_url, likes: p.likes, comments: p.comments, link: p.link
                   };
                   return (
-                    <div key={post.id} className="zoom-hover" style={{ breakInside: 'avoid', marginBottom: '1.5rem', width: '100%', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                    <div key={post.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '320px', maxWidth: '85vw', scrollSnapAlign: 'start', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                       <div style={{ display: 'flex', alignItems: 'center', padding: '1rem', gap: '10px' }}>
                         <img src={post.pageIcon} alt="JUFRA" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} />
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -835,7 +831,7 @@ const LandingView = () => {
                     id: p.id, username: p.author_name, userIcon: p.author_icon, image: p.image_url, likes: p.likes, caption: p.content, date: p.date_text, link: p.link
                   };
                   return (
-                    <div key={post.id} className="zoom-hover" style={{ breakInside: 'avoid', marginBottom: '1.5rem', width: '100%', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column', border: '1px solid #efefef' }}>
+                    <div key={post.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '320px', maxWidth: '85vw', scrollSnapAlign: 'start', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column', border: '1px solid #efefef' }}>
                       <div style={{ display: 'flex', alignItems: 'center', padding: '0.8rem 1rem', gap: '10px' }}>
                         <img src={post.userIcon} alt="Profile" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #E1306C', padding: '2px' }} onError={(e) => { e.target.style.display = 'none'; }} />
                         <span style={{ fontWeight: '600', fontSize: '0.9rem', color: '#262626' }}>{post.username}</span>
@@ -861,7 +857,7 @@ const LandingView = () => {
                     id: p.id, username: p.author_name, description: p.content, thumbnail: p.image_url, likes: p.likes, link: p.link
                   };
                   return (
-                    <div key={video.id} className="zoom-hover" style={{ breakInside: 'avoid', marginBottom: '1.5rem', width: '100%', background: '#000', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.2)', overflow: 'hidden', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+                    <div key={video.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '320px', maxWidth: '85vw', scrollSnapAlign: 'start', background: '#000', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.2)', overflow: 'hidden', display: 'flex', flexDirection: 'column', position: 'relative' }}>
                       <div style={{ width: '100%', height: '500px', background: '#222', position: 'relative' }}>
                         <img src={video.thumbnail} alt="TikTok" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} onError={(e) => { e.target.style.display = 'none'; }} />
                         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '3rem', color: 'rgba(255,255,255,0.7)' }}>▶️</div>
@@ -884,7 +880,7 @@ const LandingView = () => {
                     id: p.id, channelName: p.author_name, channelIcon: p.author_icon, title: p.content, thumbnail: p.image_url, views: p.likes, date: p.date_text, link: p.link
                   };
                   return (
-                    <div key={video.id} className="zoom-hover" style={{ breakInside: 'avoid', marginBottom: '1.5rem', width: '100%', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                    <div key={video.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '320px', maxWidth: '85vw', scrollSnapAlign: 'start', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                       <div style={{ position: 'relative', width: '100%', paddingTop: '56.25%', background: '#000' }}>
                         <img src={video.thumbnail} alt="YouTube" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} />
                         <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(255,0,0,0.8)', color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold' }}>▶️ YouTube</div>
@@ -910,7 +906,7 @@ const LandingView = () => {
               })}
 
               {activeSocialTab === 'facebook' && socialPosts.facebook.map(post => (
-                <div key={post.id} className="zoom-hover" style={{ breakInside: 'avoid', marginBottom: '1.5rem', width: '100%', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                <div key={post.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '320px', maxWidth: '85vw', scrollSnapAlign: 'start', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ display: 'flex', alignItems: 'center', padding: '1rem', gap: '10px' }}>
                     <img src={post.pageIcon} alt="JUFRA" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} />
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -934,7 +930,7 @@ const LandingView = () => {
               ))}
 
               {activeSocialTab === 'instagram' && socialPosts.instagram.map(post => (
-                <div key={post.id} className="zoom-hover" style={{ breakInside: 'avoid', marginBottom: '1.5rem', width: '100%', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column', border: '1px solid #efefef' }}>
+                <div key={post.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '320px', maxWidth: '85vw', scrollSnapAlign: 'start', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column', border: '1px solid #efefef' }}>
                   <div style={{ display: 'flex', alignItems: 'center', padding: '0.8rem 1rem', gap: '10px' }}>
                     <img src={post.userIcon} alt="Profile" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #E1306C', padding: '2px' }} onError={(e) => { e.target.style.display = 'none'; }} />
                     <span style={{ fontWeight: '600', fontSize: '0.9rem', color: '#262626' }}>{post.username}</span>
@@ -956,7 +952,7 @@ const LandingView = () => {
               ))}
 
               {activeSocialTab === 'tiktok' && socialPosts.tiktok.map(video => (
-                <div key={video.id} className="zoom-hover" style={{ breakInside: 'avoid', marginBottom: '1.5rem', width: '100%', background: '#000', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.2)', overflow: 'hidden', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+                <div key={video.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '320px', maxWidth: '85vw', scrollSnapAlign: 'start', background: '#000', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.2)', overflow: 'hidden', display: 'flex', flexDirection: 'column', position: 'relative' }}>
                   <div style={{ width: '100%', height: '500px', background: '#222', position: 'relative' }}>
                     <img src={video.thumbnail} alt="TikTok" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} onError={(e) => { e.target.style.display = 'none'; }} />
                     <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '3rem', color: 'rgba(255,255,255,0.7)' }}>▶️</div>
@@ -975,7 +971,7 @@ const LandingView = () => {
               ))}
 
               {activeSocialTab === 'youtube' && socialPosts.youtube.map(video => (
-                <div key={video.id} className="zoom-hover" style={{ breakInside: 'avoid', marginBottom: '1.5rem', width: '100%', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                <div key={video.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '320px', maxWidth: '85vw', scrollSnapAlign: 'start', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ width: '100%', height: '200px', background: '#000', position: 'relative' }}>
                     <img src={video.thumbnail} alt="YouTube" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} />
                     <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '50px', height: '35px', background: 'rgba(255,0,0,0.9)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
