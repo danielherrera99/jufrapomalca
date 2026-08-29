@@ -863,7 +863,7 @@ const LandingView = () => {
                   return (
                     <div key={video.id} className="zoom-hover" style={{ breakInside: 'avoid', marginBottom: '1.5rem', width: '100%', background: '#000', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.2)', overflow: 'hidden', display: 'flex', flexDirection: 'column', position: 'relative' }}>
                       <div style={{ width: '100%', height: '500px', background: '#222', position: 'relative' }}>
-                        <img src={video.thumbnail} alt="TikTok" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
+                        <img src={video.thumbnail} alt="TikTok" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} onError={(e) => { e.target.style.display = 'none'; }} />
                         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '3rem', color: 'rgba(255,255,255,0.7)' }}>▶️</div>
                         <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(0,0,0,0.5)', color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold' }}>🎵 TikTok</div>
                         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1rem', background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)' }}>
@@ -958,7 +958,7 @@ const LandingView = () => {
               {activeSocialTab === 'tiktok' && socialPosts.tiktok.map(video => (
                 <div key={video.id} className="zoom-hover" style={{ breakInside: 'avoid', marginBottom: '1.5rem', width: '100%', background: '#000', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.2)', overflow: 'hidden', display: 'flex', flexDirection: 'column', position: 'relative' }}>
                   <div style={{ width: '100%', height: '500px', background: '#222', position: 'relative' }}>
-                    <img src={video.thumbnail} alt="TikTok" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
+                    <img src={video.thumbnail} alt="TikTok" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} onError={(e) => { e.target.style.display = 'none'; }} />
                     <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '3rem', color: 'rgba(255,255,255,0.7)' }}>▶️</div>
                     <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1rem', background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)' }}>
                       <div style={{ color: 'white', fontWeight: 'bold', fontSize: '1rem', marginBottom: '0.3rem' }}>{video.username}</div>
