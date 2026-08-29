@@ -1372,13 +1372,13 @@ const LandingView = () => {
             <div style={{ flex: '1.2', minWidth: '300px' }}>
               <span style={{ color: 'var(--secondary)', fontWeight: 'bold', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Familia Global</span>
               <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '1.5rem', marginTop: '0.5rem' }}>Nuestra Familia Franciscana</h2>
-              <h4 style={{ color: 'var(--primary)', marginBottom: '1.5rem', fontSize: '1.3rem', fontFamily: 'var(--font-serif)', fontStyle: 'italic' }}>{config.familiaTitulo || 'Orden Franciscana Seglar (OFS) y JUFRA Global'}</h4>
+              <h4 style={{ color: 'var(--primary)', marginBottom: '1.5rem', fontSize: '1.3rem', fontFamily: 'var(--font-serif)', fontStyle: 'italic' }}>{config.familiaTitulo || 'Las Tres Ramas de la Familia Franciscana'}</h4>
               <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.9', textAlign: 'justify' }}>
-                {config.familiaDescripcion || 'Caminamos junto a nuestros hermanos mayores de la OFS, compartiendo el mismo ideal de vida y misión en la Iglesia. Asimismo, formamos parte de una inmensa fraternidad de jóvenes presente en los cinco continentes, compartiendo el carisma de San Francisco de Asís a nivel internacional.'}
+                {config.familiaDescripcion || 'La espiritualidad de San Francisco se divide en tres ramas que conforman nuestra gran familia. Caminamos unidos compartiendo el mismo carisma, el ideal de vida evangélica y la misión de llevar paz y bien al mundo.'}
               </p>
               <div style={{ marginTop: '2.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                 <Link to="/familia" target="_blank" className="btn btn-ghost zoom-hover" style={{ padding: '1rem 2.5rem', textDecoration: 'none' }}>
-                  Conocer más de la OFS
+                  Conocer más de la familia franciscana
                 </Link>
               </div>
             </div>
