@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import api from '../config/api';
+import { estatutosJufra } from '../assets/estatutos';
 import './FloatingChat.css';
 
 const FloatingChat = () => {
@@ -52,10 +53,12 @@ const FloatingChat = () => {
       if (!apiKey) throw new Error("API Key no configurada.");
 
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-      const systemInstruction = `Eres el "Asistente Seráfico", un chatbot amigable integrado en la web de la Juventud Franciscana (JUFRA) de Pomalca, Perú. Nuestra sede es la Parroquia María del Perpetuo Socorro. Tu misión es ayudar a los visitantes a conocer la JUFRA, dar oraciones, explicar nuestras actividades (reuniones, apostolados) y reflejar el carisma franciscano con mucha alegría y paz. Siempre saluda con "Paz y bien". Sé conciso y amable.`;
+      const baseInstruction = `Eres el "Asistente Seráfico", un chatbot amigable integrado en la web de la Juventud Franciscana (JUFRA) de Pomalca, Perú. Nuestra sede es la Parroquia María del Perpetuo Socorro. Tu misión es ayudar a los visitantes a conocer la JUFRA, dar oraciones, explicar nuestras actividades (reuniones, apostolados) y reflejar el carisma franciscano con mucha alegría y paz. Siempre saluda con "Paz y bien". Sé conciso y amable.`;
       
+      const systemInstruction = `${baseInstruction}\n\nAquí tienes como referencia los Estatutos Nacionales de la JUFRA Perú para que puedas responder preguntas oficiales (tiempos de formación, edades, estructura):\n\n--- INICIO DE ESTATUTOS ---\n${estatutosJufra}\n--- FIN DE ESTATUTOS ---\n\nRecuerda responder siempre de manera amigable y resumida, a menos que te pidan muchos detalles.`;
+
       const prompt = `${systemInstruction}\n\nUsuario: ${userMessage}`;
       const result = await model.generateContent(prompt);
       const response = await result.response;
