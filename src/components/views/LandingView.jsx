@@ -78,9 +78,10 @@ const LandingView = () => {
     fetchMiembros();
   }, []);
 
-  const [activeSocialTab, setActiveSocialTab] = useState('facebook');
+  const [activeSocialTab, setActiveSocialTab] = useState('todos');
 
   const [socialPosts, setSocialPosts] = useState({
+    todos: [],
     facebook: [],
     instagram: [],
     tiktok: [],
@@ -94,6 +95,7 @@ const LandingView = () => {
         if (data.posts) {
           const activePosts = data.posts.filter(p => p.activo !== false);
           setSocialPosts({
+            todos: activePosts,
             facebook: activePosts.filter(p => p.red_social === 'facebook').map(p => ({
               id: p.id,
               pageName: p.author_name,
@@ -748,6 +750,14 @@ const LandingView = () => {
               {/* Social Tabs */}
               <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap', marginTop: '1.5rem' }}>
                 <button 
+                  onClick={() => setActiveSocialTab('todos')}
+                  style={{
+                    padding: '0.6rem 1.2rem', borderRadius: '30px', fontWeight: 'bold', border: 'none', cursor: 'pointer', transition: 'all 0.3s',
+                    background: activeSocialTab === 'todos' ? '#333' : 'white',
+                    color: activeSocialTab === 'todos' ? 'white' : '#65676B',
+                    boxShadow: activeSocialTab === 'todos' ? '0 4px 10px rgba(0,0,0,0.3)' : '0 2px 5px rgba(0,0,0,0.05)'
+                  }}>🌟 Todos</button>
+                <button 
                   onClick={() => setActiveSocialTab('facebook')}
                   style={{
                     padding: '0.6rem 1.2rem', borderRadius: '30px', fontWeight: 'bold', border: 'none', cursor: 'pointer', transition: 'all 0.3s',
@@ -794,6 +804,113 @@ const LandingView = () => {
               scrollbarWidth: 'none',
               msOverflowStyle: 'none'
             }} className="hide-scrollbar">
+              {activeSocialTab === 'todos' && socialPosts.todos.map(p => {
+                if (p.red_social === 'facebook') {
+                  const post = {
+                    id: p.id, pageName: p.author_name, pageIcon: p.author_icon, date: p.date_text, content: p.content, image: p.image_url, likes: p.likes, comments: p.comments, link: p.link
+                  };
+                  return (
+                    <div key={post.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '350px', maxWidth: '85vw', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', scrollSnapAlign: 'start', display: 'flex', flexDirection: 'column' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', padding: '1rem', gap: '10px' }}>
+                        <img src={post.pageIcon} alt="JUFRA" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                          <span style={{ fontWeight: 'bold', fontSize: '0.95rem', color: '#050505' }}>{post.pageName}</span>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.8rem', color: '#65676B' }}><span>{post.date}</span><span>•</span><span>📘 Facebook</span></div>
+                        </div>
+                      </div>
+                      <div style={{ padding: '0 1rem 0.5rem 1rem', fontSize: '0.95rem', color: '#050505', lineHeight: '1.4' }}>{post.content}</div>
+                      <div style={{ width: '100%', height: '220px', background: '#f0f2f5' }}><img src={post.image} alt="Post" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></div>
+                      <div style={{ padding: '0.5rem 1rem', display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: '#65676B', paddingBottom: '0.5rem', borderBottom: '1px solid #E4E6EB' }}>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>👍💙 {post.likes}</span><span>{post.comments} comentarios</span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '0.5rem' }}>
+                          <a href={post.link} target="_blank" rel="noreferrer" style={{ textDecoration: 'none', color: '#1877F2', fontWeight: 'bold', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '6px', padding: '0.5rem 1rem', borderRadius: '6px', transition: 'background 0.2s', background: '#E7F3FF', width: '100%', justifyContent: 'center' }}>
+                            Ver en Facebook ↗
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                } else if (p.red_social === 'instagram') {
+                  const post = {
+                    id: p.id, username: p.author_name, userIcon: p.author_icon, image: p.image_url, likes: p.likes, caption: p.content, date: p.date_text, link: p.link
+                  };
+                  return (
+                    <div key={post.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '350px', maxWidth: '85vw', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', scrollSnapAlign: 'start', display: 'flex', flexDirection: 'column', border: '1px solid #efefef' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', padding: '0.8rem 1rem', gap: '10px' }}>
+                        <img src={post.userIcon} alt="Profile" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #E1306C', padding: '2px' }} />
+                        <span style={{ fontWeight: '600', fontSize: '0.9rem', color: '#262626' }}>{post.username}</span>
+                        <span style={{ marginLeft: 'auto', fontSize: '0.8rem', color: '#E1306C', fontWeight: 'bold' }}>📸 IG</span>
+                      </div>
+                      <div style={{ width: '100%', height: '350px', background: '#fafafa' }}><img src={post.image} alt="Insta" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></div>
+                      <div style={{ padding: '0.8rem 1rem' }}>
+                        <div style={{ display: 'flex', gap: '1rem', marginBottom: '0.5rem', fontSize: '1.4rem' }}><span>❤️</span><span>💬</span><span>↗️</span></div>
+                        <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#262626', marginBottom: '0.3rem' }}>{post.likes} Me gusta</div>
+                        <div style={{ fontSize: '0.9rem', color: '#262626', lineHeight: '1.4', marginBottom: '0.3rem' }}>
+                          <span style={{ fontWeight: '600', marginRight: '5px' }}>{post.username}</span>
+                          {post.caption}
+                        </div>
+                        <div style={{ fontSize: '0.7rem', color: '#8e8e8e', marginTop: '0.5rem', letterSpacing: '0.5px' }}>{post.date}</div>
+                        <a href={post.link} target="_blank" rel="noreferrer" style={{ display: 'block', textDecoration: 'none', color: 'white', fontWeight: 'bold', fontSize: '0.9rem', textAlign: 'center', padding: '0.5rem 1rem', borderRadius: '6px', background: '#0095f6', marginTop: '1rem' }}>
+                          Ver en Instagram
+                        </a>
+                      </div>
+                    </div>
+                  );
+                } else if (p.red_social === 'tiktok') {
+                  const video = {
+                    id: p.id, username: p.author_name, description: p.content, thumbnail: p.image_url, likes: p.likes, link: p.link
+                  };
+                  return (
+                    <div key={video.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '300px', maxWidth: '80vw', background: '#000', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.2)', overflow: 'hidden', scrollSnapAlign: 'start', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+                      <div style={{ width: '100%', height: '500px', background: '#222', position: 'relative' }}>
+                        <img src={video.thumbnail} alt="TikTok" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
+                        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '3rem', color: 'rgba(255,255,255,0.7)' }}>▶️</div>
+                        <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(0,0,0,0.5)', color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold' }}>🎵 TikTok</div>
+                        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1rem', background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)' }}>
+                          <div style={{ color: 'white', fontWeight: 'bold', fontSize: '1rem', marginBottom: '0.3rem' }}>{video.username}</div>
+                          <div style={{ color: 'white', fontSize: '0.9rem', lineHeight: '1.3' }}>{video.description}</div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginTop: '0.8rem', color: 'white', fontSize: '0.9rem' }}>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>❤️ {video.likes}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <a href={video.link} target="_blank" rel="noreferrer" style={{ textDecoration: 'none', color: '#000', background: 'white', fontWeight: 'bold', fontSize: '0.9rem', textAlign: 'center', padding: '0.8rem', display: 'block' }}>
+                        Ver en TikTok
+                      </a>
+                    </div>
+                  );
+                } else if (p.red_social === 'youtube') {
+                  const video = {
+                    id: p.id, channelName: p.author_name, channelIcon: p.author_icon, title: p.content, thumbnail: p.image_url, views: p.likes, date: p.date_text, link: p.link
+                  };
+                  return (
+                    <div key={video.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '350px', maxWidth: '85vw', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', scrollSnapAlign: 'start', display: 'flex', flexDirection: 'column' }}>
+                      <div style={{ position: 'relative', width: '100%', paddingTop: '56.25%', background: '#000' }}>
+                        <img src={video.thumbnail} alt="YouTube" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(255,0,0,0.8)', color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold' }}>▶️ YouTube</div>
+                        <div style={{ position: 'absolute', bottom: '10px', right: '10px', background: 'rgba(0,0,0,0.8)', color: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem' }}>Vídeo</div>
+                      </div>
+                      <div style={{ display: 'flex', padding: '1rem', gap: '12px' }}>
+                        <img src={video.channelIcon} alt="Channel" style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }} />
+                        <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+                          <h4 style={{ margin: '0 0 4px 0', fontSize: '0.95rem', color: '#0f0f0f', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                            {video.title}
+                          </h4>
+                          <span style={{ fontSize: '0.85rem', color: '#606060' }}>{video.channelName}</span>
+                          <span style={{ fontSize: '0.85rem', color: '#606060' }}>{video.views} vistas • {video.date}</span>
+                        </div>
+                      </div>
+                      <a href={video.link} target="_blank" rel="noreferrer" style={{ margin: '0 1rem 1rem 1rem', textDecoration: 'none', color: '#FF0000', fontWeight: 'bold', fontSize: '0.9rem', textAlign: 'center', padding: '0.6rem', border: '1px solid #FF0000', borderRadius: '20px', transition: 'background 0.2s', display: 'block' }}>
+                        Mirar en YouTube
+                      </a>
+                    </div>
+                  );
+                }
+                return null;
+              })}
+
               {activeSocialTab === 'facebook' && socialPosts.facebook.map(post => (
                 <div key={post.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '350px', maxWidth: '85vw', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', scrollSnapAlign: 'start', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ display: 'flex', alignItems: 'center', padding: '1rem', gap: '10px' }}>
