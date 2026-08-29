@@ -212,7 +212,7 @@ const Login = ({ onLogin }) => {
               id="remember" 
               checked={rememberMe} 
               onChange={e => setRememberMe(e.target.checked)}
-              style={{ width: 'auto' }}
+              style={{ width: '16px', height: '16px', margin: 0, accentColor: 'var(--primary)', cursor: 'pointer' }}
             />
             <label htmlFor="remember" style={{ fontSize: '0.85rem', cursor: 'pointer', margin: 0 }}>Recordar sesión</label>
           </div>
