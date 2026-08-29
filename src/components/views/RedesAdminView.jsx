@@ -155,6 +155,20 @@ const RedesAdminView = () => {
     }
   };
 
+  const handleToggleScrapedMostrarTodos = async (post, plataforma) => {
+    try {
+      const newState = post.mostrar_en_todos === true ? 'false' : 'true';
+      await api.put(`/metricas-sociales/publicaciones/${post.post_id}`, { mostrar_en_todos: newState });
+      // Update local state without closing modal
+      setPostsModal(prev => ({
+        ...prev,
+        data: prev.data.map(p => p.post_id === post.post_id ? { ...p, mostrar_en_todos: newState === 'true' } : p)
+      }));
+    } catch (err) {
+      alert('Error cambiando el estado Todos: ' + err.message);
+    }
+  };
+
   const handleToggleActivo = async (post) => {
     try {
       const data = new FormData();
@@ -167,6 +181,20 @@ const RedesAdminView = () => {
       fetchPosts();
     } catch (err) {
       alert('Error cambiando el estado: ' + err.message);
+    }
+  };
+
+  const handleToggleMostrarTodos = async (post) => {
+    try {
+      const data = new FormData();
+      const newState = post.mostrar_en_todos === true ? 'false' : 'true';
+      data.append('mostrarEnTodos', newState);
+      await api.put(`/redes/${post.id}`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      fetchPosts();
+    } catch (err) {
+      alert('Error cambiando el estado Todos: ' + err.message);
     }
   };
 
@@ -276,16 +304,23 @@ const RedesAdminView = () => {
             <p style={{ fontSize: '0.9rem', margin: 0, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
               {post.content}
             </p>
-            <div style={{ display: 'flex', gap: '10px', marginTop: 'auto', paddingTop: '10px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginTop: 'auto', paddingTop: '10px' }}>
               <button 
                 className="btn" 
-                style={{ flex: 1, padding: '0.5rem', fontSize: '0.8rem', background: post.activo === false ? '#9CA3AF' : '#10B981', color: 'white' }} 
+                style={{ flex: '1 1 45%', padding: '0.4rem', fontSize: '0.75rem', background: post.activo === false ? '#9CA3AF' : '#10B981', color: 'white' }} 
                 onClick={() => handleToggleActivo(post)}
               >
-                {post.activo === false ? 'Mostrar (Inactivo)' : 'Ocultar (Activo)'}
+                {post.activo === false ? 'Mostrar Web' : 'Ocultar Web'}
               </button>
-              <button className="btn" style={{ flex: 1, padding: '0.5rem', fontSize: '0.8rem' }} onClick={() => handleOpenModal(post)}>Editar</button>
-              <button className="btn btn-logout" style={{ flex: 1, padding: '0.5rem', fontSize: '0.8rem' }} onClick={() => handleDelete(post.id)}>Eliminar</button>
+              <button 
+                className="btn" 
+                style={{ flex: '1 1 45%', padding: '0.4rem', fontSize: '0.75rem', background: post.mostrar_en_todos === true ? '#F59E0B' : '#9CA3AF', color: 'white' }} 
+                onClick={() => handleToggleMostrarTodos(post)}
+              >
+                {post.mostrar_en_todos === true ? 'Quitar de Todos' : 'Mostrar en Todos'}
+              </button>
+              <button className="btn" style={{ flex: '1 1 45%', padding: '0.4rem', fontSize: '0.75rem' }} onClick={() => handleOpenModal(post)}>Editar</button>
+              <button className="btn btn-logout" style={{ flex: '1 1 45%', padding: '0.4rem', fontSize: '0.75rem' }} onClick={() => handleDelete(post.id)}>Eliminar</button>
             </div>
           </div>
         ))}
@@ -432,17 +467,26 @@ const RedesAdminView = () => {
                         <span title="Likes">👍 {post.likes}</span>
                         <span title="Comentarios">💬 {post.comentarios}</span>
                       </div>
-                      <div style={{ display: 'flex', gap: '8px' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <button 
+                            className="btn" 
+                            style={{ flex: 1, padding: '8px', fontSize: '0.75rem', background: post.activo === true ? '#10B981' : '#9CA3AF', color: 'white' }} 
+                            onClick={() => handleToggleScrapedActivo(post, postsModal.plataforma)}
+                          >
+                            {post.activo === true ? 'Ocultar Web' : 'Mostrar Web'}
+                          </button>
+                          <a href={post.url} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '0.75rem' }}>
+                            Original
+                          </a>
+                        </div>
                         <button 
                           className="btn" 
-                          style={{ flex: 1, padding: '8px', fontSize: '0.8rem', background: post.activo === true ? '#10B981' : '#9CA3AF', color: 'white' }} 
-                          onClick={() => handleToggleScrapedActivo(post, postsModal.plataforma)}
+                          style={{ width: '100%', padding: '8px', fontSize: '0.75rem', background: post.mostrar_en_todos === true ? '#F59E0B' : '#9CA3AF', color: 'white' }} 
+                          onClick={() => handleToggleScrapedMostrarTodos(post, postsModal.plataforma)}
                         >
-                          {post.activo === true ? 'Ocultar (En Web)' : 'Mostrar (No en Web)'}
+                          {post.mostrar_en_todos === true ? 'Quitar de "Todos"' : 'Mostrar en "Todos"'}
                         </button>
-                        <a href={post.url} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ flex: 1, textAlign: 'center', padding: '8px', fontSize: '0.8rem' }}>
-                          Ver Original
-                        </a>
                       </div>
                     </div>
                   </div>

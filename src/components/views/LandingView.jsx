@@ -93,10 +93,12 @@ const LandingView = () => {
       try {
         const { data } = await api.get('/redes/landing');
         if (data.posts) {
-          const activePosts = data.posts.filter(p => p.activo !== false);
+          const postsForTodos = data.posts.filter(p => p.mostrar_en_todos === true);
+          const activeTabPosts = data.posts.filter(p => p.activo !== false);
+          
           setSocialPosts({
-            todos: activePosts,
-            facebook: activePosts.filter(p => p.red_social === 'facebook').map(p => ({
+            todos: postsForTodos,
+            facebook: activeTabPosts.filter(p => p.red_social === 'facebook').map(p => ({
               id: p.id,
               pageName: p.author_name,
               pageIcon: p.author_icon,
@@ -107,7 +109,7 @@ const LandingView = () => {
               comments: p.comments,
               link: p.link
             })),
-            instagram: activePosts.filter(p => p.red_social === 'instagram').map(p => ({
+            instagram: activeTabPosts.filter(p => p.red_social === 'instagram').map(p => ({
               id: p.id,
               username: p.author_name,
               userIcon: p.author_icon,
@@ -117,7 +119,7 @@ const LandingView = () => {
               date: p.date_text,
               link: p.link
             })),
-            tiktok: activePosts.filter(p => p.red_social === 'tiktok').map(p => ({
+            tiktok: activeTabPosts.filter(p => p.red_social === 'tiktok').map(p => ({
               id: p.id,
               username: p.author_name,
               description: p.content,
@@ -125,7 +127,7 @@ const LandingView = () => {
               likes: p.likes,
               link: p.link
             })),
-            youtube: activePosts.filter(p => p.red_social === 'youtube').map(p => ({
+            youtube: activeTabPosts.filter(p => p.red_social === 'youtube').map(p => ({
               id: p.id,
               channelName: p.author_name,
               channelIcon: p.author_icon,
