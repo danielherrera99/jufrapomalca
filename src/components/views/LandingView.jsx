@@ -797,7 +797,7 @@ const LandingView = () => {
             {/* Carrusel (Masonry Look) */}
             <div style={{ 
               columnCount: 'auto',
-              columnWidth: '320px',
+              columnWidth: '260px',
               columnGap: '1.5rem',
               paddingBottom: '2rem',
               padding: '1rem',
