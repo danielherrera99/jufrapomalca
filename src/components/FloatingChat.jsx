@@ -16,7 +16,7 @@ const FloatingChat = () => {
   const [isSocialOpen, setIsSocialOpen] = useState(false);
   const messagesEndRef = useRef(null);
   
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY || localStorage.getItem('gemini_api_key');
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
