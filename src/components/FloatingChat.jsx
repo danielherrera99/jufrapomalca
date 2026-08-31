@@ -54,7 +54,7 @@ const FloatingChat = () => {
       if (!currentApiKey) throw new Error("API Key no configurada.");
 
       const genAI = new GoogleGenerativeAI(currentApiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
       const baseInstruction = `Eres el "Asistente Seráfico", un chatbot amigable integrado en la web de la Juventud Franciscana (JUFRA) de Pomalca, Perú. Nuestra sede es la Parroquia María del Perpetuo Socorro. Tu misión es ayudar a los visitantes a conocer la JUFRA, dar oraciones, explicar nuestras actividades (reuniones, apostolados) y reflejar el carisma franciscano con mucha alegría y paz. Siempre saluda con "Paz y bien". Sé conciso y amable.`;
       
