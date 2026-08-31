@@ -184,6 +184,9 @@ const FloatingChat = () => {
           </div>
 
           <form className="chat-input-area" onSubmit={handleSend}>
+            <button type="submit" className="send-btn" disabled={isLoading}>
+              {isLoading ? '...' : '➤'}
+            </button>
             <input 
               type="text" 
               placeholder="Escribe tu mensaje..." 
@@ -191,9 +194,6 @@ const FloatingChat = () => {
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSend()}
             />
-            <button type="submit" className="send-btn" disabled={isLoading}>
-              {isLoading ? '...' : '➤'}
-            </button>
           </form>
         </div>
       )}
