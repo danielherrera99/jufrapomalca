@@ -813,7 +813,7 @@ const LandingView = () => {
                         </div>
                       </div>
                       <div style={{ padding: '0 1rem 0.5rem 1rem', fontSize: '0.95rem', color: '#050505', lineHeight: '1.4' }}>{post.content}</div>
-                      <div style={{ width: '100%', height: '220px', background: '#f0f2f5' }}><img src={post.image} alt="Post" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} /></div>
+                      <div style={{ width: '100%', height: '220px', background: '#f0f2f5' }}><img src={getImageUrl(post.image)} alt="Post" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} /></div>
                       <div style={{ padding: '0.5rem 1rem', display: 'flex', flexDirection: 'column' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: '#65676B', paddingBottom: '0.5rem', borderBottom: '1px solid #E4E6EB' }}>
                           <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>👍💙 {post.likes}</span><span>{post.comments} comentarios</span>
@@ -837,7 +837,7 @@ const LandingView = () => {
                         <span style={{ fontWeight: '600', fontSize: '0.9rem', color: '#262626' }}>{post.username}</span>
                         <span style={{ marginLeft: 'auto', fontSize: '0.8rem', color: '#E1306C', fontWeight: 'bold' }}>📸 IG</span>
                       </div>
-                      <div style={{ width: '100%', height: '350px', background: '#fafafa' }}><img src={post.image} alt="Insta" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} /></div>
+                      <div style={{ width: '100%', height: '350px', background: '#fafafa' }}><img src={getImageUrl(post.image)} alt="Insta" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} /></div>
                       <div style={{ padding: '0.8rem 1rem' }}>
                         <div style={{ display: 'flex', gap: '1rem', marginBottom: '0.5rem', fontSize: '1.4rem' }}><span>❤️</span><span>💬</span><span>↗️</span></div>
                         <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: '#262626', marginBottom: '0.3rem' }}>{post.likes} Me gusta</div>
@@ -859,7 +859,7 @@ const LandingView = () => {
                   return (
                     <div key={video.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '320px', maxWidth: '85vw', scrollSnapAlign: 'start', background: '#000', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.2)', overflow: 'hidden', display: 'flex', flexDirection: 'column', position: 'relative' }}>
                       <div style={{ width: '100%', height: '500px', background: '#222', position: 'relative' }}>
-                        <img src={video.thumbnail} alt="TikTok" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} onError={(e) => { e.target.style.display = 'none'; }} />
+                        <img src={getImageUrl(video.thumbnail)} alt="TikTok" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} onError={(e) => { e.target.style.display = 'none'; }} />
                         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '3rem', color: 'rgba(255,255,255,0.7)' }}>▶️</div>
                         <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(0,0,0,0.5)', color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold' }}>🎵 TikTok</div>
                         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1rem', background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)' }}>
@@ -882,7 +882,7 @@ const LandingView = () => {
                   return (
                     <div key={video.id} className="zoom-hover" style={{ flex: '0 0 auto', width: '320px', maxWidth: '85vw', scrollSnapAlign: 'start', background: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                       <div style={{ position: 'relative', width: '100%', paddingTop: '56.25%', background: '#000' }}>
-                        <img src={video.thumbnail} alt="YouTube" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} />
+                        <img src={getImageUrl(video.thumbnail)} alt="YouTube" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} />
                         <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(255,0,0,0.8)', color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold' }}>▶️ YouTube</div>
                         <div style={{ position: 'absolute', bottom: '10px', right: '10px', background: 'rgba(0,0,0,0.8)', color: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem' }}>Vídeo</div>
                       </div>
