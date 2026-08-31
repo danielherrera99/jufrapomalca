@@ -50,9 +50,10 @@ const FloatingChat = () => {
     setIsLoading(true);
 
     try {
-      if (!apiKey) throw new Error("API Key no configurada.");
+      const currentApiKey = import.meta.env.VITE_GEMINI_API_KEY || localStorage.getItem('gemini_api_key');
+      if (!currentApiKey) throw new Error("API Key no configurada.");
 
-      const genAI = new GoogleGenerativeAI(apiKey);
+      const genAI = new GoogleGenerativeAI(currentApiKey);
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
       const baseInstruction = `Eres el "Asistente Seráfico", un chatbot amigable integrado en la web de la Juventud Franciscana (JUFRA) de Pomalca, Perú. Nuestra sede es la Parroquia María del Perpetuo Socorro. Tu misión es ayudar a los visitantes a conocer la JUFRA, dar oraciones, explicar nuestras actividades (reuniones, apostolados) y reflejar el carisma franciscano con mucha alegría y paz. Siempre saluda con "Paz y bien". Sé conciso y amable.`;
@@ -67,7 +68,7 @@ const FloatingChat = () => {
       setMessages(prev => [...prev, { role: 'ai', content: text }]);
     } catch (error) {
       console.error("Error en Chat Flotante:", error);
-      setMessages(prev => [...prev, { role: 'ai', content: "Lo siento, tuve un pequeño problema técnico. ¿Podrías intentar preguntarme de nuevo?" }]);
+      setMessages(prev => [...prev, { role: 'ai', content: `Error: ${error.message}. Por favor revisa la consola para más detalles.` }]);
     } finally {
       setIsLoading(false);
     }
