@@ -323,7 +323,7 @@ const RedesAdminView = () => {
           </div>
 
           {/* Gráficos de Evolución */}
-          <div className="charts-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '1.5rem', marginTop: '2rem' }}>
+          <div className="charts-grid-2x2">
             
             {/* Gráfico de Evolución de Seguidores */}
             <div className="glass-card" style={{ padding: '1.5rem', minHeight: '350px' }}>
