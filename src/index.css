@@ -178,15 +178,23 @@ code {
 }
 
 .hermanos-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 1.5rem;
+  justify-items: center;
   margin-top: 2rem;
 }
 
+@media (max-width: 500px) {
+  .hermanos-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
 .hermano-card {
-  width: 180px;
+  width: 100%;
+  max-width: 180px;
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.5);
