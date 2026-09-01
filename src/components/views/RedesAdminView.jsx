@@ -354,6 +354,28 @@ const RedesAdminView = () => {
               </div>
             </div>
 
+            {/* Gráfico de Interacciones */}
+            <div className="glass-card" style={{ padding: '1.5rem', minHeight: '350px' }}>
+              <h3 style={{ marginTop: 0, fontSize: '1.1rem', color: 'var(--primary)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                ❤️ Evolución de Interacciones
+              </h3>
+              <div style={{ width: '100%', height: 250 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#666'}} />
+                    <YAxis axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#666'}} width={40} />
+                    <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
+                    <Legend wrapperStyle={{ fontSize: '0.85rem', paddingTop: '10px' }} />
+                    <Line type="monotone" name="Facebook" dataKey="facebook_interacciones" stroke="#3B82F6" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                    <Line type="monotone" name="Instagram" dataKey="instagram_interacciones" stroke="#E1306C" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                    <Line type="monotone" name="TikTok" dataKey="tiktok_interacciones" stroke="#000000" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                    <Line type="monotone" name="YouTube" dataKey="youtube_interacciones" stroke="#EF4444" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
           </div>
         </div>
       )}
