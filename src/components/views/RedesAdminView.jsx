@@ -7,6 +7,7 @@ import {
 
 const RedesAdminView = () => {
   const [posts, setPosts] = useState([]);
+  const [topPosts, setTopPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingPost, setEditingPost] = useState(null);
@@ -48,6 +49,17 @@ const RedesAdminView = () => {
     return Object.values(dataByDate).sort((a, b) => a.timestamp - b.timestamp).slice(-15);
   }, [metricas]);
 
+  const topChartData = useMemo(() => {
+    return topPosts.map((p, index) => ({
+      // Agregamos el ranking y truncamos el título para que encaje
+      name: `#${index + 1} ` + (p.titulo ? (p.titulo.length > 25 ? p.titulo.substring(0, 25) + '...' : p.titulo) : 'Sin título'),
+      likes: p.likes || 0,
+      comentarios: p.comentarios || 0,
+      vistas: p.vistas || 0,
+      plataforma: p.plataforma
+    })).reverse(); // Revertimos para que el #1 quede arriba en el BarChart horizontal
+  }, [topPosts]);
+
   const openPostsModal = async (plataforma) => {
     setPostsModal({ isOpen: true, plataforma, data: [], loading: true });
     try {
@@ -80,12 +92,14 @@ const RedesAdminView = () => {
   const fetchPosts = async () => {
     try {
       setLoading(true);
-      const [postsRes, metricasRes] = await Promise.all([
+      const [postsRes, metricasRes, topRes] = await Promise.all([
         api.get('/redes'),
-        api.get('/metricas-sociales').catch(() => ({ data: { data: {} } }))
+        api.get('/metricas-sociales').catch(() => ({ data: { data: {} } })),
+        api.get('/metricas-sociales/top').catch(() => ({ data: { data: [] } }))
       ]);
       setPosts(postsRes.data.posts || []);
       setMetricas(metricasRes?.data?.data || {});
+      setTopPosts(topRes?.data?.data || []);
     } catch (err) {
       console.error('Error fetching redes:', err);
     } finally {
@@ -374,6 +388,29 @@ const RedesAdminView = () => {
                   </LineChart>
                 </ResponsiveContainer>
               </div>
+            </div>
+
+            {/* Gráfico Top Publicaciones */}
+            <div className="glass-card" style={{ padding: '1.5rem', minHeight: '350px' }}>
+              <h3 style={{ marginTop: 0, fontSize: '1.1rem', color: 'var(--primary)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                🏆 Top 5 Publicaciones (Engagement)
+              </h3>
+              <div style={{ width: '100%', height: 250 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={topChartData} layout="vertical" margin={{ top: 5, right: 30, left: 10, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#f0f0f0" />
+                    <XAxis type="number" axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#666'}} />
+                    <YAxis dataKey="name" type="category" width={130} axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#333', fontWeight: 'bold'}} />
+                    <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} cursor={{fill: 'rgba(0,0,0,0.05)'}} />
+                    <Legend wrapperStyle={{ fontSize: '0.85rem', paddingTop: '10px' }} />
+                    <Bar name="Likes" dataKey="likes" stackId="a" fill="#10B981" radius={[0, 0, 0, 0]} />
+                    <Bar name="Comentarios" dataKey="comentarios" stackId="a" fill="#F59E0B" radius={[0, 4, 4, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center', margin: '10px 0 0 0' }}>
+                Incluye publicaciones de todas las plataformas.
+              </p>
             </div>
 
           </div>
