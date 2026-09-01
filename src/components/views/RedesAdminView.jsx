@@ -1,6 +1,9 @@
 import { getImageUrl } from '../../config/api';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import api from '../../config/api';
+import { 
+  BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend 
+} from 'recharts';
 
 const RedesAdminView = () => {
   const [posts, setPosts] = useState([]);
@@ -19,6 +22,31 @@ const RedesAdminView = () => {
       return '';
     }
   };
+
+  const chartData = useMemo(() => {
+    if (!metricas || Object.keys(metricas).length === 0) return [];
+    
+    const dataByDate = {};
+    
+    Object.keys(metricas).forEach(plataforma => {
+      if (!metricas[plataforma]) return;
+      metricas[plataforma].forEach(m => {
+        if (!m.fecha) return;
+        // La fecha viene en formato YYYY-MM-DD
+        const dateLabel = m.fecha.length >= 10 ? `${m.fecha.substring(8, 10)}/${m.fecha.substring(5, 7)}` : m.fecha;
+        const timestamp = new Date(m.fecha).getTime();
+        
+        if (!dataByDate[dateLabel]) {
+          dataByDate[dateLabel] = { name: dateLabel, timestamp };
+        }
+        dataByDate[dateLabel][`${plataforma}_seguidores`] = m.seguidores || 0;
+        dataByDate[dateLabel][`${plataforma}_alcance`] = m.alcance || 0;
+        dataByDate[dateLabel][`${plataforma}_interacciones`] = m.interacciones || 0;
+      });
+    });
+    
+    return Object.values(dataByDate).sort((a, b) => a.timestamp - b.timestamp).slice(-15);
+  }, [metricas]);
 
   const openPostsModal = async (plataforma) => {
     setPostsModal({ isOpen: true, plataforma, data: [], loading: true });
@@ -278,6 +306,54 @@ const RedesAdminView = () => {
                   </h3>
                </div>
             </div>
+          </div>
+
+          {/* Gráficos de Evolución */}
+          <div className="charts-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '1.5rem', marginTop: '2rem' }}>
+            
+            {/* Gráfico de Evolución de Seguidores */}
+            <div className="glass-card" style={{ padding: '1.5rem', minHeight: '350px' }}>
+              <h3 style={{ marginTop: 0, fontSize: '1.1rem', color: 'var(--primary)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                📈 Evolución de Seguidores
+              </h3>
+              <div style={{ width: '100%', height: 250 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#666'}} />
+                    <YAxis axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#666'}} width={40} />
+                    <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
+                    <Legend wrapperStyle={{ fontSize: '0.85rem', paddingTop: '10px' }} />
+                    <Line type="monotone" name="Facebook" dataKey="facebook_seguidores" stroke="#3B82F6" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                    <Line type="monotone" name="Instagram" dataKey="instagram_seguidores" stroke="#E1306C" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                    <Line type="monotone" name="TikTok" dataKey="tiktok_seguidores" stroke="#000000" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                    <Line type="monotone" name="YouTube" dataKey="youtube_seguidores" stroke="#EF4444" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Gráfico de Alcance y Vistas */}
+            <div className="glass-card" style={{ padding: '1.5rem', minHeight: '350px' }}>
+              <h3 style={{ marginTop: 0, fontSize: '1.1rem', color: 'var(--primary)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                📊 Alcance y Vistas (Evolución)
+              </h3>
+              <div style={{ width: '100%', height: 250 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#666'}} />
+                    <YAxis axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#666'}} width={40} />
+                    <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} cursor={{fill: 'rgba(0,0,0,0.05)'}} />
+                    <Legend wrapperStyle={{ fontSize: '0.85rem', paddingTop: '10px' }} />
+                    <Bar name="FB Alcance" dataKey="facebook_alcance" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+                    <Bar name="Web Visitas" dataKey="web_alcance" fill="#22C55E" radius={[4, 4, 0, 0]} />
+                    <Bar name="YT Vistas" dataKey="youtube_alcance" fill="#EF4444" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
           </div>
         </div>
       )}
