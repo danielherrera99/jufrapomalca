@@ -25,6 +25,8 @@ import TerceraOrdenView from './components/views/TerceraOrdenView';
 import OfsChiclayoView from './components/views/OfsChiclayoView';
 import WebConfigView from './components/views/WebConfigView';
 import OfsConfigView from './components/views/OfsConfigView';
+import CampaignsAdminView from './components/views/CampaignsAdminView';
+import CampaignView from './components/views/CampaignView';
 import CelebracionesView from './components/views/CelebracionesView';
 import MisMensajesView from './components/views/MisMensajesView';
 import MensajesAdminView from './components/views/MensajesAdminView';
@@ -256,6 +258,7 @@ const modules = [
   { id: 'GaleriaWeb', label: 'Galería Web', icon: '🌐' },
   { id: 'QuienesSomos', label: 'Quiénes Somos', icon: '👥' },
   { id: 'WebConfig', label: 'Web Institucional', icon: '🌐' },
+  { id: 'Campanas', label: 'Gestor de Campañas', icon: '🎯' },
   { id: 'OfsConfig', label: 'Configuración OFS', icon: '☦️' },
   { id: 'Fraternidades', label: 'JUFRA Perú', icon: '🇵🇪' },
   { id: 'Perfil', label: 'Mi Perfil', icon: '👤' },
@@ -348,7 +351,7 @@ const Dashboard = ({ user, onLogout }) => {
 
           {/* GRUPO: GESTIÓN WEB */}
           <div className="nav-section-title" style={{ marginTop: '1.5rem' }}>GESTIÓN WEB</div>
-          {modules.filter(m => ['Solicitudes', 'Redes', 'GaleriaWeb', 'QuienesSomos', 'WebConfig', 'OfsConfig', 'Fraternidades'].includes(m.id)).map((mod) => (
+          {modules.filter(m => ['Solicitudes', 'Redes', 'GaleriaWeb', 'QuienesSomos', 'WebConfig', 'Campanas', 'OfsConfig', 'Fraternidades'].includes(m.id)).map((mod) => (
              <a key={mod.id} href="#" onClick={(e) => { e.preventDefault(); setActiveTab(mod.id); setIsSidebarOpen(false); }}
               className={`nav-link ${activeTab === mod.id ? 'active' : ''}`}
             >
@@ -413,6 +416,7 @@ const Dashboard = ({ user, onLogout }) => {
           <Route path="perfil" element={<PerfilView ActivityIndicator={ActivityIndicator} SafeImage={SafeImage} />} />
           <Route path="redes" element={<RedesAdminView />} />
           <Route path="webconfig" element={<WebConfigView />} />
+          <Route path="campanas" element={<CampaignsAdminView ActivityIndicator={ActivityIndicator} />} />
           <Route path="ofsconfig" element={<OfsConfigView />} />
           <Route path="fraternidades" element={<FraternidadesAdminView />} />
           <Route path="consejo" element={<Consejo />} />
@@ -492,6 +496,7 @@ function App() {
         <Routes>
           {/* Cara Pública */}
           <Route path="/" element={<LandingView />} />
+          <Route path="/campana" element={<CampaignView />} />
           <Route path="/familia" element={<OfsView />} />
           <Route path="/ofs" element={<TerceraOrdenView />} />
           <Route path="/ofs/chiclayo" element={<OfsChiclayoView />} />
