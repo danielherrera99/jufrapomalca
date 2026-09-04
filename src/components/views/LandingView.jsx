@@ -1703,7 +1703,7 @@ const LandingView = () => {
             {config.promoBotonTexto && (
               <div className="promo-actions">
                 <Link 
-                  to={config.promoBotonLink || '/celebraciones'} 
+                  to={config.promoBotonLink && config.promoBotonLink !== '#' ? config.promoBotonLink : '/celebraciones'} 
                   className="btn btn-primary" 
                   style={{ width: '100%', borderRadius: '15px', display: 'inline-block' }}
                   onClick={() => setShowPromoModal(false)}
