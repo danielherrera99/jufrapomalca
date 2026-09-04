@@ -35,6 +35,7 @@ import RedesAdminView from './components/views/RedesAdminView';
 import GaleriaWebAdminView from './components/views/GaleriaWebAdminView';
 import QuienesSomosView from './components/views/QuienesSomosView';
 import JufraPeruView from './components/views/JufraPeruView';
+import FinanzasView from './components/views/FinanzasView';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import 'leaflet/dist/leaflet.css';
@@ -243,6 +244,7 @@ const modules = [
   { id: 'Formacion', label: 'Formación', icon: '📖' },
   { id: 'Actas', label: 'Actas', icon: '📝' },
   { id: 'Documentos', label: 'Documentos', icon: '📄' },
+  { id: 'Finanzas', label: 'Finanzas', icon: '💰' },
   { id: 'Galeria', label: 'Galería', icon: '🖼️' },
   { id: 'Mapa', label: 'Mapa', icon: '🗺️' },
   { id: 'Mensajes', label: 'Mensajes (Control)', icon: '🕵️' },
@@ -336,7 +338,7 @@ const Dashboard = ({ user, onLogout }) => {
 
           {/* GRUPO: ADMIN */}
           <div className="nav-section-title" style={{ marginTop: '1.5rem' }}>ADMINISTRACIÓN</div>
-          {modules.filter(m => ['Documentos', 'Actas', 'Formacion', 'Galeria', 'Servicios', 'Comunicacion', 'Asistente', 'Mensajes', 'Perfil'].includes(m.id)).map((mod) => (
+          {modules.filter(m => ['Documentos', 'Actas', 'Formacion', 'Galeria', 'Finanzas', 'Servicios', 'Comunicacion', 'Asistente', 'Mensajes', 'Perfil'].includes(m.id)).map((mod) => (
              <a key={mod.id} href="#" onClick={(e) => { e.preventDefault(); setActiveTab(mod.id); setIsSidebarOpen(false); }}
               className={`nav-link ${activeTab === mod.id ? 'active' : ''}`}
             >
@@ -401,6 +403,7 @@ const Dashboard = ({ user, onLogout }) => {
           <Route path="formacion" element={<FormacionView formatSafeDate={formatSafeDate} SafeImage={SafeImage} ActivityIndicator={ActivityIndicator} />} />
           <Route path="actas" element={<ActasView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
           <Route path="documentos" element={<DocumentosView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
+          <Route path="finanzas" element={<FinanzasView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
           <Route path="galeria" element={<GaleriaView formatSafeDate={formatSafeDate} SafeImage={SafeImage} ActivityIndicator={ActivityIndicator} />} />
           <Route path="cantos" element={<CantosView ActivityIndicator={ActivityIndicator} />} />
           <Route path="asistencia" element={<AsistenciaView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
