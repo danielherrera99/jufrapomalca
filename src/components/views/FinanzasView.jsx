@@ -84,6 +84,21 @@ const FinanzasView = ({ formatSafeDate, ActivityIndicator }) => {
     setIsEditModalOpen(true);
   };
 
+  const handleExport = async () => {
+    try {
+      const response = await api.get('/finanzas/exportar/excel', { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'Finanzas_JUFRA.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+    } catch (error) {
+      alert('Error al exportar a Excel: ' + error.message);
+    }
+  };
+
   return (
     <div className="view-container animate-fade">
       {/* Tarjetas de Resumen */}
@@ -116,12 +131,17 @@ const FinanzasView = ({ formatSafeDate, ActivityIndicator }) => {
             />
           </div>
         </div>
-        <button className="btn btn-primary" onClick={() => {
-            setNewItem({ tipo: 'ingreso', monto: '', fecha: new Date().toISOString().split('T')[0], descripcion: '', categoria: 'otros', comprobante_url: '' });
-            setIsModalOpen(true);
-        }}>
-          + Nuevo Registro
-        </button>
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <button className="btn btn-ghost" onClick={handleExport} style={{ border: '1px solid #4CAF50', color: '#4CAF50' }}>
+            📊 Exportar Excel
+          </button>
+          <button className="btn btn-primary" onClick={() => {
+              setNewItem({ tipo: 'ingreso', monto: '', fecha: new Date().toISOString().split('T')[0], descripcion: '', categoria: 'otros', comprobante_url: '' });
+              setIsModalOpen(true);
+          }}>
+            + Nuevo Registro
+          </button>
+        </div>
       </div>
 
       {loading ? (
