@@ -1702,14 +1702,14 @@ const LandingView = () => {
             <p className="promo-desc">{config.promoDescripcion}</p>
             {config.promoBotonTexto && (
               <div className="promo-actions">
-                <a 
-                  href={config.promoBotonLink || '#'} 
+                <Link 
+                  to={config.promoBotonLink || '/celebraciones'} 
                   className="btn btn-primary" 
-                  style={{ width: '100%', borderRadius: '15px' }}
+                  style={{ width: '100%', borderRadius: '15px', display: 'inline-block' }}
                   onClick={() => setShowPromoModal(false)}
                 >
                   {config.promoBotonTexto}
-                </a>
+                </Link>
               </div>
             )}
           </div>
