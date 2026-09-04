@@ -43,6 +43,9 @@ const LandingView = () => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  // Modal Promo
+  const [showPromoModal, setShowPromoModal] = useState(false);
+
   // Scroll & ScrollSpy states
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('inicio');
@@ -274,7 +277,16 @@ const LandingView = () => {
       try {
         const res = await api.get('/web-config');
         if (res.data.success) {
-          setConfig(prev => ({ ...prev, ...res.data.data }));
+          const fetchedConfig = res.data.data;
+          setConfig(prev => ({ ...prev, ...fetchedConfig }));
+          
+          if (fetchedConfig.promoActiva) {
+            const hasSeenPromo = sessionStorage.getItem('promoVisto');
+            if (!hasSeenPromo) {
+              setShowPromoModal(true);
+              sessionStorage.setItem('promoVisto', 'true');
+            }
+          }
         }
       } catch (err) {
         console.error('Error al cargar config web:', err);
@@ -1674,6 +1686,32 @@ const LandingView = () => {
                 <button onClick={() => setSelectedEvento(null)} className="btn btn-primary" style={{ width: '100%', borderRadius: '15px', padding: '1rem', fontSize: '1rem', fontWeight: 'bold' }}>Cerrar</button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Promo Modal */}
+      {showPromoModal && (
+        <div className="promo-modal-overlay" onClick={() => setShowPromoModal(false)}>
+          <div className="promo-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="promo-close-btn" onClick={() => setShowPromoModal(false)}>×</button>
+            {config.promoImagenUrl && (
+              <img src={getImageUrl(config.promoImagenUrl)} alt="Promo" className="promo-image" />
+            )}
+            <h2 className="promo-title">{config.promoTitulo}</h2>
+            <p className="promo-desc">{config.promoDescripcion}</p>
+            {config.promoBotonTexto && (
+              <div className="promo-actions">
+                <a 
+                  href={config.promoBotonLink || '#'} 
+                  className="btn btn-primary" 
+                  style={{ width: '100%', borderRadius: '15px' }}
+                  onClick={() => setShowPromoModal(false)}
+                >
+                  {config.promoBotonTexto}
+                </a>
+              </div>
+            )}
           </div>
         </div>
       )}

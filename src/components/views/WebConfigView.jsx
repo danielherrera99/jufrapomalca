@@ -23,8 +23,16 @@ const WebConfigView = () => {
     instagramUrl: '',
     whatsappUrl: '',
     tiktokUrl: '',
-    youtubeUrl: ''
+    youtubeUrl: '',
+    promoActiva: false,
+    promoTitulo: '',
+    promoDescripcion: '',
+    promoImagenUrl: '',
+    promoBotonTexto: '',
+    promoBotonLink: ''
   });
+  const [selectedPromoFile, setSelectedPromoFile] = useState(null);
+  const [promoPreviewUrl, setPromoPreviewUrl] = useState(null);
 
   useEffect(() => {
     fetchConfig();
@@ -35,7 +43,13 @@ const WebConfigView = () => {
     try {
       const res = await api.get('/web-config');
       if (res.data.success) {
-        setConfig(res.data.data);
+        const data = res.data.data;
+        setConfig({
+          ...config,
+          ...data,
+          promoActiva: data.promoActiva || false
+        });
+        if (data.promoImagenUrl) setPromoPreviewUrl(data.promoImagenUrl);
       }
     } catch (err) {
       console.error('Error al cargar config web:', err);
@@ -44,13 +58,34 @@ const WebConfigView = () => {
     }
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedPromoFile(file);
+      setPromoPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await api.put('/web-config', config);
+      const formData = new FormData();
+      Object.keys(config).forEach(key => {
+        formData.append(key, config[key]);
+      });
+
+      if (selectedPromoFile) {
+        formData.append('promoFile', selectedPromoFile);
+      }
+
+      const res = await api.put('/web-config', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
       if (res.data.success) {
         alert('¡Configuración guardada! Los cambios ya son visibles en la web pública.');
+        setSelectedPromoFile(null);
+        fetchConfig();
       }
     } catch (err) {
       alert('Error al guardar: ' + err.message);
@@ -192,6 +227,92 @@ const WebConfigView = () => {
                 placeholder="Ej: Parroquia San Juan Maria Vianney, Pomalca"
               />
               <small style={{ color: 'var(--text-muted)' }}>Tip: Escribe el nombre del lugar o coordenadas para mover el pin.</small>
+            </div>
+          </section>
+
+          <section style={{ marginBottom: '3rem' }}>
+            <h3 style={{ color: 'var(--secondary)', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', marginBottom: '1.5rem' }}>Banner Promocional (Popup Flotante)</h3>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>Configura el anuncio que aparece al entrar a la página (solo se muestra 1 vez por sesión).</p>
+            
+            <div className="input-group" style={{ marginBottom: '1.5rem' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontWeight: 'bold' }}>
+                <input 
+                  type="checkbox" 
+                  checked={config.promoActiva} 
+                  onChange={e => setConfig({...config, promoActiva: e.target.checked})} 
+                  style={{ width: '20px', height: '20px' }}
+                />
+                Activar Banner Promocional
+              </label>
+            </div>
+
+            <div className="row" style={{ gap: '1rem', display: 'flex', flexWrap: 'wrap' }}>
+              <div className="col" style={{ flex: 1, minWidth: '250px' }}>
+                <div className="input-group">
+                  <label>Título del Anuncio:</label>
+                  <input 
+                    type="text" 
+                    value={config.promoTitulo} 
+                    onChange={e => setConfig({...config, promoTitulo: e.target.value})} 
+                    placeholder="Ej: ¡Gran Bingo Franciscano!"
+                  />
+                </div>
+                <div className="input-group">
+                  <label>Descripción corta:</label>
+                  <textarea 
+                    value={config.promoDescripcion} 
+                    onChange={e => setConfig({...config, promoDescripcion: e.target.value})} 
+                    style={{ minHeight: '80px' }}
+                    placeholder="Describe la actividad..."
+                  />
+                </div>
+                <div className="row" style={{ gap: '1rem', display: 'flex' }}>
+                  <div className="col" style={{ flex: 1 }}>
+                    <div className="input-group">
+                      <label>Texto del Botón:</label>
+                      <input 
+                        type="text" 
+                        value={config.promoBotonTexto} 
+                        onChange={e => setConfig({...config, promoBotonTexto: e.target.value})} 
+                        placeholder="Ej: Saber más"
+                      />
+                    </div>
+                  </div>
+                  <div className="col" style={{ flex: 1 }}>
+                    <div className="input-group">
+                      <label>Enlace del Botón:</label>
+                      <input 
+                        type="text" 
+                        value={config.promoBotonLink} 
+                        onChange={e => setConfig({...config, promoBotonLink: e.target.value})} 
+                        placeholder="Ej: /celebraciones o URL externa"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="col" style={{ flex: 1, minWidth: '250px' }}>
+                <div className="input-group">
+                  <label>Imagen del Flyer (Recomendado: Cuadrada o Vertical):</label>
+                  {promoPreviewUrl && (
+                    <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
+                      <img 
+                        src={promoPreviewUrl.startsWith('blob:') ? promoPreviewUrl : api.defaults.baseURL.replace('/api', '') + '/' + promoPreviewUrl} 
+                        alt="Preview" 
+                        style={{ maxWidth: '100%', maxHeight: '200px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }} 
+                        onError={(e) => { e.target.src = promoPreviewUrl; }}
+                      />
+                    </div>
+                  )}
+                  <input 
+                    type="file" 
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    style={{ padding: '0.5rem', background: '#f8f9fa' }}
+                  />
+                </div>
+              </div>
             </div>
           </section>
 
