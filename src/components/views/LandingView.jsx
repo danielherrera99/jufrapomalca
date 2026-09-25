@@ -1373,38 +1373,18 @@ const LandingView = () => {
         {/* Familia Franciscana Section */}
         <section id="familia" className="section-padding" style={{ background: '#FFFAF3', position: 'relative', overflow: 'hidden' }}>
           <div className="flex-responsive" style={{ maxWidth: '1100px', margin: '0 auto', alignItems: 'center', gap: '4rem' }}>
-            <div style={{ flex: '1.2', minWidth: '300px' }}>
+            <div style={{ flex: '1', minWidth: '300px', textAlign: 'center' }}>
               <span style={{ color: 'var(--secondary)', fontWeight: 'bold', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Familia Global</span>
-              <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '1.5rem', marginTop: '0.5rem' }}>Nuestra Familia Franciscana</h2>
+              <h2 className="section-title" style={{ marginBottom: '1.5rem', marginTop: '0.5rem' }}>Nuestra Familia Franciscana</h2>
               <h4 style={{ color: 'var(--primary)', marginBottom: '1.5rem', fontSize: '1.3rem', fontFamily: 'var(--font-serif)', fontStyle: 'italic' }}>{config.familiaTitulo || 'Las Tres Ramas de la Familia Franciscana'}</h4>
-              <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.9', textAlign: 'justify' }}>
+              <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.9', maxWidth: '800px', margin: '0 auto' }}>
                 {config.familiaDescripcion || 'La espiritualidad de San Francisco se divide en tres ramas que conforman nuestra gran familia. Caminamos unidos compartiendo el mismo carisma, el ideal de vida evangélica y la misión de llevar paz y bien al mundo.'}
               </p>
-              <div style={{ marginTop: '2.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+              <div style={{ marginTop: '2.5rem', display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
                 <Link to="/familia" target="_blank" className="btn btn-ghost zoom-hover" style={{ padding: '1rem 2.5rem', textDecoration: 'none' }}>
                   Conocer más de la familia franciscana
                 </Link>
               </div>
-            </div>
-            <div style={{ flex: '0.8', minWidth: '280px', textAlign: 'center', position: 'relative', display: 'flex', justifyContent: 'center' }}>
-               <div style={{ 
-                 width: '350px', 
-                 height: '350px', 
-                 background: 'var(--primary)', 
-                 borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%', 
-                 opacity: 0.08, 
-                 position: 'absolute', 
-                 top: '50%', 
-                 left: '50%', 
-                 transform: 'translate(-50%, -50%)',
-                 zIndex: 1 
-               }}></div>
-                <img 
-                  src="/escudo_ofs.jpg" 
-                  alt="Escudo OFS" 
-                  className="zoom-hover"
-                  style={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: '260px', height: 'auto', filter: 'drop-shadow(0 20px 30px rgba(139, 69, 19, 0.15))' }} 
-                />
             </div>
           </div>
         </section>

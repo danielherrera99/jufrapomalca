@@ -200,6 +200,11 @@ const OfsChiclayoView = () => {
       {/* Sección Identidad */}
       <section id="historia" className="section-padding" style={{ background: 'white' }}>
         <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
+          <img 
+            src="/escudo_ofs.jpg" 
+            alt="Escudo OFS Santa Isabel de Hungría" 
+            style={{ width: '150px', height: '150px', objectFit: 'contain', marginBottom: '1.5rem', borderRadius: '50%', boxShadow: '0 10px 20px rgba(139, 69, 19, 0.1)' }} 
+          />
           <h2 className="section-title">¿Quiénes somos?</h2>
           <p style={{ fontSize: 'clamp(1rem, 3vw, 1.25rem)', lineHeight: '1.8', color: 'var(--text-muted)' }}>
             {config.quienesSomos}
