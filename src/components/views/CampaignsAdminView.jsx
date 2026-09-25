@@ -159,7 +159,7 @@ const CampaignsAdminView = ({ ActivityIndicator }) => {
 
             {isModalOpen && (
                 <div className="modal-overlay">
-                    <div className="modal-content glass-card animate-scale" style={{ maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto' }}>
+                    <div className="modal-content glass-card animate-scale" style={{ maxWidth: '600px', width: '100%' }}>
                         <h3 style={{ marginTop: 0 }}>{editingId ? 'Editar Campaña' : 'Nueva Campaña'}</h3>
                         <form onSubmit={handleSave}>
                             
