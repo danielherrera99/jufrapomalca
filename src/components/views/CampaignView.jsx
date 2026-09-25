@@ -121,10 +121,10 @@ const CampaignView = () => {
                         </div>
                     )}
 
-                    {campaign.mapQuery && (
+                    {campaign.latitud && campaign.longitud && (
                         <div className="glass-card" style={{ padding: '0', overflow: 'hidden' }}>
                             <iframe 
-                                src={campaign.mapQuery} 
+                                src={`https://maps.google.com/maps?q=${campaign.latitud},${campaign.longitud}&hl=es&z=15&output=embed`}
                                 width="100%" 
                                 height="300" 
                                 style={{ border: 0, display: 'block' }} 

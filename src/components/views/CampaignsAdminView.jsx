@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../config/api';
+import MapPicker from '../MapPicker';
 
 const CampaignsAdminView = ({ ActivityIndicator }) => {
     const [campaigns, setCampaigns] = useState([]);
@@ -14,7 +15,8 @@ const CampaignsAdminView = ({ ActivityIndicator }) => {
         descripcion: '',
         fechaHora: '',
         ubicacion: '',
-        mapQuery: '',
+        latitud: '',
+        longitud: '',
         isActive: false,
         cronograma: [],
         reglas: []
@@ -47,7 +49,8 @@ const CampaignsAdminView = ({ ActivityIndicator }) => {
                 descripcion: campaign.descripcion || '',
                 fechaHora: campaign.fechaHora || '',
                 ubicacion: campaign.ubicacion || '',
-                mapQuery: campaign.mapQuery || '',
+                latitud: campaign.latitud || '',
+                longitud: campaign.longitud || '',
                 isActive: campaign.isActive || false,
                 cronograma: Array.isArray(campaign.cronograma) ? campaign.cronograma : [],
                 reglas: Array.isArray(campaign.reglas) ? campaign.reglas : []
@@ -59,7 +62,8 @@ const CampaignsAdminView = ({ ActivityIndicator }) => {
                 descripcion: '',
                 fechaHora: '',
                 ubicacion: '',
-                mapQuery: '',
+                latitud: '',
+                longitud: '',
                 isActive: false,
                 cronograma: [],
                 reglas: []
@@ -181,9 +185,13 @@ const CampaignsAdminView = ({ ActivityIndicator }) => {
                             </div>
 
                             <div className="input-group">
-                                <label>Mapa Interactivo (Iframe de Google Maps)</label>
-                                <input type="text" value={formData.mapQuery} onChange={e => setFormData({...formData, mapQuery: e.target.value})} placeholder="URL del iframe o query para mapa" />
-                                <small style={{ color: 'var(--text-muted)' }}>Pega aquí la URL src del iframe de Google Maps.</small>
+                                <label>Ubicación en el Mapa (Opcional)</label>
+                                <MapPicker 
+                                    lat={formData.latitud} 
+                                    lng={formData.longitud} 
+                                    onChange={(lat, lng) => setFormData({...formData, latitud: lat, longitud: lng})} 
+                                />
+                                <small style={{ color: 'var(--text-muted)' }}>Mueve el pin o haz clic en el mapa para establecer la ubicación exacta.</small>
                             </div>
 
                             <div className="input-group" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
