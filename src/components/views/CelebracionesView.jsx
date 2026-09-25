@@ -1,47 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
-const mockActividades = [
-  {
-    id: 1,
-    titulo: 'Festividad de San Francisco de Asís',
-    fecha: '11 Oct 2026',
-    hora: '10:15 A.M.',
-    lugar: 'Parroquia María del Perpetuo Socorro, Pomalca',
-    descripcion: 'Acompáñanos en la Santa Misa por la festividad de nuestro Padre Seráfico. Habrá bendición de mascotas y campaña de desparasitación veterinaria.',
-    imagen: '/hero_jufra_background.png',
-    etiqueta: 'Solemnidad',
-    destacado: true
-  },
-  {
-    id: 2,
-    titulo: 'Encuentro de Formación Sabatino',
-    fecha: '18 Oct 2026',
-    hora: '4:00 P.M.',
-    lugar: 'Salón Parroquial JUFRA',
-    descripcion: 'Tema: "El Cántico de las Criaturas en la actualidad". Compartiremos la Palabra, cantos y dinámicas grupales.',
-    imagen: null,
-    etiqueta: 'Formación',
-    destacado: false
-  },
-  {
-    id: 3,
-    titulo: 'Visita Solidaria',
-    fecha: '25 Oct 2026',
-    hora: '9:00 A.M.',
-    lugar: 'Asilo de Ancianos San José',
-    descripcion: 'Llevaremos víveres, cantos y mucha alegría a nuestros hermanos mayores. ¡Súmate a esta obra de caridad!',
-    imagen: null,
-    etiqueta: 'Acción Social',
-    destacado: false
-  }
-];
+import api from '../../config/api';
 
 const CelebracionesView = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [actividades, setActividades] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchEventos = async () => {
+    try {
+      const response = await api.get('/eventos/web');
+      if (response.data && response.data.eventos) {
+        setActividades(response.data.eventos);
+      }
+    } catch (error) {
+      console.error('Error al cargar eventos de la web:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
+    fetchEventos();
+    
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
@@ -52,6 +34,15 @@ const CelebracionesView = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const formatearFecha = (fechaString) => {
+    if (!fechaString) return '';
+    const opciones = { day: 'numeric', month: 'short', year: 'numeric' };
+    const fecha = new Date(fechaString);
+    // Ajustar zona horaria local sumando minutos offset
+    fecha.setMinutes(fecha.getMinutes() + fecha.getTimezoneOffset());
+    return fecha.toLocaleDateString('es-ES', opciones);
+  };
 
   return (
     <div className="landing-page animate-fade">
@@ -94,50 +85,62 @@ const CelebracionesView = () => {
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2.5rem' }}>
-            {mockActividades.map((act) => (
-              <div key={act.id} className="feature-card zoom-hover" style={{ 
-                background: 'white', 
-                padding: '0', 
-                overflow: 'hidden', 
-                borderRadius: '20px',
-                border: act.destacado ? '2px solid var(--secondary)' : 'none',
-                boxShadow: act.destacado ? '0 15px 35px rgba(212, 165, 116, 0.2)' : '0 10px 30px rgba(0,0,0,0.05)',
-                display: 'flex',
-                flexDirection: 'column'
-              }}>
-                {act.imagen && (
-                  <div style={{ height: '200px', width: '100%', overflow: 'hidden', position: 'relative' }}>
-                    <img src={act.imagen} alt={act.titulo} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    <div style={{ position: 'absolute', top: '15px', right: '15px', background: 'var(--primary)', color: 'white', padding: '0.4rem 1rem', borderRadius: '50px', fontSize: '0.8rem', fontWeight: 'bold' }}>
-                      {act.etiqueta}
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>Cargando actividades...</div>
+          ) : actividades.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '3rem', background: 'white', borderRadius: '20px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🕊️</div>
+              <h3 style={{ color: 'var(--text-main)', marginBottom: '1rem' }}>No hay actividades programadas por ahora</h3>
+              <p style={{ color: 'var(--text-muted)' }}>Mantente atento a nuestras redes sociales o regresa pronto para ver los próximos encuentros.</p>
+            </div>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2.5rem' }}>
+              {actividades.map((act) => (
+                <div key={act._id} className="feature-card zoom-hover" style={{ 
+                  background: 'white', 
+                  padding: '0', 
+                  overflow: 'hidden', 
+                  borderRadius: '20px',
+                  border: act.destacado ? '2px solid var(--secondary)' : 'none',
+                  boxShadow: act.destacado ? '0 15px 35px rgba(212, 165, 116, 0.2)' : '0 10px 30px rgba(0,0,0,0.05)',
+                  display: 'flex',
+                  flexDirection: 'column'
+                }}>
+                  {act.imagenUrl && (
+                    <div style={{ height: '200px', width: '100%', overflow: 'hidden', position: 'relative' }}>
+                      <img src={act.imagenUrl} alt={act.titulo} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <div style={{ position: 'absolute', top: '15px', right: '15px', background: 'var(--primary)', color: 'white', padding: '0.4rem 1rem', borderRadius: '50px', fontSize: '0.8rem', fontWeight: 'bold', textTransform: 'capitalize' }}>
+                        {act.tipo || 'Evento'}
+                      </div>
                     </div>
-                  </div>
-                )}
-                
-                <div style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                  {!act.imagen && (
-                    <span style={{ display: 'inline-block', background: 'rgba(139, 69, 19, 0.1)', color: 'var(--primary)', padding: '0.4rem 1rem', borderRadius: '50px', fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '1rem', alignSelf: 'flex-start' }}>
-                      {act.etiqueta}
-                    </span>
                   )}
-                  <h3 style={{ color: 'var(--text-main)', fontSize: '1.4rem', marginBottom: '1rem', lineHeight: '1.4' }}>{act.titulo}</h3>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-muted)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
-                    <span>📅</span> {act.fecha} • {act.hora}
+                  
+                  <div style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                    {!act.imagenUrl && (
+                      <span style={{ display: 'inline-block', background: 'rgba(139, 69, 19, 0.1)', color: 'var(--primary)', padding: '0.4rem 1rem', borderRadius: '50px', fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '1rem', alignSelf: 'flex-start', textTransform: 'capitalize' }}>
+                        {act.tipo || 'Evento'}
+                      </span>
+                    )}
+                    <h3 style={{ color: 'var(--text-main)', fontSize: '1.4rem', marginBottom: '1rem', lineHeight: '1.4' }}>{act.titulo}</h3>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-muted)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
+                      <span>📅</span> {formatearFecha(act.fecha)} {act.hora ? `• ${act.hora}` : ''}
+                    </div>
+                    {act.lugar && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
+                        <span>📍</span> {act.lugar}
+                      </div>
+                    )}
+                    <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '0.95rem', marginBottom: '2rem', flex: 1, whiteSpace: 'pre-line' }}>
+                      {act.descripcion}
+                    </p>
+                    <a href={`https://wa.me/51981574685?text=Paz%20y%20Bien.%20Quisiera%20m%C3%A1s%20informaci%C3%B3n%20sobre:%20${act.titulo}`} target="_blank" rel="noreferrer" className="btn btn-outline" style={{ textAlign: 'center', display: 'block', textDecoration: 'none', borderRadius: '10px', width: '100%' }}>
+                      Saber Más / Inscribirme
+                    </a>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
-                    <span>📍</span> {act.lugar}
-                  </div>
-                  <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '0.95rem', marginBottom: '2rem', flex: 1 }}>
-                    {act.descripcion}
-                  </p>
-                  <a href={`https://wa.me/51981574685?text=Paz%20y%20Bien.%20Quisiera%20m%C3%A1s%20informaci%C3%B3n%20sobre:%20${act.titulo}`} target="_blank" rel="noreferrer" className="btn btn-outline" style={{ textAlign: 'center', display: 'block', textDecoration: 'none', borderRadius: '10px', width: '100%' }}>
-                    Saber Más
-                  </a>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
