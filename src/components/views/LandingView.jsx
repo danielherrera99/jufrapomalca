@@ -1703,10 +1703,26 @@ const LandingView = () => {
             {config.promoBotonTexto && (
               <div className="promo-actions">
                 <Link 
-                  to={config.promoBotonLink && config.promoBotonLink !== '#' ? config.promoBotonLink : '/celebraciones'} 
+                  to={config.promoBotonLink && config.promoBotonLink !== '#' ? config.promoBotonLink : '#celebraciones'} 
                   className="btn btn-primary" 
-                  style={{ width: '100%', borderRadius: '15px', display: 'inline-block' }}
-                  onClick={() => setShowPromoModal(false)}
+                  style={{ width: '100%', borderRadius: '15px', display: 'inline-block', textAlign: 'center' }}
+                  onClick={(e) => {
+                    const link = config.promoBotonLink && config.promoBotonLink !== '#' ? config.promoBotonLink : '#celebraciones';
+                    if (link.startsWith('#')) {
+                      e.preventDefault();
+                      setShowPromoModal(false);
+                      setTimeout(() => {
+                        const targetId = link.substring(1);
+                        const section = document.getElementById(targetId);
+                        if (section) {
+                          const y = section.getBoundingClientRect().top + window.pageYOffset - 80; // -80px para el menú de navegación
+                          window.scrollTo({ top: y, behavior: 'smooth' });
+                        }
+                      }, 150);
+                    } else {
+                      setShowPromoModal(false);
+                    }
+                  }}
                 >
                   {config.promoBotonTexto}
                 </Link>
