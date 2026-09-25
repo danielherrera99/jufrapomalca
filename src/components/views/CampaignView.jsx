@@ -87,7 +87,7 @@ const CampaignView = () => {
                         <p style={{ fontSize: '1.1rem', marginBottom: '1.5rem' }}><strong>📍 Ubicación:</strong> <br/>{campaign.ubicacion}</p>
                     )}
 
-                    {campaign.cronograma && campaign.cronograma.length > 0 && (
+                    {Array.isArray(campaign.cronograma) && campaign.cronograma.length > 0 && (
                         <>
                             <h4 style={{ marginTop: '2rem', marginBottom: '1rem', color: 'var(--primary)' }}>Cronograma de Actividades</h4>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -107,7 +107,7 @@ const CampaignView = () => {
                 {/* Reglas y Mapa */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                     
-                    {campaign.reglas && campaign.reglas.length > 0 && (
+                    {Array.isArray(campaign.reglas) && campaign.reglas.length > 0 && (
                         <div className="glass-card" style={{ padding: '2rem' }}>
                             <h3 style={{ borderBottom: '2px solid var(--primary)', paddingBottom: '0.5rem', marginBottom: '1.5rem' }}>Indicaciones Importantes</h3>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>

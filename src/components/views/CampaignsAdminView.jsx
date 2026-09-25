@@ -49,8 +49,8 @@ const CampaignsAdminView = ({ ActivityIndicator }) => {
                 ubicacion: campaign.ubicacion || '',
                 mapQuery: campaign.mapQuery || '',
                 isActive: campaign.isActive || false,
-                cronograma: campaign.cronograma || [],
-                reglas: campaign.reglas || []
+                cronograma: Array.isArray(campaign.cronograma) ? campaign.cronograma : [],
+                reglas: Array.isArray(campaign.reglas) ? campaign.reglas : []
             });
         } else {
             setEditingId(null);
@@ -195,7 +195,7 @@ const CampaignsAdminView = ({ ActivityIndicator }) => {
 
                             <div className="input-group">
                                 <h4>Cronograma de Actividades</h4>
-                                {formData.cronograma.map((item, idx) => (
+                                {(Array.isArray(formData.cronograma) ? formData.cronograma : []).map((item, idx) => (
                                     <div key={idx} style={{ display: 'flex', gap: '10px', marginBottom: '8px', alignItems: 'center' }}>
                                         <span style={{ fontWeight: 'bold', minWidth: '80px' }}>{item.hora}</span>
                                         <span style={{ flex: 1 }}>{item.actividad}</span>
@@ -213,7 +213,7 @@ const CampaignsAdminView = ({ ActivityIndicator }) => {
 
                             <div className="input-group">
                                 <h4>Reglas / Indicaciones</h4>
-                                {formData.reglas.map((item, idx) => (
+                                {(Array.isArray(formData.reglas) ? formData.reglas : []).map((item, idx) => (
                                     <div key={idx} style={{ display: 'flex', gap: '10px', marginBottom: '8px', alignItems: 'center' }}>
                                         <span style={{ fontSize: '1.2rem' }}>{item.icono}</span>
                                         <span style={{ flex: 1 }}>{item.texto}</span>
