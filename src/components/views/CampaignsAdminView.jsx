@@ -14,7 +14,7 @@ const CampaignsAdminView = ({ ActivityIndicator }) => {
         titulo: '',
         descripcion: '',
         fechaHora: '',
-        ubicacion: '',
+        ubicacionTexto: '',
         latitud: '',
         longitud: '',
         isActive: false,
@@ -48,7 +48,7 @@ const CampaignsAdminView = ({ ActivityIndicator }) => {
                 titulo: campaign.titulo || '',
                 descripcion: campaign.descripcion || '',
                 fechaHora: campaign.fechaHora || '',
-                ubicacion: campaign.ubicacion || '',
+                ubicacionTexto: campaign.ubicacionTexto || '',
                 latitud: campaign.latitud || '',
                 longitud: campaign.longitud || '',
                 isActive: campaign.isActive || false,
@@ -61,7 +61,7 @@ const CampaignsAdminView = ({ ActivityIndicator }) => {
                 titulo: '',
                 descripcion: '',
                 fechaHora: '',
-                ubicacion: '',
+                ubicacionTexto: '',
                 latitud: '',
                 longitud: '',
                 isActive: false,
@@ -180,7 +180,7 @@ const CampaignsAdminView = ({ ActivityIndicator }) => {
                                 </div>
                                 <div className="input-group">
                                     <label>Ubicación (Texto)</label>
-                                    <input type="text" value={formData.ubicacion} onChange={e => setFormData({...formData, ubicacion: e.target.value})} placeholder="Ej: Parroquia San Francisco" />
+                                    <input type="text" value={formData.ubicacionTexto} onChange={e => setFormData({...formData, ubicacionTexto: e.target.value})} placeholder="Ej: Parroquia San Francisco" />
                                 </div>
                             </div>
 

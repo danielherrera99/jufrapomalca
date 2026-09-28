@@ -83,8 +83,8 @@ const CampaignView = () => {
                 <div className="glass-card" style={{ padding: '2rem' }}>
                     <h3 style={{ borderBottom: '2px solid var(--primary)', paddingBottom: '0.5rem', marginBottom: '1.5rem' }}>Información del Evento</h3>
                     <p style={{ fontSize: '1.1rem', marginBottom: '1rem' }}><strong>📅 Fecha y Hora:</strong> <br/>{campaign.fechaHora}</p>
-                    {campaign.ubicacion && (
-                        <p style={{ fontSize: '1.1rem', marginBottom: '1.5rem' }}><strong>📍 Ubicación:</strong> <br/>{campaign.ubicacion}</p>
+                    {campaign.ubicacionTexto && (
+                        <p style={{ fontSize: '1.1rem', marginBottom: '1.5rem' }}><strong>📍 Ubicación:</strong> <br/>{campaign.ubicacionTexto}</p>
                     )}
 
                     {Array.isArray(campaign.cronograma) && campaign.cronograma.length > 0 && (
