@@ -90,13 +90,13 @@ const RegistrosMascotasAdminView = () => {
                 <table className="admin-table">
                     <thead>
                         <tr>
-                            <th>ID Solicitud</th>
-                            <th>Mascota</th>
-                            <th>Dueño</th>
-                            <th>WhatsApp</th>
-                            <th>Servicios</th>
-                            <th>Estado</th>
-                            <th>Acción</th>
+                            <th style={{ minWidth: '130px' }}>ID Solicitud</th>
+                            <th style={{ minWidth: '150px' }}>Mascota</th>
+                            <th style={{ minWidth: '180px' }}>Dueño</th>
+                            <th style={{ minWidth: '120px' }}>WhatsApp</th>
+                            <th style={{ minWidth: '180px', textAlign: 'left' }}>Servicios</th>
+                            <th style={{ minWidth: '120px' }}>Estado</th>
+                            <th style={{ minWidth: '100px' }}>Acción</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -110,7 +110,7 @@ const RegistrosMascotasAdminView = () => {
                                     <td>{registro.nombreDueno}</td>
                                     <td>{registro.whatsapp}</td>
                                     <td>
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-start' }}>
                                             <label style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.9rem', cursor: 'pointer' }}>
                                                 <input 
                                                     type="checkbox" 
