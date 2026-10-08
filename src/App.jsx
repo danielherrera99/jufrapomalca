@@ -38,6 +38,7 @@ import GaleriaWebAdminView from './components/views/GaleriaWebAdminView';
 import QuienesSomosView from './components/views/QuienesSomosView';
 import JufraPeruView from './components/views/JufraPeruView';
 import FinanzasView from './components/views/FinanzasView';
+import RegistrosMascotasAdminView from './components/views/RegistrosMascotasAdminView';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import 'leaflet/dist/leaflet.css';
@@ -259,6 +260,7 @@ const modules = [
   { id: 'QuienesSomos', label: 'Quiénes Somos', icon: '👥' },
   { id: 'WebConfig', label: 'Web Institucional', icon: '🌐' },
   { id: 'Campanas', label: 'Gestor de Campañas', icon: '🎯' },
+  { id: 'RegistrosMascotas', label: 'Registro de Mascotas', icon: '🐾' },
   { id: 'OfsConfig', label: 'Configuración OFS', icon: '☦️' },
   { id: 'Fraternidades', label: 'JUFRA Perú', icon: '🇵🇪' },
   { id: 'Perfil', label: 'Mi Perfil', icon: '👤' },
@@ -417,6 +419,7 @@ const Dashboard = ({ user, onLogout }) => {
           <Route path="redes" element={<RedesAdminView />} />
           <Route path="webconfig" element={<WebConfigView />} />
           <Route path="campanas" element={<CampaignsAdminView ActivityIndicator={ActivityIndicator} />} />
+          <Route path="registros-mascotas" element={<RegistrosMascotasAdminView />} />
           <Route path="ofsconfig" element={<OfsConfigView />} />
           <Route path="fraternidades" element={<FraternidadesAdminView />} />
           <Route path="consejo" element={<Consejo />} />

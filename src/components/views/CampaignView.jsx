@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../config/api';
+import Swal from 'sweetalert2';
 
 const CampaignView = () => {
     const [campaign, setCampaign] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const [formData, setFormData] = useState({ nombreDueno: '', nombreMascota: '', whatsapp: '' });
+    const [downloadId, setDownloadId] = useState('');
+    const [registering, setRegistering] = useState(false);
+    const [downloading, setDownloading] = useState(false);
 
     useEffect(() => {
         const fetchActiveCampaign = async () => {
@@ -48,12 +54,65 @@ const CampaignView = () => {
         const text = encodeURIComponent(campaign.titulo);
         const details = encodeURIComponent(campaign.descripcion || '');
         const location = encodeURIComponent(campaign.ubicacion || '');
-        // Usamos una fecha genérica ya que tenemos un string libre, o podríamos usar fecha del sistema. 
-        // Para que funcione el link, pondremos un evento de todo el día para hoy, 
-        // ya que la fechaHora es texto libre, el usuario tendrá que ajustarlo.
         const start = new Date().toISOString().replace(/-|:|\.\d\d\d/g, "");
         const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${text}&details=${details}&location=${location}&dates=${start}/${start}`;
         window.open(url, '_blank');
+    };
+
+    const handleRegister = async (e) => {
+        e.preventDefault();
+        setRegistering(true);
+        try {
+            const { data } = await api.post('/registros-mascotas/registro', formData);
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Registro exitoso!',
+                    html: `Tu número de solicitud es:<br><br><b style="font-size:2rem;color:var(--primary)">${data.data.idSolicitud}</b><br><br>Guarda este código para descargar tu certificado más tarde.`,
+                    confirmButtonColor: '#5c4d44'
+                });
+                setFormData({ nombreDueno: '', nombreMascota: '', whatsapp: '' });
+            }
+        } catch (err) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: err.response?.data?.message || 'Ocurrió un error al registrar.',
+                confirmButtonColor: '#5c4d44'
+            });
+        } finally {
+            setRegistering(false);
+        }
+    };
+
+    const handleDownload = async () => {
+        if (!downloadId.trim()) return;
+        setDownloading(true);
+        try {
+            // Primero consultamos el estado
+            const { data } = await api.get(`/registros-mascotas/estado/${downloadId.trim()}`);
+            
+            if (data.success && data.data.estadoAprobado) {
+                // Proceder con la descarga
+                window.location.href = `${api.defaults.baseURL}/registros-mascotas/descargar-certificado/${downloadId.trim()}`;
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Pendiente',
+                    text: 'Tu registro aún no ha sido validado en la mesa de atención. Acércate al módulo para validarlo.',
+                    confirmButtonColor: '#5c4d44'
+                });
+            }
+        } catch (err) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Ups...',
+                text: err.response?.data?.message || 'No se encontró el número de solicitud.',
+                confirmButtonColor: '#5c4d44'
+            });
+        } finally {
+            setDownloading(false);
+        }
     };
 
     return (
@@ -76,6 +135,51 @@ const CampaignView = () => {
                     </button>
                 </div>
             </header>
+
+            <div className="grid-container" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', marginBottom: '3rem' }}>
+                
+                {/* Formulario de Registro */}
+                <div className="glass-card" style={{ padding: '2rem' }}>
+                    <h3 style={{ borderBottom: '2px solid var(--primary)', paddingBottom: '0.5rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        🐾 Registro de Mascotas
+                    </h3>
+                    <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        <div className="input-group">
+                            <label>Nombre del Dueño</label>
+                            <input type="text" required value={formData.nombreDueno} onChange={e => setFormData({...formData, nombreDueno: e.target.value})} placeholder="Tu nombre y apellido" />
+                        </div>
+                        <div className="input-group">
+                            <label>Nombre de la Mascota</label>
+                            <input type="text" required value={formData.nombreMascota} onChange={e => setFormData({...formData, nombreMascota: e.target.value})} placeholder="Nombre de tu engreído" />
+                        </div>
+                        <div className="input-group">
+                            <label>WhatsApp</label>
+                            <input type="text" required value={formData.whatsapp} onChange={e => setFormData({...formData, whatsapp: e.target.value})} placeholder="Ej: 999 999 999" />
+                        </div>
+                        <button type="submit" className="btn btn-primary" disabled={registering} style={{ marginTop: '1rem', width: '100%' }}>
+                            {registering ? 'Registrando...' : 'Registrar Mascota'}
+                        </button>
+                    </form>
+                </div>
+
+                {/* Generación de Certificado */}
+                <div className="glass-card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                    <h3 style={{ borderBottom: '2px solid var(--primary)', paddingBottom: '0.5rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        📜 Descargar Certificado
+                    </h3>
+                    <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.95rem' }}>
+                        Si ya registraste a tu mascota y validaste tu asistencia en el evento, ingresa tu número de solicitud para descargar tu certificado de participación.
+                    </p>
+                    <div className="input-group">
+                        <label>Número de Solicitud</label>
+                        <input type="text" value={downloadId} onChange={e => setDownloadId(e.target.value.toUpperCase())} placeholder="Ej: JF-A4F32B" />
+                    </div>
+                    <button onClick={handleDownload} className="btn btn-secondary" disabled={downloading || !downloadId.trim()} style={{ marginTop: '1rem', width: '100%' }}>
+                        {downloading ? 'Generando...' : 'Generar Certificado PDF'}
+                    </button>
+                </div>
+
+            </div>
 
             <div className="grid-container" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
                 
