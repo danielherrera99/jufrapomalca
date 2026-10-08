@@ -146,7 +146,7 @@ const CampaignView = () => {
                     <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                         <div className="input-group">
                             <label>Nombre del Dueño</label>
-                            <input type="text" required value={formData.nombreDueno} onChange={e => setFormData({...formData, nombreDueno: e.target.value})} placeholder="Tu nombre y apellido" />
+                            <input type="text" maxLength="16" required value={formData.nombreDueno} onChange={e => setFormData({...formData, nombreDueno: e.target.value})} placeholder="Tu nombre y apellido (máx 16 carct.)" />
                         </div>
                         <div className="input-group">
                             <label>Nombre de la Mascota</label>
@@ -154,7 +154,10 @@ const CampaignView = () => {
                         </div>
                         <div className="input-group">
                             <label>WhatsApp</label>
-                            <input type="text" required value={formData.whatsapp} onChange={e => setFormData({...formData, whatsapp: e.target.value})} placeholder="Ej: 999 999 999" />
+                            <input type="tel" pattern="[0-9]*" required value={formData.whatsapp} onChange={e => {
+                                const val = e.target.value.replace(/[^0-9]/g, '');
+                                setFormData({...formData, whatsapp: val});
+                            }} placeholder="Ej: 999 999 999" />
                         </div>
                         <button type="submit" className="btn btn-primary" disabled={registering} style={{ marginTop: '1rem', width: '100%' }}>
                             {registering ? 'Registrando...' : 'Registrar Mascota'}
