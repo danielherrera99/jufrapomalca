@@ -146,7 +146,7 @@ const CampaignView = () => {
                     <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                         <div className="input-group">
                             <label>Nombre del Dueño</label>
-                            <input type="text" maxLength="16" required value={formData.nombreDueno} onChange={e => setFormData({...formData, nombreDueno: e.target.value})} placeholder="Tu nombre y apellido (máx 16 carct.)" />
+                            <input type="text" maxLength="14" required value={formData.nombreDueno} onChange={e => setFormData({...formData, nombreDueno: e.target.value})} placeholder="Tu nombre y apellido (máx 14 carct.)" />
                         </div>
                         <div className="input-group">
                             <label>Nombre de la Mascota</label>
