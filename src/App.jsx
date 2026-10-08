@@ -419,7 +419,7 @@ const Dashboard = ({ user, onLogout }) => {
           <Route path="redes" element={<RedesAdminView />} />
           <Route path="webconfig" element={<WebConfigView />} />
           <Route path="campanas" element={<CampaignsAdminView ActivityIndicator={ActivityIndicator} />} />
-          <Route path="registros-mascotas" element={<RegistrosMascotasAdminView />} />
+          <Route path="registrosmascotas" element={<RegistrosMascotasAdminView />} />
           <Route path="ofsconfig" element={<OfsConfigView />} />
           <Route path="fraternidades" element={<FraternidadesAdminView />} />
           <Route path="consejo" element={<Consejo />} />

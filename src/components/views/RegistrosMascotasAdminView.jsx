@@ -60,9 +60,9 @@ const RegistrosMascotasAdminView = () => {
     };
 
     const filteredRegistros = registros.filter(r => 
-        r.idSolicitud.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        r.nombreDueno.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        r.nombreMascota.toLowerCase().includes(searchTerm.toLowerCase())
+        (r.idSolicitud || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (r.nombreDueno || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (r.nombreMascota || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     if (loading) return <div className="spinner"></div>;
