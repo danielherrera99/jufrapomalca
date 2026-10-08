@@ -1899,3 +1899,44 @@ input:focus {
 .promo-desc { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 1.05rem; }
 .promo-actions { margin-top: 1rem; }
 @keyframes slideUpFade { from { opacity: 0; transform: translateY(30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+.admin-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 1rem;
+}
+.admin-table th {
+  padding: 1rem;
+  background-color: var(--surface);
+  border-bottom: 2px solid var(--border);
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+.admin-table td {
+  padding: 1.5rem 1rem;
+  background-color: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.admin-table tr td:first-child {
+  border-left: 1px solid var(--border);
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+.admin-table tr td:last-child {
+  border-right: 1px solid var(--border);
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+.admin-table tr {
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+.admin-table tr:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
