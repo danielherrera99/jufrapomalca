@@ -146,7 +146,7 @@ const CampaignView = () => {
                     <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                         <div className="input-group">
                             <label>Tu Nombre (Sólo primer nombre)</label>
-                            <input type="text" maxLength="10" required value={formData.nombreDueno} onChange={e => setFormData({...formData, nombreDueno: e.target.value})} placeholder="Ej: Daniel (máx 10 carct.)" />
+                            <input type="text" maxLength="10" required value={formData.nombreDueno} onChange={e => setFormData({...formData, nombreDueno: e.target.value})} placeholder="Ej: Jesús (máx 10 carct.)" />
                         </div>
                         <div className="input-group">
                             <label>Nombre de la Mascota</label>
@@ -175,7 +175,7 @@ const CampaignView = () => {
                     </p>
                     <div className="input-group">
                         <label>Número de Solicitud</label>
-                        <input type="text" value={downloadId} onChange={e => setDownloadId(e.target.value.toUpperCase())} placeholder="Ej: JF-A4F32B" />
+                        <input type="text" value={downloadId} onChange={e => setDownloadId(e.target.value.toUpperCase())} placeholder="Ej: J-000" />
                     </div>
                     <button onClick={handleDownload} className="btn btn-secondary" disabled={downloading || !downloadId.trim()} style={{ marginTop: '1rem', width: '100%' }}>
                         {downloading ? 'Generando...' : 'Generar Certificado PDF'}
