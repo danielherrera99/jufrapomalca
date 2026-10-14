@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import Swal from 'sweetalert2';
 import api from '../../config/api';
 import AnunciosList from '../lists/AnunciosList';
 import AnunciosNewModal from '../AnunciosNewModal';
@@ -7,12 +8,20 @@ import ItemReadModal from '../ItemReadModal';
 import MapPicker from '../MapPicker';
 import SafeImage from '../SafeImage';
 
+const FILTROS = [
+  { id: 'todos', label: 'Todos', icon: '📢' },
+  { id: 'urgente', label: 'Urgentes', icon: '🚨' },
+  { id: 'evento', label: 'Eventos', icon: '📅' },
+  { id: 'formacion', label: 'Formación', icon: '📖' },
+  { id: 'apostolado', label: 'Apostolado', icon: '🙏' },
+];
+
 const AnunciosView = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [anunciosFilter, setAnunciosFilter] = useState('todos');
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [newItem, setNewItem] = useState({ titulo: '', contenido: '', fecha: '', lugar: '', artista: '', anonimo: false });
@@ -21,11 +30,11 @@ const AnunciosView = () => {
 
   const getTipoIcon = (tipo) => {
     switch (tipo) {
-        case 'urgente': return '🚨';
-        case 'evento': return '📅';
-        case 'formacion': return '📖';
-        case 'apostolado': return '🙏';
-        default: return '📢';
+      case 'urgente': return '🚨';
+      case 'evento': return '📅';
+      case 'formacion': return '📖';
+      case 'apostolado': return '🙏';
+      default: return '📢';
     }
   };
 
@@ -48,7 +57,7 @@ const AnunciosView = () => {
 
   const filteredData = useMemo(() => {
     let filtered = Array.isArray(data) ? data : [];
-    
+
     if (anunciosFilter !== 'todos') {
       filtered = filtered.filter(item => (item.tipo || 'urgente') === anunciosFilter);
     }
@@ -57,10 +66,10 @@ const AnunciosView = () => {
 
     const normalize = (str) => typeof str === 'string' ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : '';
     const term = normalize(searchTerm).trim();
-    
+
     return filtered.filter(item => {
       if (!item) return false;
-      const fallback = normalize(`${item.titulo||''} ${item.contenido||''} ${item.descripcion||''}`);
+      const fallback = normalize(`${item.titulo || ''} ${item.contenido || ''} ${item.descripcion || ''}`);
       return fallback.includes(term);
     });
   }, [data, anunciosFilter, searchTerm]);
@@ -75,7 +84,7 @@ const AnunciosView = () => {
       formData.append('prioridad', newItem.prioridad || 'normal');
       formData.append('destinatarios', newItem.destinatarios || 'todos');
       formData.append('destacado', newItem.destacado ? 'true' : 'false');
-      
+
       if (newItem.archivoFile) {
         formData.append('imagen', newItem.archivoFile);
       }
@@ -86,8 +95,22 @@ const AnunciosView = () => {
       setIsModalOpen(false);
       setNewItem({ titulo: '', contenido: '', fecha: '', lugar: '', artista: '', anonimo: false });
       fetchData();
+
+      Swal.fire({
+        icon: 'success',
+        title: '¡Anuncio publicado!',
+        text: 'El anuncio se ha creado y publicado exitosamente.',
+        timer: 2000,
+        showConfirmButton: false,
+      });
     } catch (error) {
-      alert(`Error al crear el registro: ${error.response?.data?.message || error.message}`);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al publicar',
+        text: error.response?.data?.message || error.message,
+        confirmButtonColor: '#7c3aed',
+        confirmButtonText: 'Entendido',
+      });
     }
   };
 
@@ -101,7 +124,7 @@ const AnunciosView = () => {
       formData.append('prioridad', selectedItem.prioridad || 'normal');
       formData.append('destinatarios', selectedItem.destinatarios || 'todos');
       formData.append('destacado', selectedItem.destacado ? 'true' : 'false');
-      
+
       if (selectedItem.nuevaImagenFile) {
         formData.append('imagen', selectedItem.nuevaImagenFile);
       }
@@ -111,18 +134,58 @@ const AnunciosView = () => {
       await api.put(`/anuncios/${selectedItem._id}`, formData);
       setIsEditModalOpen(false);
       fetchData();
+
+      Swal.fire({
+        icon: 'success',
+        title: '¡Cambios guardados!',
+        text: 'El anuncio ha sido actualizado exitosamente.',
+        timer: 1800,
+        showConfirmButton: false,
+      });
     } catch (error) {
-      alert(`Error al actualizar el registro: ${error.response?.data?.message || error.message}`);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al actualizar',
+        text: error.response?.data?.message || error.message,
+        confirmButtonColor: '#7c3aed',
+        confirmButtonText: 'Entendido',
+      });
     }
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('¿Estás totalmente seguro de que deseas eliminar esto?')) {
+    const result = await Swal.fire({
+      title: '¿Eliminar anuncio?',
+      text: 'Esta acción no se puede deshacer y el anuncio será eliminado definitivamente.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: '🗑️ Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+      focusCancel: true,
+    });
+
+    if (result.isConfirmed) {
       try {
         await api.delete(`/anuncios/${id}`);
         fetchData();
+        Swal.fire({
+          icon: 'success',
+          title: '¡Eliminado!',
+          text: 'El anuncio ha sido eliminado.',
+          timer: 1600,
+          showConfirmButton: false,
+        });
       } catch (err) {
-        alert(`Error al intentar eliminar: ${err.message}`);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al eliminar',
+          text: err.response?.data?.message || err.message,
+          confirmButtonColor: '#7c3aed',
+          confirmButtonText: 'Entendido',
+        });
       }
     }
   };
@@ -133,113 +196,391 @@ const AnunciosView = () => {
   };
 
   return (
-    <div className="fade-in">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-        <h2 style={{ margin: 0, fontSize: '1.5rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '10px' }}>
-          📢 Anuncios
-        </h2>
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-          <div className="search-box">
-            <span className="search-icon">🔍</span>
-            <input 
-              type="text" 
-              placeholder="Buscar anuncios..." 
+    <div className="animate-fade">
+      <style>{`
+        @keyframes modalScaleIn {
+          from { opacity: 0; transform: scale(0.95) translateY(-8px); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .anuncio-pill {
+          transition: all 0.2s ease;
+        }
+        .anuncio-pill.active {
+          background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%) !important;
+          color: white !important;
+          border-color: transparent !important;
+          box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25) !important;
+        }
+        .anuncio-btn-primary {
+          background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 10px;
+          font-weight: 600;
+          font-size: 0.92rem;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
+          transition: all 0.2s ease;
+        }
+        .anuncio-btn-primary:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 6px 20px rgba(124, 58, 237, 0.45);
+        }
+        .anuncio-search-input:focus {
+          border-color: #7c3aed !important;
+          box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15) !important;
+        }
+        .anuncio-modal-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(15, 23, 42, 0.65);
+          backdrop-filter: blur(6px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          padding: 16px;
+        }
+        .anuncio-modal-box {
+          background: white;
+          border-radius: 20px;
+          width: 100%;
+          max-width: 650px;
+          max-height: 90vh;
+          overflow-y: auto;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+          animation: modalScaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+      `}</style>
+
+      {/* ── Header ── */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '1.75rem',
+        flexWrap: 'wrap',
+        gap: '1rem',
+      }}>
+        <div>
+          <h2 style={{
+            margin: 0,
+            fontSize: '1.75rem',
+            fontWeight: 800,
+            color: '#1e293b',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            letterSpacing: '-0.02em',
+          }}>
+            📢 Anuncios Fraternos
+          </h2>
+          <p style={{ margin: '4px 0 0', color: '#64748b', fontSize: '0.88rem' }}>
+            Gestiona comunicados, convocatorias y avisos oficiales para la comunidad
+          </p>
+        </div>
+
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+          {/* Search bar */}
+          <div style={{
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            background: 'white',
+            borderRadius: '10px',
+            border: '1px solid #e2e8f0',
+            padding: '2px 14px',
+            minWidth: '240px',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
+          }}>
+            <span style={{ fontSize: '0.95rem', opacity: 0.5, marginRight: '8px' }}>🔍</span>
+            <input
+              type="text"
+              placeholder="Buscar anuncios..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
+              className="anuncio-search-input"
+              style={{
+                border: 'none',
+                outline: 'none',
+                padding: '8px 0',
+                width: '100%',
+                fontSize: '0.88rem',
+                color: '#1e293b',
+                background: 'transparent',
+              }}
             />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#94a3b8',
+                  cursor: 'pointer',
+                  padding: '2px',
+                  fontSize: '0.8rem',
+                }}
+              >
+                ✕
+              </button>
+            )}
           </div>
-          <button className="btn btn-primary" onClick={() => setIsModalOpen(true)}>
+
+          <button
+            className="anuncio-btn-primary"
+            onClick={() => setIsModalOpen(true)}
+          >
             ➕ Nuevo Anuncio
           </button>
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem', overflowX: 'auto', paddingBottom: '0.5rem', marginBottom: '1.5rem' }}>
-        {[
-          { id: 'todos', label: 'Todos', icon: '📢' }, 
-          { id: 'urgente', label: 'Urgentes', icon: '🚨' }, 
-          { id: 'evento', label: 'Eventos', icon: '📅' }, 
-          { id: 'formacion', label: 'Formación', icon: '📖' }, 
-          { id: 'apostolado', label: 'Apostolado', icon: '🙏' }
-        ].map(filtro => (
-          <button
-            key={filtro.id}
-            className={`btn ${anunciosFilter === filtro.id ? 'btn-primary' : ''}`}
-            onClick={() => setAnunciosFilter(filtro.id)}
-            style={{ 
-              background: anunciosFilter !== filtro.id ? 'var(--surface)' : '', 
-              color: anunciosFilter !== filtro.id ? 'var(--text-main)' : '', 
-              border: '1px solid var(--border)', 
-              whiteSpace: 'nowrap' 
-            }}
-          >
-            {filtro.icon} {filtro.label}
-          </button>
-        ))}
+      {/* ── Filter Pills ── */}
+      <div style={{
+        display: 'flex',
+        gap: '8px',
+        marginBottom: '24px',
+        background: 'white',
+        padding: '6px',
+        borderRadius: '14px',
+        width: 'fit-content',
+        border: '1px solid #e2e8f0',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+        overflowX: 'auto',
+        maxWidth: '100%',
+      }}>
+        {FILTROS.map(filtro => {
+          const isActive = anunciosFilter === filtro.id;
+          const count = filtro.id === 'todos'
+            ? data.length
+            : data.filter(item => (item.tipo || 'urgente') === filtro.id).length;
+
+          return (
+            <button
+              key={filtro.id}
+              onClick={() => setAnunciosFilter(filtro.id)}
+              className={`anuncio-pill ${isActive ? 'active' : ''}`}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '9px',
+                fontSize: '0.86rem',
+                fontWeight: 600,
+                border: 'none',
+                cursor: 'pointer',
+                background: isActive ? undefined : 'transparent',
+                color: isActive ? undefined : '#64748b',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              <span>{filtro.icon}</span>
+              <span>{filtro.label}</span>
+              <span style={{
+                fontSize: '0.72rem',
+                padding: '2px 6px',
+                borderRadius: '8px',
+                background: isActive ? 'rgba(255,255,255,0.25)' : '#f1f5f9',
+                color: isActive ? 'white' : '#64748b',
+                fontWeight: 700,
+                marginLeft: '2px',
+              }}>
+                {count}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
+      {/* ── Main List ── */}
       {loading ? (
-        <div className="spinner" style={{ margin: '3rem auto' }}></div>
+        <div style={{ textAlign: 'center', padding: '60px 0' }}>
+          <div className="spinner" style={{ margin: '0 auto' }}></div>
+          <p style={{ color: '#64748b', fontSize: '0.88rem', marginTop: '14px' }}>Cargando anuncios...</p>
+        </div>
       ) : (
-        <AnunciosList 
-          filteredData={filteredData} 
-          setReadItem={setReadItem} 
-          getTipoIcon={getTipoIcon} 
-          SafeImage={SafeImage} 
-          openEditModal={openEditModal} 
-          handleDelete={(id) => handleDelete(id)} 
+        <AnunciosList
+          filteredData={filteredData}
+          setReadItem={setReadItem}
+          getTipoIcon={getTipoIcon}
+          SafeImage={SafeImage}
+          openEditModal={openEditModal}
+          handleDelete={(id) => handleDelete(id)}
         />
       )}
 
-      {/* Modals */}
+      {/* ── Create Modal ── */}
       {isModalOpen && (
-        <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
-          <div className="modal-content animate-fade" onClick={e => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3>Crear Nuevo Anuncio</h3>
-              <button className="close-btn" onClick={() => setIsModalOpen(false)}>×</button>
+        <div className="anuncio-modal-overlay" onClick={() => setIsModalOpen(false)}>
+          <div className="anuncio-modal-box" onClick={e => e.stopPropagation()}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '20px 24px',
+              borderBottom: '1px solid #f1f5f9',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ fontSize: '1.4rem' }}>📢</span>
+                <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 700, color: '#1e293b' }}>
+                  Crear Nuevo Anuncio
+                </h3>
+              </div>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                style={{
+                  background: '#f1f5f9',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '32px',
+                  height: '32px',
+                  fontSize: '1rem',
+                  cursor: 'pointer',
+                  color: '#64748b',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'background 0.15s ease',
+                }}
+              >
+                ✕
+              </button>
             </div>
-            <form onSubmit={handleCreate}>
+
+            <form onSubmit={handleCreate} style={{ padding: '24px' }}>
               <AnunciosNewModal newItem={newItem} setNewItem={setNewItem} MapPicker={MapPicker} />
-              <div className="modal-actions" style={{ marginTop: '1.5rem' }}>
-                <button type="button" className="btn" onClick={() => setIsModalOpen(false)}>Cancelar</button>
-                <button type="submit" className="btn btn-primary">Guardar Anuncio</button>
+
+              <div style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '12px',
+                marginTop: '24px',
+                paddingTop: '16px',
+                borderTop: '1px solid #f1f5f9',
+              }}>
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  style={{
+                    padding: '10px 18px',
+                    borderRadius: '10px',
+                    border: '1px solid #cbd5e1',
+                    background: 'white',
+                    color: '#64748b',
+                    fontWeight: 600,
+                    fontSize: '0.88rem',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="anuncio-btn-primary"
+                >
+                  💾 Publicar Anuncio
+                </button>
               </div>
             </form>
           </div>
         </div>
       )}
 
+      {/* ── Edit Modal ── */}
       {isEditModalOpen && selectedItem && (
-        <div className="modal-overlay" onClick={() => setIsEditModalOpen(false)}>
-          <div className="modal-content animate-fade" onClick={e => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3>Editar Anuncio</h3>
-              <button className="close-btn" onClick={() => setIsEditModalOpen(false)}>×</button>
+        <div className="anuncio-modal-overlay" onClick={() => setIsEditModalOpen(false)}>
+          <div className="anuncio-modal-box" onClick={e => e.stopPropagation()}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '20px 24px',
+              borderBottom: '1px solid #f1f5f9',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ fontSize: '1.4rem' }}>✏️</span>
+                <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 700, color: '#1e293b' }}>
+                  Editar Anuncio
+                </h3>
+              </div>
+              <button
+                onClick={() => setIsEditModalOpen(false)}
+                style={{
+                  background: '#f1f5f9',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '32px',
+                  height: '32px',
+                  fontSize: '1rem',
+                  cursor: 'pointer',
+                  color: '#64748b',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                ✕
+              </button>
             </div>
-            <form onSubmit={handleUpdate}>
-              <AnunciosEditModal 
-                selectedItem={selectedItem} 
-                setSelectedItem={setSelectedItem} 
-                MapPicker={MapPicker} 
+
+            <form onSubmit={handleUpdate} style={{ padding: '24px' }}>
+              <AnunciosEditModal
+                selectedItem={selectedItem}
+                setSelectedItem={setSelectedItem}
+                MapPicker={MapPicker}
               />
-              <div className="modal-actions" style={{ marginTop: '1.5rem' }}>
-                <button type="button" className="btn" onClick={() => setIsEditModalOpen(false)}>Cancelar</button>
-                <button type="submit" className="btn btn-primary">Guardar Cambios</button>
+
+              <div style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '12px',
+                marginTop: '24px',
+                paddingTop: '16px',
+                borderTop: '1px solid #f1f5f9',
+              }}>
+                <button
+                  type="button"
+                  onClick={() => setIsEditModalOpen(false)}
+                  style={{
+                    padding: '10px 18px',
+                    borderRadius: '10px',
+                    border: '1px solid #cbd5e1',
+                    background: 'white',
+                    color: '#64748b',
+                    fontWeight: 600,
+                    fontSize: '0.88rem',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="anuncio-btn-primary"
+                >
+                  💾 Guardar Cambios
+                </button>
               </div>
             </form>
           </div>
         </div>
       )}
 
+      {/* ── Read Detail Modal ── */}
       {readItem && (
-        <ItemReadModal 
-          readItem={readItem} 
-          setReadItem={setReadItem} 
-          activeTab="Anuncios" 
-          getTipoIcon={getTipoIcon} 
-          SafeImage={SafeImage} 
+        <ItemReadModal
+          readItem={readItem}
+          setReadItem={setReadItem}
+          activeTab="Anuncios"
+          getTipoIcon={getTipoIcon}
+          SafeImage={SafeImage}
         />
       )}
     </div>
