@@ -234,7 +234,13 @@ const AnunciosView = () => {
       )}
 
       {readItem && (
-        <ItemReadModal readItem={readItem} setReadItem={setReadItem} />
+        <ItemReadModal 
+          readItem={readItem} 
+          setReadItem={setReadItem} 
+          activeTab="Anuncios" 
+          getTipoIcon={getTipoIcon} 
+          SafeImage={SafeImage} 
+        />
       )}
     </div>
   );

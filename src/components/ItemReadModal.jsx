@@ -1,6 +1,26 @@
 import { getImageUrl } from '../config/api';
 import React from 'react';
 import api from '../config/api';
+import DefaultSafeImage from './SafeImage';
+
+const defaultGetTipoIcon = (tipo) => {
+  switch (tipo) {
+    case 'urgente': return '🚨';
+    case 'evento': return '📅';
+    case 'formacion': return '📖';
+    case 'apostolado': return '🙏';
+    default: return '📢';
+  }
+};
+
+const defaultFormatSafeDate = (d) => {
+  if (!d) return 'Sin fecha';
+  try {
+    return new Date(d).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
+  } catch {
+    return String(d);
+  }
+};
 
 const ItemReadModal = ({ 
   readItem, 
@@ -12,6 +32,10 @@ const ItemReadModal = ({
   ActivityIndicator 
 }) => {
   if (!readItem) return null;
+
+  const safeGetTipoIcon = typeof getTipoIcon === 'function' ? getTipoIcon : defaultGetTipoIcon;
+  const safeFormatDate = typeof formatSafeDate === 'function' ? formatSafeDate : defaultFormatSafeDate;
+  const SafeImg = SafeImage || DefaultSafeImage;
 
   return (
     <div className="modal-overlay" onClick={() => setReadItem(null)}>
@@ -36,7 +60,7 @@ const ItemReadModal = ({
                 <div>
                   <h2 style={{ margin: 0, color: 'var(--primary)', fontSize: '1.8rem' }}>{readItem.titulo || 'Acta sin título'}</h2>
                   <span style={{ color: 'var(--text-muted)' }}>
-                    Acta de Reunión de {(readItem.tipoReunion || 'General').toUpperCase()} | {formatSafeDate(readItem.fecha, 'dd MMMM yyyy')}
+                    Acta de Reunión de {(readItem.tipoReunion || 'General').toUpperCase()} | {safeFormatDate(readItem.fecha, 'dd MMMM yyyy')}
                   </span>
                 </div>
               </div>
@@ -220,7 +244,7 @@ const ItemReadModal = ({
             <div style={{ padding: '1.5rem 2rem', background: 'var(--surface)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                  <h2 style={{ margin: 0, color: 'var(--primary)', fontSize: '1.5rem' }}>{readItem.titulo}</h2>
-                 <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>📅 {formatSafeDate(readItem.fecha)}</span>
+                 <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>📅 {safeFormatDate(readItem.fecha)}</span>
               </div>
               {readItem.descripcion && (
                 <p style={{ margin: '0.5rem 0 0 0', color: 'var(--text-main)', fontSize: '1.05rem', lineHeight: '1.5' }}>{readItem.descripcion}</p>
@@ -243,14 +267,14 @@ const ItemReadModal = ({
         ) : (
           <>
             {readItem.imagen ? (
-              <SafeImage src={readItem.imagen.replace('http://', 'https://')} style={{ width: '100%', minHeight: '220px', maxHeight: '220px' }} fallbackIcon="🖼️" />
+              <SafeImg src={readItem.imagen.replace('http://', 'https://')} style={{ width: '100%', minHeight: '220px', maxHeight: '220px' }} fallbackIcon="🖼️" />
             ) : (
                <div style={{ width: '100%', minHeight: '80px', background: 'linear-gradient(135deg, var(--primary), var(--secondary))' }}></div>
             )}
             <div style={{ padding: '2rem', overflowY: 'auto' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                 <span style={{ fontSize: '0.85rem', background: readItem.prioridad === 'alta' ? '#F44336' : 'rgba(0,0,0,0.05)', color: readItem.prioridad === 'alta' ? 'white' : 'var(--text-main)', padding: '5px 12px', borderRadius: '20px', fontWeight: 'bold' }}>
-                  {getTipoIcon(readItem.tipo)} {readItem.tipo ? readItem.tipo.toUpperCase() : 'GENERAL'}
+                  {safeGetTipoIcon(readItem.tipo)} {readItem.tipo ? readItem.tipo.toUpperCase() : 'GENERAL'}
                 </span>
                 {readItem.destacado && <span style={{ fontSize: '1.2rem', color: '#ffb300', fontWeight: 'bold' }}>⭐ Destacado</span>}
               </div>
