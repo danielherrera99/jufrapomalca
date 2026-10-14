@@ -378,35 +378,170 @@ const ItemReadModal = ({
             </div>
           </>
         ) : activeTab === 'Cantos' ? (
-          <>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '2px solid var(--border)', paddingBottom: '1rem', marginBottom: '1.5rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', maxHeight: '90vh', overflowY: 'auto' }}>
+            {/* Header */}
+            <div style={{
+              padding: '24px 28px 16px',
+              borderBottom: '1px solid #f1f5f9',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              gap: '16px'
+            }}>
               <div style={{ flex: 1 }}>
-                <span style={{ fontSize: '0.8rem', background: 'var(--primary)', color: 'white', padding: '4px 10px', borderRadius: '12px', fontWeight: 'bold' }}>{(readItem.categoria || 'Otro').toUpperCase()}</span>
-                <h2 style={{ margin: '0.5rem 0 0 0', color: 'var(--text-main)', fontSize: '2rem' }}>{readItem.titulo}</h2>
-                <p style={{ margin: '0.2rem 0 0 0', color: 'var(--text-muted)' }}>Autor: <b>{typeof readItem.autor === 'object' && readItem.autor !== null ? (readItem.autor.nombre + ' ' + readItem.autor.apellido) : (readItem.autor || readItem.artista || 'Desconocido')}</b></p>
-              </div>
-              <button className="btn" style={{ background: '#ECEFF1', color: 'var(--text-main)' }} onClick={() => window.print()}>🖨️ Imprimir</button>
-            </div>
-            
-            <div style={{ padding: '1.5rem 2rem', overflowY: 'auto', flex: 1, background: 'var(--surface)', borderRadius: '12px', fontFamily: 'serif', whiteSpace: 'pre-wrap', fontSize: '1.1rem', lineHeight: '2.2', border: '1px solid var(--border)' }}>
-               {readItem.letra}
-            </div>
-
-            {readItem.archivoUrl && (
-              <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(139, 90, 43, 0.05)', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <span style={{ fontSize: '1.8rem' }}>📎</span>
-                <div style={{ flex: 1 }}>
-                  <p style={{ margin: 0, fontWeight: 'bold', color: 'var(--primary)' }}>Archivo Adjunto (Audio / Acordes)</p>
-                  <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>{readItem.archivoNombre || 'Descargar archivo adjunto'}</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <span style={{
+                    fontSize: '0.75rem',
+                    background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
+                    color: 'white',
+                    padding: '4px 12px',
+                    borderRadius: '20px',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.04em'
+                  }}>
+                    🎵 {(readItem.categoria || 'Otro').toUpperCase()}
+                  </span>
                 </div>
-                <a href={readItem.archivoUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ padding: '0.6rem 1.2rem', textDecoration: 'none' }}>Descargar / Abrir</a>
+                <h2 style={{
+                  margin: '0 0 4px 0',
+                  color: '#1e293b',
+                  fontSize: '1.5rem',
+                  fontWeight: 800,
+                  lineHeight: 1.25
+                }}>
+                  {readItem.titulo}
+                </h2>
+                <p style={{ margin: 0, color: '#64748b', fontSize: '0.88rem' }}>
+                  Autor: <b>{typeof readItem.autor === 'object' && readItem.autor !== null ? (`${readItem.autor.nombre || ''} ${readItem.autor.apellido || ''}`).trim() : (readItem.autor || readItem.artista || 'Desconocido')}</b>
+                </p>
               </div>
-            )}
 
-            <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid var(--border)', paddingTop: '1.5rem' }}>
-               <button className="btn" style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-main)' }} onClick={() => setReadItem(null)}>Cerrar Letra</button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <button
+                  className="btn"
+                  style={{
+                    background: '#f8fafc',
+                    border: '1px solid #e2e8f0',
+                    color: '#475569',
+                    padding: '6px 12px',
+                    borderRadius: '8px',
+                    fontSize: '0.82rem',
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => window.print()}
+                >
+                  🖨️ Imprimir
+                </button>
+                <button
+                  onClick={() => setReadItem(null)}
+                  style={{
+                    background: '#f1f5f9',
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '32px',
+                    height: '32px',
+                    fontSize: '1rem',
+                    cursor: 'pointer',
+                    color: '#64748b',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
             </div>
-          </>
+
+            {/* Lyrics Content */}
+            <div style={{ padding: '24px 28px', flex: 1 }}>
+              <div style={{
+                padding: '24px',
+                background: '#fafaf9',
+                borderRadius: '14px',
+                fontFamily: 'serif',
+                whiteSpace: 'pre-wrap',
+                fontSize: '1.08rem',
+                lineHeight: '2.1',
+                border: '1px solid #e7e5e4',
+                color: '#292524',
+                boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.02)'
+              }}>
+                {readItem.letra || readItem.contenido || 'Sin letra registrada.'}
+              </div>
+
+              {readItem.archivoUrl && (
+                <div style={{
+                  marginTop: '20px',
+                  padding: '16px 20px',
+                  background: 'linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)',
+                  borderRadius: '14px',
+                  border: '1px solid #ddd6fe',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '12px',
+                  flexWrap: 'wrap'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <span style={{ fontSize: '1.6rem' }}>📎</span>
+                    <div>
+                      <p style={{ margin: 0, fontWeight: 700, color: '#6d28d9', fontSize: '0.92rem' }}>
+                        Archivo de Audio / Acordes
+                      </p>
+                      <p style={{ margin: 0, fontSize: '0.82rem', color: '#64748b' }}>
+                        {readItem.archivoNombre || 'Descargar material adjunto'}
+                      </p>
+                    </div>
+                  </div>
+                  <a
+                    href={readItem.archivoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      textDecoration: 'none',
+                      background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
+                      color: 'white',
+                      fontWeight: 600,
+                      fontSize: '0.85rem',
+                      padding: '8px 16px',
+                      borderRadius: '8px',
+                      boxShadow: '0 2px 8px rgba(109,40,217,0.25)'
+                    }}
+                  >
+                    📥 Abrir / Descargar
+                  </a>
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div style={{
+              padding: '16px 28px 24px',
+              borderTop: '1px solid #f1f5f9',
+              display: 'flex',
+              justifyContent: 'flex-end',
+              background: '#fcfcfd'
+            }}>
+              <button
+                onClick={() => setReadItem(null)}
+                style={{
+                  background: '#f1f5f9',
+                  border: '1px solid #cbd5e1',
+                  color: '#334155',
+                  fontWeight: 600,
+                  fontSize: '0.9rem',
+                  padding: '10px 24px',
+                  borderRadius: '10px',
+                  cursor: 'pointer'
+                }}
+              >
+                Cerrar Cancionero
+              </button>
+            </div>
+          </div>
         ) : activeTab === 'Documentos' ? (
           <>
             <div style={{ padding: '2rem', borderBottom: '2px solid var(--border)', background: 'rgba(0,0,0,0.02)' }}>
