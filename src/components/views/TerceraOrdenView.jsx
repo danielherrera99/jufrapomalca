@@ -22,22 +22,43 @@ const TerceraOrdenView = () => {
     bannerLink: '',
     bannerActive: false
   });
+
+  const [fraternidades, setFraternidades] = useState([
+    {
+      id: 'chiclayo-fallback',
+      nombre: 'Fraternidad OFS Chiclayo',
+      patrono: 'Santa Isabel de Hungría',
+      sede: 'Convento San Antonio de Padua',
+      departamento: 'Lambayeque',
+      ciudad: 'Chiclayo',
+      zona: 'norte',
+      horarios: '1er y 3er sábado de cada mes - 4:30 PM (Reunión formativa y oración)',
+      contacto: 'Consejo Fraternidad OFS',
+      telefono: '+51 979 948 528',
+      enlaceWeb: '/ofs/chiclayo',
+      activo: true
+    }
+  ]);
+
+  const [loadingFraternidades, setLoadingFraternidades] = useState(true);
+  const [selectedFraternidad, setSelectedFraternidad] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [webRes, ofsRes] = await Promise.all([
+        const [webRes, ofsRes, fratRes] = await Promise.allSettled([
           api.get('/web-config'),
-          api.get('/ofs-config')
+          api.get('/ofs-config'),
+          api.get('/ofs-fraternidades')
         ]);
         
         let newConfig = { ...config };
-        if (webRes.data.success) {
-          newConfig = { ...newConfig, ...webRes.data.data };
+        if (webRes.status === 'fulfilled' && webRes.value.data?.success) {
+          newConfig = { ...newConfig, ...webRes.value.data.data };
         }
-        if (ofsRes.data.success) {
-          const ofsData = ofsRes.data.data;
+        if (ofsRes.status === 'fulfilled' && ofsRes.value.data?.success) {
+          const ofsData = ofsRes.value.data.data;
           newConfig = {
               ...newConfig,
               ...ofsData,
@@ -51,19 +72,38 @@ const TerceraOrdenView = () => {
           };
         }
         setConfig(newConfig);
+
+        if (fratRes.status === 'fulfilled' && fratRes.value.data?.data?.length > 0) {
+          // Filtrar las activas
+          const activeFrats = fratRes.value.data.data.filter(f => f.activo !== false);
+          if (activeFrats.length > 0) {
+            setFraternidades(activeFrats);
+          }
+        }
       } catch (err) {
-        console.error('Error al cargar config:', err);
+        console.error('Error al cargar config u OFS:', err);
+      } finally {
+        setLoadingFraternidades(false);
       }
     };
     fetchData();
     window.scrollTo(0, 0);
   }, []);
 
+  // WhatsApp directo
+  const getWhatsAppLink = (tel, nombre) => {
+    if (!tel) return '';
+    const cleanNumber = tel.replace(/\D/g, '');
+    const finalNumber = cleanNumber.length === 9 ? `51${cleanNumber}` : cleanNumber;
+    const msg = `¡Paz y Bien! Deseo recibir información sobre las reuniones y vida fraterna de la Fraternidad ${nombre}. 🕊️`;
+    return `https://wa.me/${finalNumber}?text=${encodeURIComponent(msg)}`;
+  };
+
   return (
     <div className="landing-page animate-fade">
       {/* Navegación */}
       <nav className="landing-nav">
-        <Link to="/" className="logo">OFS CHICLAYO</Link>
+        <Link to="/" className="logo">ORDEN FRANCISCANA SEGLAR</Link>
         
         <button className="nav-toggle" onClick={() => setIsMenuOpen(!isMenuOpen)}>
           {isMenuOpen ? '✕' : '☰'}
@@ -71,82 +111,94 @@ const TerceraOrdenView = () => {
 
         <div className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
           <Link to="/" onClick={() => setIsMenuOpen(false)}>Regresar a JUFRA</Link>
-          <Link to="/familia" onClick={() => setIsMenuOpen(false)}>Familia Franciscana</Link>
-          <a href="#historia" onClick={() => setIsMenuOpen(false)}>Identidad</a>
-          <a href="#pilares" onClick={() => setIsMenuOpen(false)}>Vida Seglar</a>
-          <a href="#oracion" onClick={() => setIsMenuOpen(false)}>Oración</a>
+          <a href="#historia" onClick={() => setIsMenuOpen(false)}>Historia</a>
+          <a href="#regla" onClick={() => setIsMenuOpen(false)}>Nuestra Regla</a>
+          <a href="#fraternidades" onClick={() => setIsMenuOpen(false)}>Fraternidades</a>
           <a href="#contacto" onClick={() => setIsMenuOpen(false)}>Contacto</a>
         </div>
       </nav>
 
-
-
-
-
       {/* Hero Section OFS */}
       <header className="hero-section" style={{ 
-        backgroundImage: `url('/hero_ofs_san_damian.png')`,
-        minHeight: '60vh'
+        background: 'linear-gradient(135deg, #3D2B1F 0%, #1A120B 100%)',
+        minHeight: '65vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+        padding: '3rem 2rem',
+        marginTop: '60px',
+        position: 'relative'
       }}>
-        <div className="hero-overlay"></div>
-        <div className="hero-content">
-          <h1 className="hero-title">Orden Franciscana Seglar</h1>
-          <p className="hero-subtitle">
-            Laicos comprometidos a vivir el Evangelio en medio del mundo, en familia y en fraternidad.
+        <div className="hero-content" style={{ maxWidth: '850px', zIndex: 2 }}>
+          <span style={{ 
+            color: 'var(--secondary)', 
+            fontWeight: 'bold', 
+            letterSpacing: '3px', 
+            textTransform: 'uppercase',
+            fontSize: '0.9rem',
+            marginBottom: '1rem',
+            display: 'inline-block'
+          }}>
+            Tercera Orden de San Francisco
+          </span>
+          <h1 className="hero-title" style={{ fontSize: 'clamp(2.5rem, 5vw, 4.2rem)', color: '#FFF', fontFamily: 'var(--font-serif)' }}>
+            Vivir el Evangelio en el Mundo
+          </h1>
+          <p className="hero-subtitle" style={{ color: '#E5DCC5', fontSize: '1.25rem', marginTop: '1.5rem', lineHeight: '1.6', opacity: 0.95 }}>
+            Seglares, hombres y mujeres, solteros y casados, que inspirados por San Francisco de Asís nos comprometemos a llevar la luz de Cristo en nuestras familias, profesiones y sociedad.
           </p>
-          <div className="flex-responsive" style={{ justifyContent: 'center' }}>
-            <a href="#fraternidades" className="btn btn-primary" style={{ padding: '1rem 3rem', textDecoration: 'none' }}>
+          <div style={{ marginTop: '2.5rem', display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <a href="#fraternidades" className="btn btn-primary" style={{ padding: '0.8rem 2rem', borderRadius: '50px' }}>
               Encuentra tu Fraternidad
             </a>
-            <a href="#historia" className="btn btn-ghost" style={{ padding: '1rem 3rem', textDecoration: 'none' }}>
-              Nuestra Identidad
+            <a href="#historia" className="btn btn-secondary" style={{ padding: '0.8rem 2rem', borderRadius: '50px', color: '#FFF', borderColor: 'rgba(255,255,255,0.4)' }}>
+              Conoce Más
             </a>
           </div>
         </div>
       </header>
 
-      {/* Sección Identidad */}
-      <section id="historia" className="section-padding" style={{ background: 'white' }}>
-        <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
-          <img 
-            src="/escudo_ofs.jpg" 
-            alt="Escudo OFS Santa Isabel de Hungría" 
-            style={{ width: '150px', height: '150px', objectFit: 'contain', marginBottom: '1.5rem', borderRadius: '50%', boxShadow: '0 10px 20px rgba(139, 69, 19, 0.1)' }} 
-          />
-          <h2 className="section-title">¿Quiénes somos?</h2>
-          <p style={{ fontSize: 'clamp(1rem, 3vw, 1.25rem)', lineHeight: '1.8', color: 'var(--text-muted)' }}>
-            {config.quienesSomos}
-          </p>
+      {/* Historia e Identidad */}
+      <section id="historia" className="section-padding" style={{ maxWidth: '1000px', margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+          <span style={{ color: 'var(--tertiary)', fontWeight: 'bold', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Nuestra Identidad</span>
+          <h2 className="section-title" style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>¿Qué es la OFS?</h2>
+          <div style={{ width: '60px', height: '3px', background: 'var(--primary)', margin: '0 auto' }}></div>
+        </div>
+
+        <div className="responsive-grid" style={{ gap: '3rem', alignItems: 'center' }}>
+          <div>
+            <h3 style={{ fontFamily: 'var(--font-serif)', color: 'var(--primary)', fontSize: '1.8rem', marginBottom: '1rem' }}>
+              Una vocación para laicos
+            </h3>
+            <p style={{ lineHeight: '1.8', color: 'var(--text-muted)', marginBottom: '1rem' }}>
+              La <strong>Orden Franciscana Seglar (OFS)</strong> fue fundada por el mismo <strong>San Francisco de Asís</strong> en 1221, inicialmente conocida como los <em>Hermanos y Hermanas de la Penitencia</em>. Nació para responder al deseo de tantas personas seglares que querían seguir su forma de vida sin dejar sus familias ni sus trabajos cotidianos.
+            </p>
+            <p style={{ lineHeight: '1.8', color: 'var(--text-muted)' }}>
+              Hoy somos una orden pública en la Iglesia Católica, con regla propia aprobada por la Santa Sede, comprometidos a construir un mundo más fraterno y justo desde la sencillez evangélica y la ecología integral.
+            </p>
+          </div>
+          <div style={{ background: '#F5EBE1', padding: '2.5rem', borderRadius: '15px', borderLeft: '5px solid var(--secondary)' }}>
+            <h4 style={{ color: 'var(--primary)', marginBottom: '1rem', fontFamily: 'var(--font-serif)' }}>Nuestros Patronos</h4>
+            <div style={{ marginBottom: '1.5rem' }}>
+              <strong>👑 Santa Isabel de Hungría</strong>
+              <p style={{ margin: '0.3rem 0 0 0', fontSize: '0.95rem', color: 'var(--text-muted)' }}>
+                Reina y modelo de caridad incansable hacia los pobres y enfermos.
+              </p>
+            </div>
+            <div>
+              <strong>👑 San Luis de Francia</strong>
+              <p style={{ margin: '0.3rem 0 0 0', fontSize: '0.95rem', color: 'var(--text-muted)' }}>
+                Gobernante justo que testimonió el Evangelio en la política y el servicio social.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Pilares OFS */}
-      <section id="pilares" className="features-grid section-padding" style={{ background: 'rgba(139, 69, 19, 0.02)' }}>
-        <div className="feature-card">
-          <div className="feature-icon-wrapper">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-          </div>
-          <h3>Vida Secular</h3>
-          <p>Llevamos el espíritu de San Francisco a nuestras familias, trabajos y vida cotidiana, siendo luz en medio del mundo.</p>
-        </div>
-        <div className="feature-card">
-          <div className="feature-icon-wrapper">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-          </div>
-          <h3>Fraternidad</h3>
-          <p>Nos reunimos como hermanos para apoyarnos en el camino espiritual y fortalecer nuestro compromiso cristiano.</p>
-        </div>
-        <div className="feature-card">
-          <div className="feature-icon-wrapper">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-          </div>
-          <h3>Misión</h3>
-          <p>Somos instrumentos de paz, justicia y caridad, promoviendo los valores evangélicos en la sociedad actual.</p>
-        </div>
-      </section>
-
-      {/* Cita OFS */}
-      <section className="testimonial-section section-padding">
+      {/* Cita de la Regla */}
+      <section id="regla" style={{ background: 'var(--surface)', padding: '5rem 2rem', textAlign: 'center' }}>
         <div className="testimonial-card">
           <p className="testimonial-text">
             "Pasar del Evangelio a la vida y de la vida al Evangelio."
@@ -161,7 +213,7 @@ const TerceraOrdenView = () => {
         </div>
       </section>
 
-      {/* Fraternidades Locales */}
+      {/* Fraternidades Locales OFS */}
       <section id="fraternidades" className="section-padding" style={{ background: '#FAF6F0' }}>
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <span style={{ color: 'var(--tertiary)', fontWeight: 'bold', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Presencia Local</span>
@@ -171,20 +223,295 @@ const TerceraOrdenView = () => {
           </p>
         </div>
 
-        <div className="features-grid" style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <div className="feature-card" style={{ background: 'white', textAlign: 'center', padding: '3rem 2rem', boxShadow: '0 10px 30px rgba(0,0,0,0.05)', borderRadius: '15px' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📍</div>
-            <h3 style={{ color: 'var(--primary)', marginBottom: '0.5rem' }}>Fraternidad OFS Chiclayo</h3>
-            <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-              <strong>"Santa Isabel de Hungría"</strong><br/>
-              Convento San Antonio de Padua
-            </p>
-            <Link to="/ofs/chiclayo" className="btn btn-primary" style={{ padding: '0.8rem 2rem', textDecoration: 'none', borderRadius: '50px' }}>
-              Ver Información y Horarios ➔
-            </Link>
-          </div>
+        <div style={{
+          maxWidth: '1100px',
+          margin: '0 auto',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: '2rem',
+          padding: '0 1rem'
+        }}>
+          {fraternidades.map((f) => {
+            const fid = f.id || f._id;
+            const hasWeb = Boolean(f.enlaceWeb || f.enlace_web);
+            const webUrl = f.enlaceWeb || f.enlace_web;
+
+            return (
+              <div
+                key={fid}
+                className="feature-card"
+                style={{
+                  background: 'white',
+                  textAlign: 'center',
+                  padding: '2.5rem 2rem',
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
+                  borderRadius: '16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  border: '1px solid rgba(139, 90, 43, 0.1)',
+                  transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+                }}
+              >
+                <div>
+                  <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📍</div>
+                  
+                  <span style={{
+                    display: 'inline-block',
+                    padding: '3px 12px',
+                    borderRadius: '20px',
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    background: '#FDF6EC',
+                    color: '#B45309',
+                    marginBottom: '0.8rem',
+                    textTransform: 'uppercase'
+                  }}>
+                    {f.ciudad ? `${f.ciudad} • ${f.departamento}` : f.departamento || 'OFS Perú'}
+                  </span>
+
+                  <h3 style={{ color: 'var(--primary)', marginBottom: '0.4rem', fontSize: '1.35rem', fontWeight: 800 }}>
+                    {f.nombre}
+                  </h3>
+
+                  {f.patrono && (
+                    <div style={{ color: '#8B5A2B', fontWeight: 700, fontSize: '0.95rem', marginBottom: '0.6rem' }}>
+                      "{f.patrono}"
+                    </div>
+                  )}
+
+                  {f.sede && (
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '1rem' }}>
+                      {f.sede}
+                    </p>
+                  )}
+
+                  {f.horarios && (
+                    <div style={{
+                      padding: '8px 12px',
+                      background: 'rgba(139, 90, 43, 0.05)',
+                      borderRadius: '8px',
+                      fontSize: '0.85rem',
+                      color: 'var(--text)',
+                      marginBottom: '1.2rem',
+                      textAlign: 'left'
+                    }}>
+                      <strong>🕒 Horarios:</strong> {f.horarios}
+                    </div>
+                  )}
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginTop: '1rem' }}>
+                  <button
+                    onClick={() => setSelectedFraternidad(f)}
+                    className="btn btn-primary"
+                    style={{
+                      padding: '0.8rem 1.5rem',
+                      borderRadius: '50px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      border: 'none',
+                      boxShadow: '0 4px 12px rgba(139, 90, 43, 0.2)'
+                    }}
+                  >
+                    Ver Información y Horarios ➔
+                  </button>
+
+                  {hasWeb && (
+                    <Link
+                      to={webUrl}
+                      style={{
+                        fontSize: '0.85rem',
+                        color: 'var(--secondary, #8B5A2B)',
+                        textDecoration: 'none',
+                        fontWeight: 600
+                      }}
+                    >
+                      🌐 Visitar micrositio web
+                    </Link>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
+
+      {/* MODAL DETALLE DE FRATERNIDAD OFS */}
+      {selectedFraternidad && (
+        <div
+          className="modal-overlay"
+          onClick={() => setSelectedFraternidad(null)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.6)',
+            backdropFilter: 'blur(4px)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 9999,
+            padding: '1rem'
+          }}
+        >
+          <div
+            className="modal-content animate-scale"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: 'white',
+              borderRadius: '20px',
+              maxWidth: '560px',
+              width: '100%',
+              padding: '2.5rem',
+              boxShadow: '0 25px 50px rgba(0,0,0,0.25)',
+              border: '1px solid #FFE0B2',
+              position: 'relative',
+              textAlign: 'left'
+            }}
+          >
+            {/* Botón cerrar */}
+            <button
+              onClick={() => setSelectedFraternidad(null)}
+              style={{
+                position: 'absolute',
+                top: '1.2rem',
+                right: '1.2rem',
+                background: '#F3F4F6',
+                border: 'none',
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                fontSize: '1.2rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#6B7280'
+              }}
+            >
+              ✕
+            </button>
+
+            {/* Encabezado */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1rem' }}>
+              <div style={{
+                width: '50px',
+                height: '50px',
+                borderRadius: '12px',
+                background: 'linear-gradient(135deg, #8B5A2B 0%, #5C3A21 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.8rem',
+                color: 'white'
+              }}>
+                🕊️
+              </div>
+              <div>
+                <h3 style={{ margin: 0, color: 'var(--primary)', fontSize: '1.4rem', fontWeight: 800 }}>
+                  {selectedFraternidad.nombre}
+                </h3>
+                {selectedFraternidad.patrono && (
+                  <div style={{ color: '#8B5A2B', fontWeight: 700, fontSize: '0.95rem' }}>
+                    "{selectedFraternidad.patrono}"
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1rem',
+              marginTop: '1.5rem',
+              padding: '1.2rem',
+              background: '#FAF6F0',
+              borderRadius: '12px',
+              fontSize: '0.95rem'
+            }}>
+              {selectedFraternidad.sede && (
+                <div>
+                  <strong>📍 Sede / Convento:</strong><br />
+                  <span style={{ color: 'var(--text-muted)' }}>{selectedFraternidad.sede}</span>
+                </div>
+              )}
+
+              <div>
+                <strong>🏙️ Ubicación:</strong><br />
+                <span style={{ color: 'var(--text-muted)' }}>
+                  {selectedFraternidad.ciudad ? `${selectedFraternidad.ciudad}, ${selectedFraternidad.departamento}` : selectedFraternidad.departamento}
+                </span>
+              </div>
+
+              {selectedFraternidad.horarios && (
+                <div>
+                  <strong>🕒 Horarios de Encuentro:</strong><br />
+                  <span style={{ color: 'var(--text-muted)' }}>{selectedFraternidad.horarios}</span>
+                </div>
+              )}
+
+              {(selectedFraternidad.contacto || selectedFraternidad.telefono) && (
+                <div>
+                  <strong>👤 Contacto / Ministro:</strong><br />
+                  <span style={{ color: 'var(--text-muted)' }}>
+                    {selectedFraternidad.contacto || 'Consejo Fraternidad'} {selectedFraternidad.telefono && `(${selectedFraternidad.telefono})`}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Botones de acción del modal */}
+            <div style={{ display: 'flex', gap: '0.8rem', marginTop: '1.8rem', flexWrap: 'wrap' }}>
+              {selectedFraternidad.telefono && (
+                <a
+                  href={getWhatsAppLink(selectedFraternidad.telefono, selectedFraternidad.nombre)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn"
+                  style={{
+                    flex: '1 1 200px',
+                    padding: '0.8rem 1.2rem',
+                    background: '#25D366',
+                    color: 'white',
+                    borderRadius: '50px',
+                    fontWeight: 700,
+                    textDecoration: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <span>💬</span> Escribir por WhatsApp
+                </a>
+              )}
+
+              {(selectedFraternidad.enlaceWeb || selectedFraternidad.enlace_web) && (
+                <Link
+                  to={selectedFraternidad.enlaceWeb || selectedFraternidad.enlace_web}
+                  className="btn btn-primary"
+                  style={{
+                    flex: '1 1 200px',
+                    padding: '0.8rem 1.2rem',
+                    borderRadius: '50px',
+                    fontWeight: 700,
+                    textDecoration: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <span>🌐</span> Visitar Micrositio ➔
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Footer General */}
       <footer id="contacto" className="landing-footer section-padding">

@@ -33,6 +33,7 @@ import MensajesAdminView from './components/views/MensajesAdminView';
 import AsistenteIAView from './components/views/AsistenteIAView';
 import SolicitudesView from './components/views/SolicitudesView';
 import FraternidadesAdminView from './components/views/FraternidadesAdminView';
+import OfsFraternidadesAdminView from './components/views/OfsFraternidadesAdminView';
 import RedesAdminView from './components/views/RedesAdminView';
 import GaleriaWebAdminView from './components/views/GaleriaWebAdminView';
 import QuienesSomosView from './components/views/QuienesSomosView';
@@ -263,6 +264,7 @@ const modules = [
   { id: 'Campanas', label: 'Gestor de Campañas', icon: '🎯' },
   { id: 'RegistrosMascotas', label: 'Registro de Mascotas', icon: '🐾' },
   { id: 'OfsConfig', label: 'Configuración OFS', icon: '☦️' },
+  { id: 'OfsFraternidades', label: 'Fraternidades OFS', icon: '🕊️' },
   { id: 'Fraternidades', label: 'JUFRA Perú', icon: '🇵🇪' },
   { id: 'Perfil', label: 'Mi Perfil', icon: '👤' },
 ];
@@ -354,7 +356,7 @@ const Dashboard = ({ user, onLogout }) => {
 
           {/* GRUPO: GESTIÓN WEB */}
           <div className="nav-section-title" style={{ marginTop: '1.5rem' }}>GESTIÓN WEB</div>
-          {modules.filter(m => ['Solicitudes', 'Redes', 'GaleriaWeb', 'QuienesSomos', 'WebConfig', 'Campanas', 'RegistrosMascotas', 'OfsConfig', 'Fraternidades'].includes(m.id)).map((mod) => (
+          {modules.filter(m => ['Solicitudes', 'Redes', 'GaleriaWeb', 'QuienesSomos', 'WebConfig', 'Campanas', 'RegistrosMascotas', 'OfsConfig', 'OfsFraternidades', 'Fraternidades'].includes(m.id)).map((mod) => (
              <a key={mod.id} href="#" onClick={(e) => { e.preventDefault(); setActiveTab(mod.id); setIsSidebarOpen(false); }}
               className={`nav-link ${activeTab === mod.id ? 'active' : ''}`}
             >
@@ -422,6 +424,7 @@ const Dashboard = ({ user, onLogout }) => {
           <Route path="campanas" element={<CampaignsAdminView ActivityIndicator={ActivityIndicator} />} />
           <Route path="registrosmascotas" element={<RegistrosMascotasAdminView />} />
           <Route path="ofsconfig" element={<OfsConfigView />} />
+          <Route path="ofsfraternidades" element={<OfsFraternidadesAdminView ActivityIndicator={ActivityIndicator} />} />
           <Route path="fraternidades" element={<FraternidadesAdminView />} />
           <Route path="consejo" element={<Consejo />} />
           <Route path="comunicacion" element={<ComunicacionView ActivityIndicator={ActivityIndicator} />} />
