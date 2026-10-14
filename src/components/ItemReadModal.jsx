@@ -42,13 +42,17 @@ const ItemReadModal = ({
       <div 
         className="modal-content animate-fade" 
         style={{ 
-          maxWidth: activeTab === 'Actas' ? '800px' : '600px', 
+          maxWidth: activeTab === 'Actas' ? '800px' : (activeTab === 'Eventos' ? '680px' : '600px'), 
           cursor: 'default', 
           padding: activeTab === 'Actas' ? '2.5rem' : '0', 
           overflow: 'hidden', 
-          maxHeight: '95vh', 
+          maxHeight: '92vh', 
           display: 'flex', 
-          flexDirection: 'column' 
+          flexDirection: 'column',
+          borderRadius: '20px',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+          background: 'white',
+          border: '1px solid #e2e8f0'
         }} 
         onClick={e => e.stopPropagation()}
       >
@@ -92,48 +96,254 @@ const ItemReadModal = ({
             </div>
           </>
         ) : activeTab === 'Eventos' ? (
-          <>
-            <div style={{ padding: '0 0 1rem 0', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', maxHeight: '90vh', overflowY: 'auto' }}>
+            {/* Modal Header */}
+            <div style={{
+              padding: '24px 28px 16px',
+              borderBottom: '1px solid #f1f5f9',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              gap: '16px',
+              position: 'relative'
+            }}>
               <div style={{ flex: 1 }}>
-                <span style={{ fontSize: '0.9rem', background: 'var(--primary)', color: 'white', padding: '6px 14px', borderRadius: '16px', fontWeight: 'bold', textTransform: 'uppercase' }}>
-                  📅 DETALLE DEL EVENTO
-                </span>
-                <h2 style={{ margin: '1rem 0 0.5rem 0', color: 'var(--text-main)', fontSize: '2.4rem', lineHeight: '1.2' }}>{readItem.titulo}</h2>
-                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                   <span style={{ fontSize: '1.1rem', color: '#EF4444', fontWeight: 'bold' }}>🕒 {readItem.hora || 'Todo el día'}</span>
-                   <span style={{ fontSize: '1.1rem', color: 'var(--text-main)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '5px' }}>📍 {readItem.lugar || 'Sede Jufra'}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px', flexWrap: 'wrap' }}>
+                  <span style={{
+                    fontSize: '0.75rem',
+                    background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
+                    color: 'white',
+                    padding: '4px 12px',
+                    borderRadius: '20px',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.04em',
+                    boxShadow: '0 2px 8px rgba(124,58,237,0.25)'
+                  }}>
+                    📅 DETALLE DEL EVENTO
+                  </span>
+                  {readItem.tipo && (
+                    <span style={{
+                      fontSize: '0.75rem',
+                      background: '#f1f5f9',
+                      color: '#475569',
+                      padding: '4px 10px',
+                      borderRadius: '20px',
+                      fontWeight: 600,
+                      textTransform: 'uppercase'
+                    }}>
+                      {readItem.tipo}
+                    </span>
+                  )}
+                </div>
+
+                <h2 style={{
+                  margin: '0 0 12px 0',
+                  color: '#1e293b',
+                  fontSize: '1.45rem',
+                  fontWeight: 800,
+                  lineHeight: 1.3,
+                  letterSpacing: '-0.01em'
+                }}>
+                  {readItem.titulo}
+                </h2>
+
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
+                  <span style={{
+                    fontSize: '0.85rem',
+                    color: '#ef4444',
+                    fontWeight: 700,
+                    background: '#fef2f2',
+                    padding: '4px 10px',
+                    borderRadius: '8px',
+                    border: '1px solid #fee2e2'
+                  }}>
+                    🕒 {readItem.hora || 'Todo el día'}
+                  </span>
+                  <span style={{
+                    fontSize: '0.85rem',
+                    color: '#475569',
+                    fontWeight: 600,
+                    background: '#f8fafc',
+                    padding: '4px 10px',
+                    borderRadius: '8px',
+                    border: '1px solid #e2e8f0'
+                  }}>
+                    📍 {readItem.lugar || 'Sede Jufra'}
+                  </span>
+                  {readItem.fecha && (
+                    <span style={{
+                      fontSize: '0.85rem',
+                      color: '#7c3aed',
+                      fontWeight: 600,
+                      background: '#f5f3ff',
+                      padding: '4px 10px',
+                      borderRadius: '8px',
+                      border: '1px solid #ddd6fe'
+                    }}>
+                      📅 {safeFormatDate(readItem.fecha)}
+                    </span>
+                  )}
                 </div>
               </div>
-              <button className="btn" style={{ background: '#ECEFF1', color: 'var(--text-main)' }} onClick={() => window.print()}>🖨️ Imprimir</button>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <button
+                  className="btn"
+                  style={{
+                    background: '#f8fafc',
+                    border: '1px solid #e2e8f0',
+                    color: '#475569',
+                    padding: '6px 12px',
+                    borderRadius: '8px',
+                    fontSize: '0.82rem',
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => window.print()}
+                >
+                  🖨️ Imprimir
+                </button>
+                <button
+                  onClick={() => setReadItem(null)}
+                  style={{
+                    background: '#f1f5f9',
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '32px',
+                    height: '32px',
+                    fontSize: '1rem',
+                    cursor: 'pointer',
+                    color: '#64748b',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
             </div>
 
-            {readItem.imagenUrl && (
-              <div style={{ width: '100%', height: '300px', backgroundImage: `url(${readItem.imagenUrl})`, backgroundSize: 'cover', backgroundPosition: 'center', borderRadius: '16px', margin: '1rem 0', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }}></div>
-            )}
-            
-            <div style={{ marginTop: '1rem', background: 'var(--surface)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
-               <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--primary)', fontSize: '1.2rem' }}>Acerca de este evento</h3>
-               <p style={{ fontSize: '1.1rem', color: 'var(--text-main)', lineHeight: '1.7', whiteSpace: 'pre-line', fontStyle: 'italic', margin: 0 }}>
+            {/* Modal Body */}
+            <div style={{ padding: '24px 28px', flex: 1 }}>
+              {readItem.imagenUrl && (
+                <div style={{
+                  width: '100%',
+                  height: '240px',
+                  borderRadius: '14px',
+                  overflow: 'hidden',
+                  marginBottom: '20px',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+                  border: '1px solid #e2e8f0'
+                }}>
+                  <img
+                    src={readItem.imagenUrl}
+                    alt={readItem.titulo}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  />
+                </div>
+              )}
+
+              <div style={{
+                background: '#f8fafc',
+                padding: '20px',
+                borderRadius: '14px',
+                border: '1px solid #e2e8f0',
+                marginBottom: '16px'
+              }}>
+                <h3 style={{
+                  margin: '0 0 10px 0',
+                  color: '#7c3aed',
+                  fontSize: '0.98rem',
+                  fontWeight: 700,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}>
+                  ℹ️ Acerca de este evento
+                </h3>
+                <p style={{
+                  fontSize: '0.95rem',
+                  color: '#334155',
+                  lineHeight: '1.65',
+                  whiteSpace: 'pre-line',
+                  margin: 0
+                }}>
                   {readItem.descripcion || 'Sin descripción detallada.'}
-               </p>
-            </div>
+                </p>
+              </div>
 
-            {readItem.ubicacion && readItem.ubicacion.lat && (
-               <div style={{ marginTop: '1.5rem', background: 'var(--cream)', padding: '1.5rem', borderRadius: '12px', border: '1px dashed var(--primary)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              {readItem.ubicacion && readItem.ubicacion.lat && (
+                <div style={{
+                  background: 'linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)',
+                  padding: '16px 20px',
+                  borderRadius: '14px',
+                  border: '1px solid #ddd6fe',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                  gap: '12px'
+                }}>
                   <div>
-                     <h4 style={{ margin: '0 0 0.2rem 0', color: 'var(--primary)', fontSize: '1.1rem' }}>Ubicación Satelital</h4>
-                     <p style={{ margin: 0, color: 'var(--text-muted)' }}>Míralo exactamente en el Mapa</p>
+                    <h4 style={{ margin: '0 0 4px 0', color: '#6d28d9', fontSize: '0.96rem', fontWeight: 700 }}>
+                      📍 Ubicación en Mapa
+                    </h4>
+                    <p style={{ margin: 0, color: '#64748b', fontSize: '0.84rem' }}>
+                      Coordenadas registradas para navegación
+                    </p>
                   </div>
-                  <a href={`https://www.google.com/maps/search/?api=1&query=${readItem.ubicacion.lat},${readItem.ubicacion.lng}`} target="_blank" rel="noreferrer" className="btn zoom-hover" style={{ textDecoration: 'none', background: 'var(--primary)', color: 'white', fontWeight: 'bold', padding: '0.8rem 1.5rem', borderRadius: '10px' }}>
-                     🗺️ Abrir en Google Maps
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${readItem.ubicacion.lat},${readItem.ubicacion.lng}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      textDecoration: 'none',
+                      background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
+                      color: 'white',
+                      fontWeight: 600,
+                      fontSize: '0.88rem',
+                      padding: '10px 18px',
+                      borderRadius: '10px',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      boxShadow: '0 4px 12px rgba(109,40,217,0.25)'
+                    }}
+                  >
+                    🗺️ Abrir en Google Maps
                   </a>
-               </div>
-            )}
-
-            <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid var(--border)', paddingTop: '1.5rem' }}>
-               <button className="btn btn-primary" style={{ width: 'auto' }} onClick={() => setReadItem(null)}>Cerrar Evento</button>
+                </div>
+              )}
             </div>
-          </>
+
+            {/* Modal Footer */}
+            <div style={{
+              padding: '16px 28px 24px',
+              borderTop: '1px solid #f1f5f9',
+              display: 'flex',
+              justifyContent: 'flex-end',
+              background: '#fcfcfd'
+            }}>
+              <button
+                onClick={() => setReadItem(null)}
+                style={{
+                  background: '#f1f5f9',
+                  border: '1px solid #cbd5e1',
+                  color: '#334155',
+                  fontWeight: 600,
+                  fontSize: '0.9rem',
+                  padding: '10px 24px',
+                  borderRadius: '10px',
+                  cursor: 'pointer'
+                }}
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
         ) : activeTab === 'Formacion' ? (
           <>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '2px solid var(--border)', paddingBottom: '1rem', marginBottom: '1.5rem' }}>
