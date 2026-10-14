@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../config/api';
+import { getFraternidadUrl } from '../../utils/fraternidadHelper';
 
 const ZONAS_MAP = {
   norte: 'Zona Norte',
@@ -122,30 +123,132 @@ const JufraPeruView = () => {
                     <h3 style={{ borderBottom: '2px solid var(--primary)', paddingBottom: '0.5rem', marginBottom: '1.5rem', color: 'var(--primary)' }}>
                       {ZONAS_MAP[zonaKey] || 'Otras'}
                     </h3>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
-                      {frats.map(f => (
-                        <div key={f._id || f.id || Math.random()} className="glass-card zoom-hover" style={{ padding: '1.5rem', background: '#FFF' }}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-                            <h4 style={{ margin: 0, color: '#1A1D20', fontSize: '1.1rem' }}>{f.nombre}</h4>
-                          </div>
-                          <p style={{ margin: '0 0 0.2rem 0', fontSize: '0.9rem', color: '#4B5563' }}>📍 <strong>{f.departamento}</strong></p>
-                          {f.parroquia && <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem', color: '#4B5563' }}>⛪ {f.parroquia}</p>}
-                          
-                          {(f.contacto || f.telefono || f.enlaceSocial) && (
-                            <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border)', fontSize: '0.9rem' }}>
-                              {f.contacto && <div style={{ marginBottom: '0.3rem' }}>👤 {f.contacto}</div>}
-                              {f.telefono && <div style={{ marginBottom: '0.3rem' }}>📞 {f.telefono}</div>}
-                              {f.enlaceSocial && (
-                                <div style={{ marginTop: '0.8rem' }}>
-                                  <a href={f.enlaceSocial} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 'bold' }}>
-                                    📱 Redes Sociales
-                                  </a>
-                                </div>
-                              )}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(310px, 1fr))', gap: '1.5rem' }}>
+                      {frats.map(f => {
+                        const webUrl = getFraternidadUrl(f);
+                        const isPomalca = (f.nombre || '').toUpperCase().includes('POMALCA');
+
+                        return (
+                          <div 
+                            key={f._id || f.id || Math.random()} 
+                            className="glass-card zoom-hover" 
+                            style={{ 
+                              padding: '1.6rem', 
+                              background: '#FFF', 
+                              borderRadius: '16px',
+                              border: isPomalca ? '2px solid #7c3aed' : '1px solid #e2e8f0',
+                              boxShadow: isPomalca ? '0 8px 24px rgba(124,58,237,0.12)' : '0 2px 8px rgba(0,0,0,0.04)',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              position: 'relative'
+                            }}
+                          >
+                            {isPomalca && (
+                              <div style={{
+                                position: 'absolute',
+                                top: '-10px',
+                                right: '16px',
+                                background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',
+                                color: 'white',
+                                fontSize: '0.72rem',
+                                fontWeight: 800,
+                                padding: '3px 10px',
+                                borderRadius: '12px',
+                                letterSpacing: '0.04em',
+                                boxShadow: '0 2px 6px rgba(124,58,237,0.3)'
+                              }}>
+                                ⭐ WEB & APP OFICIAL
+                              </div>
+                            )}
+
+                            <div style={{ marginBottom: '0.8rem' }}>
+                              <Link 
+                                to={webUrl}
+                                style={{ 
+                                  textDecoration: 'none', 
+                                  color: '#1A1D20',
+                                  fontSize: '1.15rem',
+                                  fontWeight: 800,
+                                  lineHeight: 1.3,
+                                  display: 'block'
+                                }}
+                              >
+                                {f.nombre}
+                              </Link>
                             </div>
-                          )}
-                        </div>
-                      ))}
+
+                            <p style={{ margin: '0 0 0.3rem 0', fontSize: '0.9rem', color: '#4B5563' }}>
+                              📍 <strong>{f.departamento || 'Perú'}</strong>
+                            </p>
+                            {f.parroquia && (
+                              <p style={{ margin: '0 0 0.6rem 0', fontSize: '0.9rem', color: '#6B7280' }}>
+                                ⛪ {f.parroquia}
+                              </p>
+                            )}
+
+                            {(f.contacto || f.telefono) && (
+                              <div style={{ marginTop: '0.8rem', paddingTop: '0.8rem', borderTop: '1px solid #f1f5f9', fontSize: '0.88rem', color: '#4B5563' }}>
+                                {f.contacto && <div style={{ marginBottom: '0.25rem' }}>👤 {f.contacto}</div>}
+                                {f.telefono && <div style={{ marginBottom: '0.25rem' }}>📞 {f.telefono}</div>}
+                              </div>
+                            )}
+
+                            {/* Action Buttons */}
+                            <div style={{
+                              marginTop: 'auto',
+                              paddingTop: '1rem',
+                              borderTop: '1px solid #f1f5f9',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              gap: '10px',
+                              flexWrap: 'wrap'
+                            }}>
+                              {f.enlaceSocial ? (
+                                <a 
+                                  href={f.enlaceSocial} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer" 
+                                  style={{ 
+                                    color: '#7c3aed', 
+                                    textDecoration: 'none', 
+                                    fontWeight: 700,
+                                    fontSize: '0.82rem',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '4px'
+                                  }}
+                                >
+                                  📱 Redes Sociales
+                                </a>
+                              ) : <span />}
+
+                              <Link
+                                to={webUrl}
+                                style={{
+                                  background: isPomalca 
+                                    ? 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)'
+                                    : '#f5f3ff',
+                                  color: isPomalca ? 'white' : '#7c3aed',
+                                  border: isPomalca ? 'none' : '1px solid #ddd6fe',
+                                  padding: '7px 14px',
+                                  borderRadius: '8px',
+                                  fontSize: '0.82rem',
+                                  fontWeight: 700,
+                                  textDecoration: 'none',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '5px',
+                                  boxShadow: isPomalca ? '0 2px 8px rgba(124,58,237,0.25)' : 'none',
+                                  transition: 'all 0.15s ease'
+                                }}
+                              >
+                                {isPomalca ? '🌐 Portal Oficial ➔' : '🌐 Ver Web ➔'}
+                              </Link>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 );
