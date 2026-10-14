@@ -1,0 +1,633 @@
+/* ========================================================
+   GESTIÓN DE FINANZAS - ESTILOS PROFESIONALES Y MODERNOS
+   ======================================================== */
+
+.finanzas-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+/* --- TARJETAS DE RESUMEN (METRICS) --- */
+.finanzas-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.finanzas-metric-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.finanzas-metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+}
+
+.finanzas-metric-icon-wrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  flex-shrink: 0;
+}
+
+.finanzas-metric-card.ingresos .finanzas-metric-icon-wrap {
+  background: #ecfdf5;
+  color: #10b981;
+  border: 1px solid #a7f3d0;
+}
+
+.finanzas-metric-card.egresos .finanzas-metric-icon-wrap {
+  background: #fef2f2;
+  color: #ef4444;
+  border: 1px solid #fecaca;
+}
+
+.finanzas-metric-card.saldo .finanzas-metric-icon-wrap {
+  background: #eff6ff;
+  color: #3b82f6;
+  border: 1px solid #bfdbfe;
+}
+
+.finanzas-metric-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.finanzas-metric-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+}
+
+.finanzas-metric-amount {
+  font-size: 1.85rem;
+  font-weight: 800;
+  line-height: 1.2;
+  font-family: var(--font-heading, sans-serif);
+}
+
+.finanzas-metric-card.ingresos .finanzas-metric-amount {
+  color: #15803d;
+}
+
+.finanzas-metric-card.egresos .finanzas-metric-amount {
+  color: #b91c1c;
+}
+
+.finanzas-metric-card.saldo .finanzas-metric-amount {
+  color: #1d4ed8;
+}
+
+.finanzas-metric-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.725rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  width: fit-content;
+  margin-top: 2px;
+}
+
+.finanzas-metric-card.ingresos .finanzas-metric-badge {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.finanzas-metric-card.egresos .finanzas-metric-badge {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.finanzas-metric-card.saldo .finanzas-metric-badge {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* --- BARRA DE CONTROL Y HERRAMIENTAS --- */
+.finanzas-toolbar {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 960px) {
+  .finanzas-toolbar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.finanzas-filters-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.finanzas-search-box {
+  position: relative;
+  min-width: 250px;
+  flex: 1;
+}
+
+.finanzas-search-box input {
+  width: 100%;
+  padding: 0.7rem 2.2rem 0.7rem 2.5rem;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background-color: #f8fafc;
+  font-size: 0.9rem;
+  color: #1e293b;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.finanzas-search-box input:focus {
+  background-color: #ffffff;
+  border-color: var(--primary, #8B4513);
+  box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.12);
+}
+
+.finanzas-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.finanzas-search-clear {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 4px;
+}
+
+/* Quick Filter Pills (Todos / Ingresos / Egresos) */
+.finanzas-type-pills {
+  display: inline-flex;
+  background: #f1f5f9;
+  padding: 4px;
+  border-radius: 10px;
+  gap: 4px;
+}
+
+.finanzas-type-pill {
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.825rem;
+  font-weight: 600;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.finanzas-type-pill:hover {
+  color: #1e293b;
+}
+
+.finanzas-type-pill.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.finanzas-type-pill.active.ingreso {
+  color: #15803d;
+}
+
+.finanzas-type-pill.active.egreso {
+  color: #b91c1c;
+}
+
+.finanzas-pill-count {
+  font-size: 0.725rem;
+  padding: 2px 7px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* Category Filter Dropdown */
+.finanzas-category-select {
+  padding: 0.65rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background-color: #f8fafc;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #334155;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.finanzas-category-select:focus {
+  border-color: var(--primary, #8B4513);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.12);
+}
+
+/* Action buttons */
+.finanzas-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.finanzas-btn-export {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.65rem 1.15rem;
+  border-radius: 10px;
+  border: 1px solid #10b981;
+  background: #f0fdf4;
+  color: #047857;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.finanzas-btn-export:hover {
+  background: #10b981;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+  transform: translateY(-1px);
+}
+
+.finanzas-btn-create {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.65rem 1.25rem;
+  border-radius: 10px;
+  border: none;
+  background: var(--primary, #8B4513);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(139, 69, 19, 0.2);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.finanzas-btn-create:hover {
+  background: var(--primary-hover, #70360F);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(139, 69, 19, 0.3);
+}
+
+/* --- TABLA PRINCIPAL DE FINANZAS --- */
+.finanzas-table-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.finanzas-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.finanzas-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.9rem;
+  min-width: 860px;
+}
+
+.finanzas-table th {
+  background-color: #f8fafc;
+  color: #475569;
+  font-weight: 700;
+  font-size: 0.775rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 1.1rem 1.25rem;
+  border-bottom: 2px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.finanzas-table td {
+  padding: 1.15rem 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+  color: #334155;
+  transition: background-color 0.15s ease;
+}
+
+.finanzas-table tbody tr:hover td {
+  background-color: #fafaf9;
+}
+
+.finanzas-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Fecha styling */
+.finanzas-fecha-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.finanzas-fecha-main {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 0.9rem;
+}
+
+.finanzas-fecha-sub {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+/* Badges for Tipo */
+.finanzas-badge-tipo {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.finanzas-badge-tipo.ingreso {
+  background-color: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.finanzas-badge-tipo.egreso {
+  background-color: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+/* Description styling */
+.finanzas-desc-title {
+  font-weight: 500;
+  color: #1e293b;
+  line-height: 1.4;
+}
+
+.finanzas-comprobante-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  color: #3b82f6;
+  text-decoration: none;
+  margin-top: 3px;
+  font-weight: 500;
+}
+
+.finanzas-comprobante-link:hover {
+  text-decoration: underline;
+}
+
+/* Category pill */
+.finanzas-badge-cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+/* Monto cell */
+.finanzas-monto {
+  font-weight: 700;
+  font-size: 1.05rem;
+  white-space: nowrap;
+  font-family: var(--font-heading, sans-serif);
+}
+
+.finanzas-monto.ingreso {
+  color: #15803d;
+}
+
+.finanzas-monto.egreso {
+  color: #b91c1c;
+}
+
+/* User Pill */
+.finanzas-user-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: #334155;
+  white-space: nowrap;
+}
+
+.finanzas-user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Action Buttons */
+.finanzas-action-btns {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.finanzas-action-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.finanzas-action-btn.edit:hover {
+  background-color: #eff6ff;
+  border-color: #93c5fd;
+  color: #1d4ed8;
+  transform: scale(1.08);
+}
+
+.finanzas-action-btn.delete:hover {
+  background-color: #fef2f2;
+  border-color: #fca5a5;
+  color: #b91c1c;
+  transform: scale(1.08);
+}
+
+/* Table Footer / Info & Pagination */
+.finanzas-table-footer {
+  padding: 1rem 1.25rem;
+  background-color: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #64748b;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.finanzas-pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.finanzas-page-btn {
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+  font-size: 0.825rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.finanzas-page-btn:hover:not(:disabled) {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.finanzas-page-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.finanzas-page-info {
+  font-size: 0.825rem;
+  font-weight: 500;
+  color: #475569;
+}
+
+/* Empty State */
+.finanzas-empty-state {
+  padding: 4rem 2rem;
+  text-align: center;
+  color: #64748b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.finanzas-empty-icon {
+  font-size: 3.5rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.85;
+}
+
+/* --- MODAL FORM POLISH --- */
+.finanzas-tipo-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.finanzas-tipo-btn {
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border: 2px solid #e2e8f0;
+  background: #f8fafc;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.finanzas-tipo-btn.selected-ingreso {
+  background: #ecfdf5;
+  border-color: #10b981;
+  color: #047857;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+}
+
+.finanzas-tipo-btn.selected-egreso {
+  background: #fef2f2;
+  border-color: #ef4444;
+  color: #b91c1c;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2);
+}
