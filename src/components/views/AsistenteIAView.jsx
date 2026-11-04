@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { getGeminiApiKey } from '../../config/gemini';
 
 const AsistenteIAView = () => {
   const [messages, setMessages] = useState([
@@ -7,9 +8,9 @@ const AsistenteIAView = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const envApiKey = import.meta.env.VITE_GEMINI_API_KEY;
-  const [apiKey, setApiKey] = useState(envApiKey || localStorage.getItem('gemini_api_key') || '');
-  const [isConfiguring, setIsConfiguring] = useState(!envApiKey && !localStorage.getItem('gemini_api_key'));
+  const activeKey = getGeminiApiKey();
+  const [apiKey, setApiKey] = useState(activeKey || '');
+  const [isConfiguring, setIsConfiguring] = useState(!activeKey);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -44,12 +45,19 @@ const AsistenteIAView = () => {
 
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
-
       const systemInstruction = `Eres un asistente virtual llamado "Asistente Seráfico" para la Juventud Franciscana (JUFRA) de Pomalca, con sede en la Parroquia María del Perpetuo Socorro. Tu tono debe ser amable, franciscano (saludando siempre con "Paz y bien" si es la primera interacción o si amerita), y dispuesto a ayudar. Estás ayudando a los líderes (el consejo) a redactar correos, actas, oraciones o resolver dudas.`;
       const prompt = `${systemInstruction}\n\nUsuario: ${userMessage}`;
       
-      const result = await model.generateContent(prompt);
+      let result;
+      try {
+        const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+        result = await model.generateContent(prompt);
+      } catch (primaryErr) {
+        console.warn("Reintentando con modelo gemini-3.5-flash-lite...", primaryErr);
+        const fallbackModel = genAI.getGenerativeModel({ model: "gemini-3.5-flash-lite" });
+        result = await fallbackModel.generateContent(prompt);
+      }
+
       const response = await result.response;
       const text = response.text();
 
@@ -93,7 +101,7 @@ const AsistenteIAView = () => {
               type="password" 
               value={apiKey} 
               onChange={e => setApiKey(e.target.value)} 
-              placeholder="Pega tu API Key aquí (AIzaSy...)"
+              placeholder="Pega tu API Key de Gemini aquí (AIzaSy... / AQ...)"
               style={{ padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)', width: '100%', marginBottom: '1rem', fontSize: '1.1rem' }}
               required 
             />

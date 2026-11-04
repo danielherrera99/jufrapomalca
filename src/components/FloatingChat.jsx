@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import api from '../config/api';
+import { getGeminiApiKey } from '../config/gemini';
 import { estatutosJufra } from '../assets/estatutos';
 import './FloatingChat.css';
 
@@ -16,7 +17,7 @@ const FloatingChat = () => {
   const [isSocialOpen, setIsSocialOpen] = useState(false);
   const messagesEndRef = useRef(null);
   
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY || localStorage.getItem('gemini_api_key');
+  const apiKey = getGeminiApiKey();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -50,25 +51,38 @@ const FloatingChat = () => {
     setIsLoading(true);
 
     try {
-      const currentApiKey = import.meta.env.VITE_GEMINI_API_KEY || localStorage.getItem('gemini_api_key');
+      const currentApiKey = getGeminiApiKey();
       if (!currentApiKey) throw new Error("API Key no configurada.");
 
       const genAI = new GoogleGenerativeAI(currentApiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
       const baseInstruction = `Eres el "Asistente Seráfico", un chatbot amigable integrado en la web de la Juventud Franciscana (JUFRA) de Pomalca, Perú. Nuestra sede es la Parroquia María del Perpetuo Socorro. Tu misión es ayudar a los visitantes a conocer la JUFRA, dar oraciones, explicar nuestras actividades (reuniones, apostolados) y reflejar el carisma franciscano con mucha alegría y paz. Siempre saluda con "Paz y bien". Sé conciso y amable.`;
       
       const systemInstruction = `${baseInstruction}\n\nAquí tienes como referencia los Estatutos Nacionales de la JUFRA Perú para que puedas responder preguntas oficiales (tiempos de formación, edades, estructura):\n\n--- INICIO DE ESTATUTOS ---\n${estatutosJufra}\n--- FIN DE ESTATUTOS ---\n\nRecuerda responder siempre de manera amigable y resumida, a menos que te pidan muchos detalles.`;
 
       const prompt = `${systemInstruction}\n\nUsuario: ${userMessage}`;
-      const result = await model.generateContent(prompt);
+      
+      let result;
+      try {
+        const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+        result = await model.generateContent(prompt);
+      } catch (primaryErr) {
+        console.warn("Reintentando con modelo gemini-3.5-flash-lite...", primaryErr);
+        const fallbackModel = genAI.getGenerativeModel({ model: "gemini-3.5-flash-lite" });
+        result = await fallbackModel.generateContent(prompt);
+      }
+
       const response = await result.response;
       const text = response.text();
 
       setMessages(prev => [...prev, { role: 'ai', content: text }]);
     } catch (error) {
       console.error("Error en Chat Flotante:", error);
-      setMessages(prev => [...prev, { role: 'ai', content: `Error: ${error.message}. Por favor revisa la consola para más detalles.` }]);
+      const isLeakedOrAuth = error?.message?.includes('leaked') || error?.message?.includes('403') || error?.message?.includes('API key');
+      const errorMsg = isLeakedOrAuth
+        ? '¡Paz y bien! Estamos actualizando la conexión del Asistente Seráfico. Por favor intenta nuevamente en unos momentos.'
+        : `¡Paz y bien! Ocurrió un inconveniente temporal (${error.message}). Por favor intenta nuevamente en unos momentos.`;
+      setMessages(prev => [...prev, { role: 'ai', content: errorMsg }]);
     } finally {
       setIsLoading(false);
     }
