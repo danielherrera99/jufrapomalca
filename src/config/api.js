@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'https://api-jufra.onrender.com/api',
+  baseURL: import.meta.env.VITE_API_URL || 'https://jufra-backend.vercel.app/api',
   timeout: 60000,
 });
 
@@ -28,7 +28,7 @@ export const getImageUrl = (url) => {
   if (url.startsWith('http') || url.startsWith('data:')) {
     return url;
   }
-  const baseUrl = import.meta.env.VITE_API_URL || 'https://api-jufra.onrender.com/api';
+  const baseUrl = import.meta.env.VITE_API_URL || 'https://jufra-backend.vercel.app/api';
   const serverUrl = baseUrl.replace(/\/api\/?$/, '');
   return `${serverUrl}${url.startsWith('/') ? '' : '/'}${url}`;
 };
