@@ -1483,7 +1483,7 @@ const LandingView = () => {
               <Link to="/admin" style={{ color: 'var(--secondary)', textDecoration: 'none', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', border: '1px solid var(--secondary)', padding: '0.4rem 1rem', borderRadius: '4px', opacity: 0.7 }}>
                 Acceso Interno
               </Link>
-              <a href="/Jufra-Pomalca.apk" download style={{ color: '#4CAF50', textDecoration: 'none', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', border: '1px solid #4CAF50', padding: '0.4rem 1rem', borderRadius: '4px', opacity: 0.7, display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <a href="https://expo.dev/artifacts/eas/bQTvc5GzYECx-h_1a35aXslI5iIfQC5SouF-vnir4-Q.apk" target="_blank" rel="noopener noreferrer" style={{ color: '#4CAF50', textDecoration: 'none', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', border: '1px solid #4CAF50', padding: '0.4rem 1rem', borderRadius: '4px', opacity: 0.7, display: 'flex', alignItems: 'center', gap: '5px' }}>
                 📱 App Móvil
               </a>
             </div>
