@@ -41,6 +41,8 @@ import JufraPeruView from './components/views/JufraPeruView';
 import FraternidadDetailView from './components/views/FraternidadDetailView';
 import FinanzasView from './components/views/FinanzasView';
 import RegistrosMascotasAdminView from './components/views/RegistrosMascotasAdminView';
+import { FraternidadProvider, useFraternidad } from './context/FraternidadContext';
+import FraternidadSelector from './components/FraternidadSelector';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import 'leaflet/dist/leaflet.css';
@@ -144,15 +146,18 @@ const Login = ({ onLogin }) => {
     e.preventDefault();
     try {
       const { data } = await api.post('/auth/login', { username, password });
-      if (data.usuario.rol === 'admin' || data.usuario.rol === 'consejo') {
+      if (['admin', 'superadmin', 'admin_nacional', 'consejo'].includes(data.usuario.rol)) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.usuario));
+        if (data.usuario.fraternidadId) {
+          localStorage.setItem('selected_fraternidad_id', data.usuario.fraternidadId);
+        }
         if (rememberMe) {
           localStorage.setItem('rememberedUser', username);
         }
         onLogin(data.usuario);
       } else {
-        setError('Acceso denegado: Solo miembros del consejo.');
+        setError('Acceso denegado: Solo miembros del consejo o administración.');
       }
     } catch (err) {
       if (err.code === 'ECONNABORTED' || err.message.includes('timeout') || err.message.includes('Network Error')) {
@@ -270,6 +275,7 @@ const modules = [
 ];
 
 const Dashboard = ({ user, onLogout }) => {
+  const { selectedFraternidadId } = useFraternidad();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -365,7 +371,31 @@ const Dashboard = ({ user, onLogout }) => {
           ))}
         </nav>
         <div className="sidebar-footer">
-          <p className="user-name">{user.nombre} {user.apellido}</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+            <div style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '50%',
+              background: user.rol === 'superadmin' ? '#d97706' : '#b45309',
+              color: '#fff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 'bold',
+              fontSize: '1rem',
+              boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
+            }}>
+              {user.rol === 'superadmin' ? '👑' : (user.nombre?.charAt(0) || 'U')}
+            </div>
+            <div style={{ overflow: 'hidden' }}>
+              <p className="user-name" style={{ margin: 0, fontWeight: 700, whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+                {user.nombre} {user.apellido}
+              </p>
+              <span style={{ fontSize: '0.74rem', color: user.rol === 'superadmin' ? '#d97706' : 'var(--text-muted)', fontWeight: 600 }}>
+                {user.rol === 'superadmin' ? '👑 Super Admin Nacional' : (user.fraternidadNombre || 'JUFRA Pomalca')}
+              </span>
+            </div>
+          </div>
           <button className="btn btn-logout" onClick={onLogout}>Cerrar Sesión</button>
         </div>
       </aside>
@@ -385,8 +415,9 @@ const Dashboard = ({ user, onLogout }) => {
                 })()}
               </p>
             </div>
-          <div className="flex-responsive" style={{ gap: '2rem', alignItems: 'center', flex: 1, justifyContent: 'flex-end' }}>
-              <div style={{ position: 'relative', flex: '1', minWidth: '200px', maxWidth: '400px' }}>
+          <div className="flex-responsive" style={{ gap: '1rem', alignItems: 'center', flex: 1, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+              <FraternidadSelector user={user} />
+              <div style={{ position: 'relative', flex: '1', minWidth: '200px', maxWidth: '350px' }}>
                 <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>🔍</span>
                 <input 
                   type="text" 
@@ -400,7 +431,7 @@ const Dashboard = ({ user, onLogout }) => {
         </header>
 
         
-        <div className="mt-4">
+        <div className="mt-4" key={selectedFraternidadId || 'all-peru'}>
           <Routes>
           <Route path="/" element={<DashboardView user={user} formatSafeDate={formatSafeDate} setActiveTab={setActiveTab} ActivityIndicator={ActivityIndicator} />} />
           <Route path="hermanos" element={<HermanosView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
@@ -513,7 +544,13 @@ function App() {
           
           {/* Panel de Administración (Privado) */}
           <Route path="/admin" element={!user ? <Login onLogin={setUser} /> : <Navigate to="/dashboard" />} />
-          <Route path="/dashboard/*" element={user ? <Dashboard user={user} onLogout={handleLogout} /> : <Navigate to="/admin" />} />
+          <Route path="/dashboard/*" element={
+            user ? (
+              <FraternidadProvider user={user}>
+                <Dashboard user={user} onLogout={handleLogout} />
+              </FraternidadProvider>
+            ) : <Navigate to="/admin" />
+          } />
           
           {/* Redirección por defecto */}
           <Route path="*" element={<Navigate to="/" />} />

@@ -10,6 +10,16 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  
+  // Inyectar fraternidadId activa si está seleccionada (para Multi-Tenant)
+  const selectedFraternidadId = localStorage.getItem('selected_fraternidad_id');
+  if (selectedFraternidadId && !config.params?.fraternidadId) {
+    config.params = {
+      ...config.params,
+      fraternidadId: selectedFraternidadId
+    };
+  }
+  
   return config;
 });
 
