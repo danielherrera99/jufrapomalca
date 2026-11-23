@@ -4,6 +4,131 @@ import { Link } from 'react-router-dom';
 import api from '../../config/api';
 import { DEPARTAMENTOS_MAPA } from '../../config/mapData';
 import SafeImage from '../SafeImage';
+
+// Datos para la sección unificada: Historia, etapas y símbolos franciscanos
+const historiaItems = [
+  {
+    year: '2000',
+    badgeColor: '#c2410c',
+    title: 'Fundación de la Fraternidad',
+    description: 'El 18 de mayo de 2000 nace JUFRA Pomalca por iniciativa de jóvenes catecúmenos liderados por Raúl Tantaleán y guiados por el párroco Pedro Delfín Vidalón. El 8 de octubre es presentada oficialmente a la población.'
+  },
+  {
+    year: '2019',
+    badgeColor: '#d97706',
+    title: 'Camino al Reconocimiento',
+    description: 'El hermano Jean Pierre Juárez asume el cargo de coordinador e inicia, junto a su consejo, la búsqueda activa del reconocimiento e integración canónica e histórica formal ante la Orden Franciscana Seglar (OFS).'
+  },
+  {
+    year: '2024',
+    badgeColor: '#16a34a',
+    title: 'Reconocimiento Oficial OFS',
+    description: 'El 3 de enero de 2024, tras cumplir con las Constituciones Generales, se promulga el decreto de reconocimiento formal de JUFRA Pomalca y se convoca a elecciones para conformar el primer consejo electivo oficial.'
+  },
+  {
+    year: '2026',
+    badgeColor: '#0284c7',
+    title: 'Innovación e Impacto Digital',
+    description: 'Consolidación de la fraternidad a nivel nacional y lanzamiento oficial del portal web institucional y aplicación móvil de JUFRA Pomalca, digitalizando la asistencia, gestión interna y la comunicación fraterna.'
+  }
+];
+
+const etapasItems = [
+  {
+    numero: '01',
+    title: 'Iniciado',
+    shortDesc: 'Tiempo de acercamiento, descubrimiento y conocimiento...',
+    fullDesc: 'Tiempo de acercamiento, descubrimiento y conocimiento inicial de la Fraternidad y del hermoso carisma franciscano.',
+    checkpoints: [
+      'Participación en los encuentros dominicales a las 5:00 PM',
+      'Acogida fraterna e integración con la comunidad juvenil',
+      'Primer acercamiento a la vida de San Francisco y Santa Clara'
+    ]
+  },
+  {
+    numero: '02',
+    title: 'Aceptado',
+    shortDesc: 'Etapa de formación y discernimiento profundo de la vocació...',
+    fullDesc: 'Etapa de formación y discernimiento profundo de la vocación, participando activamente en la vida y misión fraterna.',
+    checkpoints: [
+      'Profundización en los escritos y espiritualidad franciscana',
+      'Participación activa en apostolados, misiones y servicios fraternos',
+      'Discernimiento vocacional con acompañamiento del formador'
+    ]
+  },
+  {
+    numero: '03',
+    title: 'Comprometido',
+    shortDesc: 'Promesa formal ante Dios y la Iglesia de vivir el Santo Evangeli...',
+    fullDesc: 'Promesa formal ante Dios y la Iglesia de vivir el Santo Evangelio a la manera de San Francisco de Asís.',
+    checkpoints: [
+      'Celebración de la Promesa pública ante Dios y la Iglesia',
+      'Compromiso activo de vivir el Evangelio en la vida cotidiana',
+      'Participación plena en el consejo y liderazgo de la fraternidad'
+    ]
+  }
+];
+
+const simbolosItems = [
+  {
+    title: 'La Tau',
+    color: '#c2410c',
+    iconSvg: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4 6h16" />
+        <path d="M12 6v14" />
+      </svg>
+    ),
+    description: 'Es el signo de salvación y humildad que San Francisco adoptó como propia firma. Representa la cruz y nuestro profundo deseo de conversión.'
+  },
+  {
+    title: 'Cristo de San Damián',
+    color: '#d97706',
+    iconSvg: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+      </svg>
+    ),
+    description: 'Es el ícono bizantino desde el cual Jesús le habló a Francisco pidiéndole: "Ve y repara mi Iglesia".'
+  },
+  {
+    title: 'Corona Seráfica',
+    color: '#0284c7',
+    iconSvg: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
+      </svg>
+    ),
+    description: 'Conocida también como el Rosario Franciscano. Consiste en 7 misterios que meditan sobre las 7 alegrías de la Virgen María.'
+  },
+  {
+    title: 'El Escapulario',
+    color: '#78350f',
+    iconSvg: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="5" y="4" width="14" height="16" rx="2" />
+        <path d="M9 9h6" />
+        <path d="M9 13h6" />
+      </svg>
+    ),
+    description: 'Es una forma abreviada de llevar el hábito de penitencia. Significa consagración, devoción mariana y pertenencia a la gran familia franciscana.'
+  },
+  {
+    title: 'Cordón de los 3 Nudos',
+    color: '#16a34a',
+    iconSvg: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 12h18" />
+        <circle cx="7" cy="12" r="2.5" fill="currentColor" />
+        <circle cx="12" cy="12" r="2.5" fill="currentColor" />
+        <circle cx="17" cy="12" r="2.5" fill="currentColor" />
+      </svg>
+    ),
+    description: 'Representa nuestra atadura a Cristo. Sus tres nudos nos recuerdan permanentemente los votos franciscanos: Pobreza, Obediencia y Castidad.'
+  }
+];
+
 const LandingView = () => {
   const [config, setConfig] = useState({
     heroTitle: 'JUFRA Pomalca',
@@ -49,6 +174,10 @@ const LandingView = () => {
   // Scroll & ScrollSpy states
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('inicio');
+
+  // Pestaña activa en "Historia, etapas y símbolos franciscanos"
+  const [activeCaminoTab, setActiveCaminoTab] = useState('historia'); // 'historia' | 'etapas' | 'simbolos'
+  const [activeEtapaIndex, setActiveEtapaIndex] = useState(0); // 0 (Iniciado), 1 (Aceptado), 2 (Comprometido)
 
   const [activeCategory, setActiveCategory] = useState('todas');
   const [galleryItems, setGalleryItems] = useState([]);
@@ -446,168 +575,306 @@ const LandingView = () => {
           </div>
         </section>
 
-        {/* Sección Nuestro Camino (Timeline) */}
-        <section id="historia" className="section-padding" style={{ background: '#FAF6F0', overflow: 'hidden' }}>
-          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-            <span style={{ color: 'var(--secondary)', fontWeight: 'bold', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Nuestra Historia</span>
-            <h2 className="section-title" style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>Nuestro Camino</h2>
-            <p style={{ color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto' }}>Conoce los momentos clave y el recorrido de amor, fe y servicio de la Juventud Franciscana en Pomalca.</p>
-          </div>
-
-          <div className="timeline-container">
-            <div className="timeline-line"></div>
+        {/* Sección Unificada: Historia, etapas y símbolos franciscanos */}
+        <section id="historia" className="camino-unificado-section" style={{ background: '#FAF6F0', padding: '5rem 1.5rem', overflow: 'hidden' }}>
+          <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
             
-            <div className="timeline-item animate-fade">
-              <div className="timeline-dot" style={{ '--dot-color': 'var(--primary)' }}></div>
-              <div className="timeline-card">
-                <div className="timeline-year" style={{ '--dot-color': 'var(--primary)' }}>2000</div>
-                <h4 className="timeline-title">Fundación de la Fraternidad</h4>
-                <p className="timeline-text">
-                  El 18 de mayo de 2000 nace JUFRA Pomalca por iniciativa de jóvenes catecúmenos liderados por Raúl Tantaleán y guiados por el párroco Pedro Delfín Vidalón. El 8 de octubre es presentada oficialmente a la población.
-                </p>
+            {/* Cabecera Principal con Selector de Pestañas */}
+            <div className="camino-header-flex">
+              <div>
+                <span style={{ color: '#16a34a', fontWeight: '700', fontSize: '0.95rem', display: 'block', marginBottom: '0.4rem', letterSpacing: '0.5px' }}>
+                  Nuestro Camino
+                </span>
+                <h2 style={{
+                  fontSize: 'clamp(2rem, 3.5vw, 2.7rem)',
+                  fontWeight: '800',
+                  color: '#1c1917',
+                  lineHeight: 1.15,
+                  margin: 0,
+                  letterSpacing: '-0.5px'
+                }}>
+                  Historia, etapas y<br />símbolos franciscanos
+                </h2>
+              </div>
+
+              {/* Botones de Pestañas (Pill selector) */}
+              <div className="camino-tabs-pill">
+                <button
+                  type="button"
+                  onClick={() => setActiveCaminoTab('historia')}
+                  className={`camino-tab-btn ${activeCaminoTab === 'historia' ? 'active' : ''}`}
+                >
+                  Nuestra Historia
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveCaminoTab('etapas')}
+                  className={`camino-tab-btn ${activeCaminoTab === 'etapas' ? 'active' : ''}`}
+                >
+                  Etapas (3)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveCaminoTab('simbolos')}
+                  className={`camino-tab-btn ${activeCaminoTab === 'simbolos' ? 'active' : ''}`}
+                >
+                  Símbolos (5)
+                </button>
               </div>
             </div>
 
-            <div className="timeline-item animate-fade">
-              <div className="timeline-dot" style={{ '--dot-color': 'var(--secondary)' }}></div>
-              <div className="timeline-card">
-                <div className="timeline-year" style={{ '--dot-color': 'var(--secondary)' }}>2019</div>
-                <h4 className="timeline-title">Camino al Reconocimiento</h4>
-                <p className="timeline-text">
-                  El hermano Jean Pierre Juárez asume el cargo de coordinador e inicia, junto a su consejo, la búsqueda activa del reconocimiento e integración canónica e histórica formal ante la Orden Franciscana Seglar (OFS).
-                </p>
+            {/* CONTENIDO SEGÚN LA PESTAÑA ACTIVA */}
+
+            {/* PESTAÑA 1: NUESTRA HISTORIA */}
+            {activeCaminoTab === 'historia' && (
+              <div className="camino-grid-4 animate-fade">
+                {historiaItems.map((item, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      backgroundColor: '#ffffff',
+                      borderRadius: '18px',
+                      padding: '2rem 1.6rem',
+                      border: '1px solid #e7e5e4',
+                      boxShadow: '0 4px 15px rgba(0,0,0,0.02)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      height: '100%',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    <div>
+                      <span style={{
+                        display: 'inline-block',
+                        backgroundColor: item.badgeColor,
+                        color: '#ffffff',
+                        fontWeight: '700',
+                        fontSize: '0.82rem',
+                        padding: '4px 12px',
+                        borderRadius: '6px',
+                        letterSpacing: '0.5px'
+                      }}>
+                        {item.year}
+                      </span>
+                    </div>
+
+                    <h3 style={{
+                      fontSize: '1.18rem',
+                      fontWeight: '800',
+                      color: '#1c1917',
+                      marginTop: '1.2rem',
+                      marginBottom: '0.8rem',
+                      lineHeight: 1.3
+                    }}>
+                      {item.title}
+                    </h3>
+
+                    <p style={{
+                      fontSize: '0.92rem',
+                      color: '#57534e',
+                      lineHeight: 1.65,
+                      margin: 0
+                    }}>
+                      {item.description}
+                    </p>
+                  </div>
+                ))}
               </div>
-            </div>
+            )}
 
-            <div className="timeline-item animate-fade">
-              <div className="timeline-dot" style={{ '--dot-color': 'var(--tertiary)' }}></div>
-              <div className="timeline-card">
-                <div className="timeline-year" style={{ '--dot-color': 'var(--tertiary)' }}>2024</div>
-                <h4 className="timeline-title">Reconocimiento Oficial OFS</h4>
-                <p className="timeline-text">
-                  El 3 de enero de 2024, tras cumplir con las Constituciones Generales, se promulga el decreto de reconocimiento formal de JUFRA Pomalca y se convoca a elecciones para conformar el primer consejo electivo oficial.
-                </p>
+            {/* PESTAÑA 2: ETAPAS DE FORMACIÓN */}
+            {activeCaminoTab === 'etapas' && (
+              <div className="camino-etapas-split animate-fade">
+                {/* Columna Izquierda: Lista de Etapas */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {etapasItems.map((etapa, idx) => {
+                    const isSelected = activeEtapaIndex === idx;
+                    return (
+                      <div
+                        key={idx}
+                        onClick={() => setActiveEtapaIndex(idx)}
+                        style={{
+                          backgroundColor: '#ffffff',
+                          borderRadius: '16px',
+                          padding: '1.4rem 1.6rem',
+                          border: isSelected ? '1.5px solid #1c1917' : '1px solid #e7e5e4',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease',
+                          boxShadow: isSelected ? '0 6px 20px rgba(0,0,0,0.04)' : 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '1.1rem'
+                        }}
+                      >
+                        <div style={{
+                          width: '38px',
+                          height: '38px',
+                          borderRadius: '8px',
+                          backgroundColor: isSelected ? '#16a34a' : '#f5f5f4',
+                          color: isSelected ? '#ffffff' : '#57534e',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontWeight: '800',
+                          fontSize: '0.92rem',
+                          flexShrink: 0,
+                          transition: 'all 0.2s ease'
+                        }}>
+                          {etapa.numero}
+                        </div>
+
+                        <div style={{ flex: 1, overflow: 'hidden' }}>
+                          <h4 style={{
+                            margin: '0 0 0.25rem 0',
+                            fontWeight: '700',
+                            fontSize: '1.05rem',
+                            color: '#1c1917'
+                          }}>
+                            {etapa.title}
+                          </h4>
+                          <p style={{
+                            margin: 0,
+                            fontSize: '0.85rem',
+                            color: '#78716c',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                          }}>
+                            {etapa.shortDesc}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Columna Derecha: Tarjeta de Detalle de la Etapa Seleccionada */}
+                <div style={{
+                  backgroundColor: '#ffffff',
+                  borderRadius: '20px',
+                  padding: '2.5rem',
+                  border: '1px solid #e7e5e4',
+                  boxShadow: '0 6px 25px rgba(0,0,0,0.03)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center'
+                }}>
+                  <span style={{
+                    color: '#16a34a',
+                    fontWeight: '800',
+                    fontSize: '0.82rem',
+                    letterSpacing: '1px',
+                    textTransform: 'uppercase',
+                    marginBottom: '0.5rem',
+                    display: 'block'
+                  }}>
+                    ETAPA {etapasItems[activeEtapaIndex].numero}
+                  </span>
+
+                  <h3 style={{
+                    fontSize: '1.85rem',
+                    fontWeight: '800',
+                    color: '#1c1917',
+                    margin: '0 0 1rem 0'
+                  }}>
+                    {etapasItems[activeEtapaIndex].title}
+                  </h3>
+
+                  <p style={{
+                    fontSize: '0.96rem',
+                    color: '#57534e',
+                    lineHeight: 1.65,
+                    marginBottom: '1.75rem'
+                  }}>
+                    {etapasItems[activeEtapaIndex].fullDesc}
+                  </p>
+
+                  <div style={{ height: '1px', backgroundColor: '#f0ece7', marginBottom: '1.75rem' }} />
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    {etapasItems[activeEtapaIndex].checkpoints.map((cp, cIdx) => (
+                      <div key={cIdx} style={{ display: 'flex', alignItems: 'center', gap: '0.9rem' }}>
+                        <div style={{
+                          width: '22px',
+                          height: '22px',
+                          borderRadius: '6px',
+                          backgroundColor: '#16a34a',
+                          color: '#ffffff',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '12px',
+                          fontWeight: 'bold',
+                          flexShrink: 0
+                        }}>
+                          ✓
+                        </div>
+                        <span style={{ fontSize: '0.92rem', color: '#44403c', fontWeight: '500' }}>
+                          {cp}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
 
-            <div className="timeline-item animate-fade">
-              <div className="timeline-dot" style={{ '--dot-color': 'var(--primary)' }}></div>
-              <div className="timeline-card">
-                <div className="timeline-year" style={{ '--dot-color': 'var(--primary)' }}>2026</div>
-                <h4 className="timeline-title">Innovación e Impacto Digital</h4>
-                <p className="timeline-text">
-                  Consolidación de la fraternidad a nivel nacional y lanzamiento oficial del portal web institucional y aplicación móvil de JUFRA Pomalca, digitalizando la asistencia, gestión interna y la comunicación fraterna.
-                </p>
+            {/* PESTAÑA 3: SÍMBOLOS FRANCISCANOS */}
+            {activeCaminoTab === 'simbolos' && (
+              <div className="camino-grid-5 animate-fade">
+                {simbolosItems.map((item, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      backgroundColor: '#ffffff',
+                      borderRadius: '18px',
+                      padding: '2rem 1.4rem',
+                      border: '1px solid #e7e5e4',
+                      boxShadow: '0 4px 15px rgba(0,0,0,0.02)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      height: '100%',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    <div style={{
+                      width: '38px',
+                      height: '38px',
+                      borderRadius: '8px',
+                      backgroundColor: item.color,
+                      color: '#ffffff',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginBottom: '1.2rem',
+                      boxShadow: '0 2px 6px rgba(0,0,0,0.12)'
+                    }}>
+                      {item.iconSvg}
+                    </div>
+
+                    <h3 style={{
+                      fontSize: '1.18rem',
+                      fontWeight: '800',
+                      color: '#1c1917',
+                      margin: '0 0 0.8rem 0',
+                      lineHeight: 1.3
+                    }}>
+                      {item.title}
+                    </h3>
+
+                    <p style={{
+                      fontSize: '0.91rem',
+                      color: '#57534e',
+                      lineHeight: 1.65,
+                      margin: 0
+                    }}>
+                      {item.description}
+                    </p>
+                  </div>
+                ))}
               </div>
-            </div>
-          </div>
-        </section>
+            )}
 
-        {/* Sección Etapas de un joven franciscano */}
-        <section id="etapas" className="section-padding" style={{ background: '#FFFFFF' }}>
-          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-            <span style={{ color: 'var(--primary)', fontWeight: 'bold', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Formación</span>
-            <h2 className="section-title" style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>Etapas de un joven franciscano</h2>
-            <p style={{ color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto' }}>
-              El camino vocacional en la Juventud Franciscana se vive de manera progresiva, madurando en la fe y en el compromiso fraterno a través de tres grandes etapas.
-            </p>
-          </div>
-
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', justifyContent: 'center', maxWidth: '1000px', margin: '0 auto', padding: '0 1rem' }}>
-            {/* Iniciado */}
-            <div className="etapa-card" style={{ flex: '1 1 250px', background: '#FAF6F0', borderRadius: '15px', padding: '2rem', textAlign: 'center', borderTop: '5px solid var(--tertiary)', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🌱</div>
-              <h3 style={{ color: 'var(--text-color)', marginBottom: '1rem', fontSize: '1.4rem' }}>Iniciado</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: '1.6' }}>
-                Tiempo de acercamiento, descubrimiento y conocimiento inicial de la Fraternidad y del hermoso carisma franciscano.
-              </p>
-            </div>
-
-            {/* Aceptado */}
-            <div className="etapa-card" style={{ flex: '1 1 250px', background: '#FAF6F0', borderRadius: '15px', padding: '2rem', textAlign: 'center', borderTop: '5px solid var(--secondary)', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🌿</div>
-              <h3 style={{ color: 'var(--text-color)', marginBottom: '1rem', fontSize: '1.4rem' }}>Aceptado</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: '1.6' }}>
-                Etapa de formación y discernimiento profundo de la vocación, participando activamente en la vida y misión fraterna.
-              </p>
-            </div>
-
-            {/* Comprometido */}
-            <div className="etapa-card" style={{ flex: '1 1 250px', background: '#FAF6F0', borderRadius: '15px', padding: '2rem', textAlign: 'center', borderTop: '5px solid var(--primary)', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🌳</div>
-              <h3 style={{ color: 'var(--text-color)', marginBottom: '1rem', fontSize: '1.4rem' }}>Comprometido</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: '1.6' }}>
-                Promesa formal ante Dios y la Iglesia de vivir el Santo Evangelio a la manera de San Francisco de Asís.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Sección Símbolos Franciscanos */}
-        <section id="simbolos" className="section-padding" style={{ background: '#FAF6F0' }}>
-          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-            <span style={{ color: 'var(--tertiary)', fontWeight: 'bold', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Nuestra Identidad</span>
-            <h2 className="section-title" style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>Símbolos Franciscanos</h2>
-            <p style={{ color: 'var(--text-muted)', maxWidth: '700px', margin: '0 auto' }}>
-              Estos son los principales símbolos que nos identifican y acompañan nuestra espiritualidad como hermanos de la Orden Franciscana.
-            </p>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '2rem', maxWidth: '1100px', margin: '0 auto', padding: '0 1rem' }}>
-            {/* La Tau */}
-            <div className="simbolo-card" style={{ background: '#FFFFFF', borderRadius: '15px', padding: '2rem', textAlign: 'center', boxShadow: '0 5px 20px rgba(0,0,0,0.04)' }}>
-              <div style={{ marginBottom: '1rem', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <img src="/assets/simbolos/tau.jpg" alt="La Tau" style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }} />
-              </div>
-              <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.3rem' }}>La Tau</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
-                Es el signo de salvación y humildad que San Francisco adoptó como propia firma. Representa la cruz y nuestro profundo deseo de conversión.
-              </p>
-            </div>
-
-            {/* Cristo de San Damián */}
-            <div className="simbolo-card" style={{ background: '#FFFFFF', borderRadius: '15px', padding: '2rem', textAlign: 'center', boxShadow: '0 5px 20px rgba(0,0,0,0.04)' }}>
-              <div style={{ marginBottom: '1rem', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <img src="/assets/simbolos/san_damian.jpg" alt="Cristo de San Damián" style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }} />
-              </div>
-              <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.3rem' }}>Cristo de San Damián</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
-                Es el ícono bizantino desde el cual Jesús le habló a Francisco pidiéndole: "Ve y repara mi Iglesia".
-              </p>
-            </div>
-
-            {/* Corona Seráfica */}
-            <div className="simbolo-card" style={{ background: '#FFFFFF', borderRadius: '15px', padding: '2rem', textAlign: 'center', boxShadow: '0 5px 20px rgba(0,0,0,0.04)' }}>
-              <div style={{ marginBottom: '1rem', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <img src="/assets/simbolos/corona.png" alt="Corona Seráfica" style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }} />
-              </div>
-              <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.3rem' }}>Corona Seráfica</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
-                Conocida también como el Rosario Franciscano. Consiste en 7 misterios que meditan sobre las 7 alegrías de la Virgen María.
-              </p>
-            </div>
-
-            {/* Escapulario */}
-            <div className="simbolo-card" style={{ background: '#FFFFFF', borderRadius: '15px', padding: '2rem', textAlign: 'center', boxShadow: '0 5px 20px rgba(0,0,0,0.04)' }}>
-              <div style={{ marginBottom: '1rem', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <img src="/assets/simbolos/escapulario.png" alt="El Escapulario" style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }} />
-              </div>
-              <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.3rem' }}>El Escapulario</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
-                Es una forma abreviada de llevar el hábito de penitencia. Significa consagración, devoción mariana y pertenencia a la gran familia franciscana.
-              </p>
-            </div>
-
-            {/* Cordón de los 3 nudos */}
-            <div className="simbolo-card" style={{ background: '#FFFFFF', borderRadius: '15px', padding: '2rem', textAlign: 'center', boxShadow: '0 5px 20px rgba(0,0,0,0.04)' }}>
-              <div style={{ marginBottom: '1rem', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <img src="/assets/simbolos/cordon.png" alt="Cordón de los 3 Nudos" style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }} />
-              </div>
-              <h3 style={{ color: 'var(--text-color)', marginBottom: '0.5rem', fontSize: '1.3rem' }}>Cordón de los 3 Nudos</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.5' }}>
-                Representa nuestra atadura a Cristo. Sus tres nudos nos recuerdan permanentemente los votos franciscanos: Obediencia, Pobreza y Humildad.
-              </p>
-            </div>
           </div>
         </section>
 

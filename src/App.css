@@ -1022,6 +1022,101 @@ input:focus {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
+/* Nuevo Componente Unificado: Nuestro Camino, Etapas y Símbolos */
+.camino-unificado-section {
+  background-color: #FAF6F0;
+  padding: 5rem 1.5rem;
+}
+
+.camino-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.camino-tabs-pill {
+  display: inline-flex;
+  background-color: #ede7df;
+  border-radius: 9999px;
+  padding: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.camino-tab-btn {
+  background: transparent;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: #57534e;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.camino-tab-btn.active {
+  background-color: #2b1810;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.camino-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.camino-etapas-split {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(360px, 1.6fr);
+  gap: 1.75rem;
+  align-items: stretch;
+}
+
+.camino-grid-5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 1024px) {
+  .camino-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .camino-grid-5 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .camino-header-flex {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .camino-tabs-pill {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .camino-tab-btn {
+    padding: 8px 10px;
+    font-size: 0.82rem;
+    flex: 1;
+    text-align: center;
+  }
+  .camino-grid-4 {
+    grid-template-columns: 1fr;
+  }
+  .camino-etapas-split {
+    grid-template-columns: 1fr;
+  }
+  .camino-grid-5 {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* 4. Timeline Sección "Nuestro Camino" (Horizontal por defecto en pantallas medianas/grandes, Vertical en móviles) */
 .timeline-container {
   position: relative;
