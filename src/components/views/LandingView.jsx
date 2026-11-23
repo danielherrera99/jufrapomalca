@@ -526,7 +526,7 @@ const LandingView = () => {
   };
 
   return (
-    <>
+    <div className="landing-layout-wrapper">
       {/* Navegación Pública */}
       <nav className={`landing-nav ${isScrolled ? 'scrolled' : ''}`}>
           <Link to="/" className="logo">
@@ -582,11 +582,11 @@ const LandingView = () => {
             <p className="hero-subtitle reveal-subtitle">
               {config.heroSubtitle}
             </p>
-            <div className="flex-responsive reveal-buttons" style={{ justifyContent: 'center', gap: '1rem', marginTop: '2rem', flexWrap: 'wrap' }}>
-              <button className="btn btn-primary zoom-hover" onClick={() => setIsInterestModalOpen(true)} style={{ padding: '1rem 2.5rem', boxShadow: '0 4px 15px rgba(139, 90, 43, 0.3)' }}>
+            <div className="flex-responsive reveal-buttons" style={{ justifyContent: 'center', gap: '1rem', marginTop: '1.75rem', flexWrap: 'wrap' }}>
+              <button className="btn btn-primary zoom-hover" onClick={() => setIsInterestModalOpen(true)} style={{ padding: '0.85rem 2.25rem', boxShadow: '0 4px 15px rgba(139, 90, 43, 0.3)' }}>
                 Únete a nuestra fraternidad
               </button>
-              <a href="#eventos" className="btn btn-ghost zoom-hover" style={{ padding: '1rem 2.5rem', borderColor: 'white', color: 'white', textDecoration: 'none' }}>
+              <a href="#eventos" className="btn btn-ghost zoom-hover" style={{ padding: '0.85rem 2.25rem', borderColor: 'white', color: 'white', textDecoration: 'none' }}>
                 Ver actividades
               </a>
             </div>
@@ -2306,7 +2306,7 @@ const LandingView = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

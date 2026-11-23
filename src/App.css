@@ -929,6 +929,14 @@ input:focus {
   margin-top: 1.5rem;
 }
 /* 3. Landing Page Public */
+.landing-layout-wrapper {
+  zoom: 0.9;
+  width: 100%;
+  background: var(--background);
+  --section-padding-y: 5.5rem;
+  --section-padding-x: 8%;
+}
+
 .landing-page {
   background: var(--background);
   overflow-x: hidden;
@@ -941,9 +949,9 @@ input:focus {
   width: 100%;
   box-sizing: border-box;
   z-index: 1000;
-  background: rgba(255, 248, 220, 0.85);
+  background: rgba(255, 248, 220, 0.88);
   backdrop-filter: blur(12px);
-  padding: 1.2rem var(--section-padding-x);
+  padding: 0.85rem var(--section-padding-x);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1021,7 +1029,7 @@ input:focus {
 
 .hero-section {
   width: 100%;
-  padding: 14rem var(--section-padding-x) 12rem;
+  padding: 10rem var(--section-padding-x) 8rem;
   text-align: center;
   position: relative;
   background-size: cover;
@@ -1031,12 +1039,12 @@ input:focus {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 80vh;
+  min-height: 75vh;
 }
 
 @media (max-width: 768px) {
   .hero-section {
-    padding: 10rem var(--section-padding-x) 8rem;
+    padding: 8rem var(--section-padding-x) 6rem;
   }
 }
 
@@ -1050,24 +1058,24 @@ input:focus {
 .hero-content {
   position: relative;
   z-index: 2;
-  max-width: 1000px;
+  max-width: 950px;
   width: 100%;
 }
 
 .hero-title {
   font-family: var(--font-serif);
-  /* font-size handled by clamp in h1 */
+  font-size: clamp(2.2rem, 5.5vw, 3.8rem);
   font-weight: 700;
-  line-height: 1.1;
+  line-height: 1.15;
   color: white;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .hero-subtitle {
-  font-size: clamp(1rem, 3vw, 1.4rem);
-  color: rgba(255,255,255,0.9);
-  max-width: 700px;
-  margin: 0 auto 3rem;
+  font-size: clamp(0.95rem, 2.2vw, 1.25rem);
+  color: rgba(255,255,255,0.92);
+  max-width: 680px;
+  margin: 0 auto 2.5rem;
   line-height: 1.6;
 }
 

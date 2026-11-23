@@ -1,5 +1,6 @@
 /* src/components/FloatingChat.css */
 .floating-chat-container {
+  zoom: 0.9;
   position: fixed;
   bottom: 25px;
   right: 25px;
