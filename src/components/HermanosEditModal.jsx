@@ -1,4 +1,5 @@
 import React from 'react';
+import { resolveEtapa } from './views/DashboardView';
 
 const HermanosEditModal = ({ selectedItem, setSelectedItem }) => {
   return (
@@ -124,8 +125,8 @@ const HermanosEditModal = ({ selectedItem, setSelectedItem }) => {
         <select 
           className="form-select" 
           style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid var(--border)', width: '100%' }} 
-          value={selectedItem.etapaFormacion || 'aspirante'} 
-          onChange={e => setSelectedItem({...selectedItem, etapaFormacion: e.target.value})}
+          value={selectedItem.etapaFormacion || selectedItem.etapa_formacion || resolveEtapa(selectedItem)} 
+          onChange={e => setSelectedItem({...selectedItem, etapaFormacion: e.target.value, etapa_formacion: e.target.value})}
         >
           <option value="aspirante">Aspirante</option>
           <option value="iniciado">Iniciado</option>

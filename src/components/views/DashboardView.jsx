@@ -5,6 +5,47 @@ import {
 } from 'recharts';
 import api from '../../config/api';
 
+export const resolveEtapa = (h) => {
+  if (!h) return 'aspirante';
+
+  // 1. Si tiene etapaFormacion o etapa_formacion explícita, normalizarla
+  const rawEtapa = String(h.etapaFormacion || h.etapa_formacion || h.etapa || '').toLowerCase().trim();
+  if (rawEtapa.includes('prome')) return 'promesado';
+  if (rawEtapa.includes('formaci')) return 'en_formacion';
+  if (rawEtapa.includes('inici')) return 'iniciado';
+  if (rawEtapa.includes('aspir') || rawEtapa.includes('acogi')) return 'aspirante';
+
+  // 2. Si tiene fecha de promesa registrada, es Promesado
+  if (h.fechaPromesa || h.fecha_promesa) return 'promesado';
+
+  // 3. Si tiene cargo en el consejo o es administrador
+  const cargo = String(h.cargo || '').toLowerCase().trim();
+  if (['coordinador', 'vice-coordinador', 'secretario', 'tesorero', 'formador'].includes(cargo)) {
+    return 'promesado';
+  }
+  if (cargo === 'animador') {
+    return 'en_formacion';
+  }
+  const rol = String(h.rol || '').toLowerCase().trim();
+  if (['admin', 'consejo', 'superadmin', 'admin_nacional'].includes(rol)) {
+    return 'promesado';
+  }
+
+  // 4. Si tiene fecha de ingreso o creación, deducir según tiempo en la fraternidad (Estatutos JUFRA)
+  const fechaIngreso = h.fechaIngreso || h.fecha_ingreso || h.createdAt || h.created_at;
+  if (fechaIngreso) {
+    const meses = (new Date() - new Date(fechaIngreso)) / (1000 * 60 * 60 * 24 * 30.44);
+    if (!isNaN(meses)) {
+      if (meses >= 24) return 'promesado';
+      if (meses >= 9) return 'en_formacion';
+      if (meses >= 3) return 'iniciado';
+      return 'aspirante';
+    }
+  }
+
+  return 'aspirante';
+};
+
 const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, setIsModalOpen }) => {
   const [data, setData] = useState({ hermanos: [], anuncios: [], eventos: [], asistencias: [], metricas: null });
   const [loading, setLoading] = useState(true);
@@ -52,23 +93,23 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
       asistencia: attendanceMap[date]
     })).slice(-7);
 
-    // 2. Procesar Etapas de Formación
+    // 2. Procesar Etapas de Formación (Datos Reales y Deducidos)
     const stagesMap = {
       'aspirante': { name: 'Aspirantes', value: 0, color: '#94A3B8' },
       'iniciado': { name: 'Iniciados', value: 0, color: '#0EA5E9' },
-      'en_formacion': { name: 'Formación', value: 0, color: '#6366F1' },
-      'promesado': { name: 'Promesados', value: 0, color: '#22C55E' }
+      'en_formacion': { name: 'En Formación', value: 0, color: '#F59E0B' },
+      'promesado': { name: 'Promesados', value: 0, color: '#16A34A' }
     };
 
     const birthdays = [];
     const todayStr = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
 
     (data.hermanos || []).forEach(h => {
-      const etapa = h.etapaFormacion || 'aspirante';
+      const etapa = resolveEtapa(h);
       if (stagesMap[etapa]) stagesMap[etapa].value++;
 
-      if (h.fechaNacimiento) {
-        const bdayStr = new Date(h.fechaNacimiento).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+      if (h.fechaNacimiento || h.fecha_nacimiento) {
+        const bdayStr = new Date(h.fechaNacimiento || h.fecha_nacimiento).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
         if (bdayStr === todayStr) birthdays.push(h);
       }
     });
@@ -247,9 +288,14 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
 
         {/* Gráfico de Distribución por Etapas */}
         <div className="glass-card" style={{ padding: '1.5rem', minHeight: '350px' }}>
-          <h3 style={{ marginTop: 0, fontSize: '1.1rem', color: 'var(--primary)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            🍩 Distribución por Etapas
-          </h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              🍩 Distribución por Etapas
+            </h3>
+            <span style={{ fontSize: '0.8rem', background: 'rgba(194, 65, 12, 0.1)', color: 'var(--primary)', padding: '3px 10px', borderRadius: '12px', fontWeight: 'bold' }}>
+              {totalHermanos} Hermanos
+            </span>
+          </div>
           <div style={{ width: '100%', height: 250 }}>
             <ResponsiveContainer width="99%" height={250}>
               <PieChart>
@@ -257,9 +303,9 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
                   data={chartData.distribution}
                   cx="50%"
                   cy="50%"
-                  innerRadius={60}
+                  innerRadius={55}
                   outerRadius={80}
-                  paddingAngle={5}
+                  paddingAngle={4}
                   dataKey="value"
                 >
                   {chartData.distribution.map((entry, index) => (
@@ -267,9 +313,20 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
                   ))}
                 </Pie>
                 <Tooltip 
+                  formatter={(value, name) => [
+                    `${value} ${value === 1 ? 'hermano' : 'hermanos'} (${totalHermanos > 0 ? ((value / totalHermanos) * 100).toFixed(1) : 0}%)`,
+                    name
+                  ]}
                   contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
                 />
-                <Legend iconType="circle" wrapperStyle={{ fontSize: '0.85rem' }} />
+                <Legend 
+                  iconType="circle" 
+                  wrapperStyle={{ fontSize: '0.85rem' }} 
+                  formatter={(value) => {
+                    const item = chartData.distribution.find(d => d.name === value);
+                    return `${value} (${item ? item.value : 0})`;
+                  }}
+                />
               </PieChart>
             </ResponsiveContainer>
           </div>

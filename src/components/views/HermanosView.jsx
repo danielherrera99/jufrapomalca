@@ -1,6 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import api from '../../config/api';
 import HermanosEditModal from '../HermanosEditModal';
+import { resolveEtapa } from './DashboardView';
+
+const etapaBadgeMap = {
+  'aspirante': { label: 'Aspirante', bg: '#F1F5F9', color: '#475569' },
+  'iniciado': { label: 'Iniciado(a)', bg: '#E0F2FE', color: '#0369A1' },
+  'en_formacion': { label: 'En Formación', bg: '#FEF3C7', color: '#B45309' },
+  'promesado': { label: 'Promesado(a)', bg: '#DCFCE7', color: '#15803D' }
+};
 
 const HermanosView = ({ handleApprove }) => {
   const [data, setData] = useState([]);
@@ -146,14 +154,29 @@ const HermanosView = ({ handleApprove }) => {
                 {item.email || item.username || ''}
               </p>
               
-              <div style={{ marginTop: '1rem' }}>
-                <span style={{ fontSize: '0.8rem', padding: '0.2rem 0.5rem', borderRadius: '4px', background: item.activo ? 'rgba(76, 175, 80, 0.1)' : 'rgba(244, 67, 54, 0.1)', color: item.activo ? '#4CAF50' : '#F44336' }}>
-                  {item.activo ? 'Activo (Aprobado)' : 'Pendiente de Aprobación'}
+              <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                <span style={{ 
+                  fontSize: '0.75rem', 
+                  padding: '0.2rem 0.6rem', 
+                  borderRadius: '12px', 
+                  background: (etapaBadgeMap[resolveEtapa(item)] || etapaBadgeMap.aspirante).bg, 
+                  color: (etapaBadgeMap[resolveEtapa(item)] || etapaBadgeMap.aspirante).color, 
+                  fontWeight: '700' 
+                }}>
+                  {(etapaBadgeMap[resolveEtapa(item)] || etapaBadgeMap.aspirante).label}
                 </span>
+                <span style={{ fontSize: '0.75rem', padding: '0.2rem 0.6rem', borderRadius: '12px', background: item.activo ? 'rgba(76, 175, 80, 0.1)' : 'rgba(244, 67, 54, 0.1)', color: item.activo ? '#4CAF50' : '#F44336', fontWeight: '600' }}>
+                  {item.activo ? 'Activo' : 'Pendiente'}
+                </span>
+                {item.cargo && item.cargo !== 'ninguno' && (
+                  <span style={{ fontSize: '0.75rem', padding: '0.2rem 0.6rem', borderRadius: '12px', background: 'rgba(139, 90, 43, 0.1)', color: 'var(--primary)', fontWeight: '600' }}>
+                    🛡️ {item.cargo}
+                  </span>
+                )}
                 {!item.activo && (
                   <button 
                     onClick={(e) => localHandleApprove(item._id, e)}
-                    style={{ display: 'block', marginTop: '10px', background: '#4CAF50', color: 'white', border: 'none', padding: '0.5rem', borderRadius: '8px', cursor: 'pointer', width: '100%', fontWeight: 'bold' }}>
+                    style={{ display: 'block', marginTop: '6px', background: '#4CAF50', color: 'white', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '8px', cursor: 'pointer', width: '100%', fontWeight: 'bold', fontSize: '0.85rem' }}>
                     Aprobar Acceso
                   </button>
                 )}
