@@ -2035,8 +2035,17 @@ const LandingView = () => {
             {/* Fila Superior: Marca y Enlaces de Redes */}
             <div className="modern-footer-top">
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem' }}>
-                  <span style={{ color: '#c2410c', fontWeight: '900', fontSize: '1.25rem', lineHeight: 1 }}>T</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.4rem' }}>
+                  <img 
+                    src="/logo_jufra.png" 
+                    alt="Logo JUFRA Pomalca" 
+                    style={{ 
+                      width: '34px', 
+                      height: '34px', 
+                      objectFit: 'contain',
+                      display: 'block'
+                    }} 
+                  />
                   <span style={{ fontWeight: '800', fontSize: '1.15rem', color: '#1c1917' }}>JUFRA Pomalca</span>
                 </div>
                 <p style={{ color: '#78716c', fontSize: '0.9rem', margin: 0, maxWidth: '520px', lineHeight: 1.5 }}>
