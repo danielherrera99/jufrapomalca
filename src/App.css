@@ -2035,3 +2035,234 @@ input:focus {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
+
+/* ========================================================
+   SECCIÓN CONTACTO & FOOTER MODERNO (Imágenes 2 y 3)
+   ======================================================== */
+.modern-contacto-section {
+  padding: 5rem 1.5rem;
+  background-color: #faf8f5;
+  color: #1c1917;
+  position: relative;
+}
+
+.modern-contacto-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.modern-contacto-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 3.5rem;
+  align-items: flex-start;
+}
+
+@media (max-width: 960px) {
+  .modern-contacto-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+.contacto-info-item {
+  display: flex;
+  gap: 1.2rem;
+  margin-bottom: 1.8rem;
+  align-items: flex-start;
+}
+
+.contacto-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background-color: #ffffff;
+  border: 1px solid #e7e5e4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+
+.contacto-form-card {
+  background-color: #ffffff;
+  border-radius: 20px;
+  border: 1px solid #e7e5e4;
+  padding: 2.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+}
+
+.contacto-inputs-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin-bottom: 1.4rem;
+}
+
+@media (max-width: 640px) {
+  .contacto-inputs-2col {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .contacto-form-card {
+    padding: 1.8rem 1.4rem;
+  }
+}
+
+.contacto-input-field {
+  width: 100%;
+  padding: 0.85rem 1.1rem;
+  border: 1px solid #e7e5e4;
+  border-radius: 12px;
+  background-color: #ffffff;
+  font-size: 0.92rem;
+  color: #1c1917;
+  outline: none;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.contacto-input-field:focus {
+  border-color: #c2410c;
+  box-shadow: 0 0 0 3px rgba(194, 65, 12, 0.1);
+}
+
+.contacto-tag-btn {
+  padding: 0.55rem 1.05rem;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid #e7e5e4;
+  background-color: #ffffff;
+  color: #44403c;
+  font-family: inherit;
+}
+
+.contacto-tag-btn:hover {
+  border-color: #d6d3d1;
+  background-color: #fbf9f6;
+}
+
+.contacto-tag-btn.active {
+  background-color: #29150d;
+  color: #ffffff;
+  border-color: #29150d;
+}
+
+.contacto-submit-btn {
+  background-color: #c2410c;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 0.9rem 1.8rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.4rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(194, 65, 12, 0.2);
+  font-family: inherit;
+}
+
+.contacto-submit-btn:hover {
+  background-color: #9a3412;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(194, 65, 12, 0.25);
+}
+
+.contacto-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.modern-footer {
+  background-color: #ffffff;
+  border-top: 1px solid #e7e5e4;
+  padding: 3.5rem 1.5rem 2.5rem 1.5rem;
+  color: #1c1917;
+}
+
+.modern-footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.modern-footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.modern-footer-social-links {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  flex-wrap: wrap;
+}
+
+.modern-footer-social-links a {
+  color: #57534e;
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.modern-footer-social-links a:hover {
+  color: #c2410c;
+}
+
+.modern-footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  border-top: 1px solid #f0ece7;
+  padding-top: 2rem;
+}
+
+.footer-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.footer-pill-admin {
+  background-color: #faf8f5;
+  border: 1px solid #e7e5e4;
+  color: #57534e;
+}
+
+.footer-pill-admin:hover {
+  background-color: #f5f5f4;
+  color: #1c1917;
+}
+
+.footer-pill-app {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #16a34a;
+}
+
+.footer-pill-app:hover {
+  background-color: #dcfce7;
+}
+

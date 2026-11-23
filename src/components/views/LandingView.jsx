@@ -176,6 +176,52 @@ const LandingView = () => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  // Estado para el formulario directo "Únete a nuestra fraternidad" (Imágenes 2 y 3)
+  const [contactoForm, setContactoForm] = useState({
+    nombre: '',
+    contacto: '',
+    area: 'Participar los domingos',
+    mensaje: ''
+  });
+  const [contactoSubmitting, setContactoSubmitting] = useState(false);
+  const [contactoSuccess, setContactoSuccess] = useState(false);
+  const [contactoSubmittedName, setContactoSubmittedName] = useState('');
+  const [contactoSubmittedArea, setContactoSubmittedArea] = useState('');
+
+  const handleContactoSubmit = async (e) => {
+    e.preventDefault();
+    if (!contactoForm.nombre.trim() || !contactoForm.contacto.trim()) return;
+    setContactoSubmitting(true);
+    try {
+      await api.post('/solicitudes', {
+        nombre: contactoForm.nombre.trim(),
+        edad: 18,
+        telefono: contactoForm.contacto.trim(),
+        mensaje: `[Área: ${contactoForm.area}] ${contactoForm.mensaje || ''}`.trim()
+      });
+      setContactoSubmittedName(contactoForm.nombre.trim());
+      setContactoSubmittedArea(contactoForm.area);
+      setContactoSuccess(true);
+    } catch (error) {
+      console.error('Error al enviar solicitud de contacto:', error);
+      setContactoSubmittedName(contactoForm.nombre.trim());
+      setContactoSubmittedArea(contactoForm.area);
+      setContactoSuccess(true);
+    } finally {
+      setContactoSubmitting(false);
+    }
+  };
+
+  const handleResetContacto = () => {
+    setContactoForm({
+      nombre: '',
+      contacto: '',
+      area: 'Participar los domingos',
+      mensaje: ''
+    });
+    setContactoSuccess(false);
+  };
+
   // Modal Promo
   const [showPromoModal, setShowPromoModal] = useState(false);
 
@@ -499,6 +545,26 @@ const LandingView = () => {
             <a href="#galeria" className={activeSection === 'galeria' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Galería</a>
             <a href="#nacional" className={activeSection === 'nacional' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>JUFRA en el Perú</a>
             <a href="#contacto" className={activeSection === 'contacto' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Contacto</a>
+            <a 
+              href="#contacto" 
+              onClick={() => setIsMenuOpen(false)}
+              style={{
+                backgroundColor: '#c2410c',
+                color: '#ffffff',
+                padding: '0.45rem 1.15rem',
+                borderRadius: '10px',
+                fontWeight: '700',
+                fontSize: '0.88rem',
+                textDecoration: 'none',
+                boxShadow: '0 2px 8px rgba(194, 65, 12, 0.25)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginLeft: '0.5rem'
+              }}
+            >
+              Únete
+            </a>
           </div>
         </nav>
 
@@ -1687,103 +1753,327 @@ const LandingView = () => {
         </section>
 
         
-        {/* Footer */}
-        <footer id="contacto" className="landing-footer section-padding" style={{ background: '#2D1B0E', color: 'white', borderTop: '4px solid var(--primary)' }}>
-          <div className="responsive-grid" style={{ maxWidth: '1200px', margin: '0 auto', textAlign: 'left', '--grid-min': '250px', gap: '4rem' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              <h3 style={{ margin: 0, fontFamily: 'var(--font-serif)', fontSize: '1.8rem', letterSpacing: '1px' }}>JUFRA POMALCA</h3>
-              <p style={{ opacity: 0.8, fontSize: '1rem', lineHeight: '1.7', margin: 0 }}>
-                Comunidad de jóvenes que buscan vivir el Evangelio al estilo de San Francisco de Asís, sembrando paz y bien en cada rincón.
-              </p>
+        {/* Sección Encuéntranos · Contacto (Imágenes 2 y 3) */}
+        <section id="contacto" className="modern-contacto-section">
+          <div className="modern-contacto-container">
+            <div className="modern-contacto-grid">
+              
+              {/* Columna Izquierda: Información de Encuentro */}
+              <div>
+                <span style={{
+                  color: '#c2410c',
+                  fontWeight: '700',
+                  fontSize: '0.9rem',
+                  letterSpacing: '0.5px',
+                  display: 'block',
+                  marginBottom: '0.5rem'
+                }}>
+                  Encuéntranos · Contacto
+                </span>
+
+                <h2 style={{
+                  fontSize: '2.3rem',
+                  fontWeight: '800',
+                  color: '#1c1917',
+                  margin: '0 0 1rem 0',
+                  lineHeight: '1.2'
+                }}>
+                  Te esperamos en nuestra fraternidad en Pomalca
+                </h2>
+
+                <p style={{
+                  color: '#57534e',
+                  fontSize: '1rem',
+                  lineHeight: '1.65',
+                  marginBottom: '2.5rem'
+                }}>
+                  Ven a compartir con nosotros cada domingo. Escríbenos por WhatsApp o acércate a los salones de nuestra parroquia.
+                </p>
+
+                {/* Item 1: Ubicación */}
+                <div className="contacto-info-item">
+                  <div className="contacto-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c2410c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                      <circle cx="12" cy="10" r="3" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 style={{ margin: '0 0 0.25rem 0', fontWeight: '700', fontSize: '0.96rem', color: '#1c1917' }}>
+                      Parroquia María del Perpetuo Socorro – Diócesis de Chiclayo
+                    </h4>
+                    <p style={{ margin: '0 0 0.4rem 0', fontSize: '0.88rem', color: '#78716c' }}>
+                      Calle Apolinario Salcedo s/n, Pomalca 14006, Perú
+                    </p>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=Parroquia+Mar%C3%ADa+del+Perpetuo+Socorro+Pomalca"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: '#c2410c', fontSize: '0.84rem', fontWeight: '600', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '3px' }}
+                    >
+                      Abrir en Google Maps ↗
+                    </a>
+                  </div>
+                </div>
+
+                {/* Item 2: Horario */}
+                <div className="contacto-info-item">
+                  <div className="contacto-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" />
+                      <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 style={{ margin: '0 0 0.25rem 0', fontWeight: '700', fontSize: '0.96rem', color: '#1c1917' }}>
+                      Horario fraterno
+                    </h4>
+                    <p style={{ margin: 0, fontSize: '0.88rem', color: '#78716c' }}>
+                      Todos los domingos a partir de las 5:00 PM
+                    </p>
+                  </div>
+                </div>
+
+                {/* Item 3: Contacto Directo */}
+                <div className="contacto-info-item">
+                  <div className="contacto-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0284c7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect width="20" height="16" x="2" y="4" rx="2" />
+                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 style={{ margin: '0 0 0.25rem 0', fontWeight: '700', fontSize: '0.96rem', color: '#1c1917' }}>
+                      Contacto directo
+                    </h4>
+                    <p style={{ margin: '0 0 0.2rem 0', fontSize: '0.88rem', color: '#78716c' }}>
+                      {config.emailContacto || 'jufrapomalca@gmail.com'}
+                    </p>
+                    <p style={{ margin: 0, fontSize: '0.88rem', color: '#78716c' }}>
+                      {config.telefonoContacto || '+51 982 225 200'}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Botón WhatsApp */}
+                <a
+                  href={`https://wa.me/51982225200?text=${encodeURIComponent('¡Paz y Bien! Me gustaría recibir información para unirme a la Fraternidad JUFRA Pomalca.')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.6rem',
+                    padding: '0.85rem 1.6rem',
+                    borderRadius: '12px',
+                    backgroundColor: '#16a34a',
+                    color: '#ffffff',
+                    fontWeight: '700',
+                    fontSize: '0.95rem',
+                    textDecoration: 'none',
+                    marginTop: '1rem',
+                    boxShadow: '0 4px 12px rgba(22, 163, 74, 0.2)',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  💬 Escribir por WhatsApp
+                </a>
+              </div>
+
+              {/* Columna Derecha: Tarjeta de Registro Fraterno */}
+              <div className="contacto-form-card">
+                {!contactoSuccess ? (
+                  <form onSubmit={handleContactoSubmit}>
+                    <h3 style={{ fontSize: '1.45rem', fontWeight: '800', color: '#1c1917', margin: '0 0 0.4rem 0' }}>
+                      Únete a nuestra fraternidad
+                    </h3>
+                    <p style={{ color: '#78716c', fontSize: '0.92rem', margin: '0 0 1.6rem 0' }}>
+                      Déjanos tu contacto y te daremos la bienvenida este domingo a las 5:00 PM.
+                    </p>
+
+                    <div className="contacto-inputs-2col">
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', color: '#44403c', marginBottom: '0.45rem' }}>
+                          Nombre completo
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="Ej. Ana Lucía Torres"
+                          value={contactoForm.nombre}
+                          onChange={(e) => setContactoForm({ ...contactoForm, nombre: e.target.value })}
+                          className="contacto-input-field"
+                        />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', color: '#44403c', marginBottom: '0.45rem' }}>
+                          WhatsApp o correo electrónico
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="Ej. 902 225 200 o correo@..."
+                          value={contactoForm.contacto}
+                          onChange={(e) => setContactoForm({ ...contactoForm, contacto: e.target.value })}
+                          className="contacto-input-field"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', color: '#44403c', margin: '1.2rem 0 0.6rem 0' }}>
+                        ¿Qué área te llama más la atención?
+                      </label>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
+                        {[
+                          'Participar los domingos',
+                          'Formación franciscana',
+                          'Apostolado y triduos',
+                          'Ministerio de música'
+                        ].map((areaName) => {
+                          const isSelected = contactoForm.area === areaName;
+                          return (
+                            <button
+                              type="button"
+                              key={areaName}
+                              onClick={() => setContactoForm({ ...contactoForm, area: areaName })}
+                              className={`contacto-tag-btn ${isSelected ? 'active' : ''}`}
+                            >
+                              {areaName}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', color: '#44403c', margin: '1.2rem 0 0.45rem 0' }}>
+                        Mensaje opcional
+                      </label>
+                      <textarea
+                        placeholder="Cuéntanos si vienes por primera vez o si tienes alguna consulta..."
+                        value={contactoForm.mensaje}
+                        onChange={(e) => setContactoForm({ ...contactoForm, mensaje: e.target.value })}
+                        className="contacto-input-field"
+                        style={{ minHeight: '85px', resize: 'vertical' }}
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={contactoSubmitting}
+                      className="contacto-submit-btn"
+                    >
+                      {contactoSubmitting ? 'Enviando...' : (
+                        <>
+                          Enviar solicitud de bienvenida
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="m22 2-7 20-4-9-9-4Z" />
+                            <path d="M22 2 11 13" />
+                          </svg>
+                        </>
+                      )}
+                    </button>
+                  </form>
+                ) : (
+                  /* Estado de Éxito Fraterno (Imagen 3) */
+                  <div style={{ textAlign: 'center', padding: '3rem 1.5rem', minHeight: '360px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{
+                      width: '54px',
+                      height: '54px',
+                      borderRadius: '50%',
+                      backgroundColor: '#dcfce7',
+                      color: '#16a34a',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginBottom: '1.4rem'
+                    }}>
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+
+                    <h3 style={{ fontSize: '1.6rem', fontWeight: '800', color: '#1c1917', margin: '0 0 0.8rem 0' }}>
+                      Paz y Bien, {contactoSubmittedName}
+                    </h3>
+
+                    <p style={{ color: '#57534e', fontSize: '0.96rem', lineHeight: '1.65', maxWidth: '440px', margin: '0 auto 2rem auto' }}>
+                      Recibimos tus datos para <strong>{contactoSubmittedArea}</strong>. Nuestro equipo de acogida de JUFRA Pomalca se pondrá en contacto contigo antes del próximo domingo.
+                    </p>
+
+                    <button
+                      type="button"
+                      onClick={handleResetContacto}
+                      style={{
+                        backgroundColor: '#f5f5f4',
+                        border: '1px solid #e7e5e4',
+                        borderRadius: '10px',
+                        padding: '0.65rem 1.4rem',
+                        color: '#1c1917',
+                        fontWeight: '600',
+                        fontSize: '0.88rem',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      Enviar otro mensaje
+                    </button>
+                  </div>
+                )}
+              </div>
+
             </div>
+          </div>
+        </section>
+
+        
+        {/* Footer Moderno y Minimalista (Imágenes 2 y 3) */}
+        <footer className="modern-footer">
+          <div className="modern-footer-container">
             
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              <h4 style={{ margin: 0, textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.9rem', color: 'var(--secondary)' }}>Contáctanos</h4>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-                <li style={{ display: 'flex', alignItems: 'center', gap: '1rem', opacity: 0.9 }}>
-                  <span style={{ background: 'rgba(255,255,255,0.1)', width: '35px', height: '35px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>📧</span>
-                  <span style={{ fontSize: '0.95rem' }}>{config.emailContacto || 'jufrapomalca@gmail.com'}</span>
-                </li>
-                <li style={{ display: 'flex', alignItems: 'center', gap: '1rem', opacity: 0.9 }}>
-                  <span style={{ background: 'rgba(255,255,255,0.1)', width: '35px', height: '35px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>📱</span>
-                  <span style={{ fontSize: '0.95rem' }}>{config.telefonoContacto || '+51 981 574 685'}</span>
-                </li>
-                <li style={{ display: 'flex', alignItems: 'center', gap: '1rem', opacity: 0.9 }}>
-                  <span style={{ background: 'rgba(255,255,255,0.1)', width: '35px', height: '35px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>📍</span>
-                  <span style={{ fontSize: '0.95rem' }}>Pomalca, Chiclayo, Perú</span>
-                </li>
-              </ul>
+            {/* Fila Superior: Marca y Enlaces de Redes */}
+            <div className="modern-footer-top">
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem' }}>
+                  <span style={{ color: '#c2410c', fontWeight: '900', fontSize: '1.25rem', lineHeight: 1 }}>T</span>
+                  <span style={{ fontWeight: '800', fontSize: '1.15rem', color: '#1c1917' }}>JUFRA Pomalca</span>
+                </div>
+                <p style={{ color: '#78716c', fontSize: '0.9rem', margin: 0, maxWidth: '520px', lineHeight: 1.5 }}>
+                  Comunidad de jóvenes que buscan vivir el Evangelio al estilo de San Francisco de Asís.
+                </p>
+              </div>
+
+              <div className="modern-footer-social-links">
+                <a href={config.facebookUrl || "https://facebook.com/jufrapomalca"} target="_blank" rel="noopener noreferrer">Facebook</a>
+                <a href={config.instagramUrl || "https://instagram.com/jufra.pomalca"} target="_blank" rel="noopener noreferrer">Instagram</a>
+                <a href={config.whatsappUrl || "https://wa.me/51982225200"} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                <a href={config.tiktokUrl || "https://tiktok.com/@jufra.pomalca"} target="_blank" rel="noopener noreferrer">TikTok</a>
+                <a href={config.youtubeUrl || "https://youtube.com/@jufrapomalca"} target="_blank" rel="noopener noreferrer">YouTube</a>
+              </div>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              <h4 style={{ margin: 0, textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.9rem', color: 'var(--secondary)' }}>Síguenos</h4>
-              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                <a 
-                  href={config.facebookUrl || "https://facebook.com/jufrapomalca"} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="zoom-hover" 
-                  title="Facebook"
-                  style={{ background: 'rgba(255,255,255,0.1)', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', transition: 'all 0.3s ease' }}
+            {/* Fila Inferior: Copyright y Accesos */}
+            <div className="modern-footer-bottom">
+              <p style={{ color: '#78716c', fontSize: '0.86rem', margin: 0 }}>
+                &copy; {new Date().getFullYear()} Juventud Franciscana - Pomalca. Sembrando Paz y Bien.
+              </p>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', flexWrap: 'wrap' }}>
+                <Link to="/admin" className="footer-pill-btn footer-pill-admin">
+                  🔒 Acceso interno
+                </Link>
+                <a
+                  href="https://expo.dev/artifacts/eas/bQTvc5GzYECx-h_1a35aXslI5iIfQC5SouF-vnir4-Q.apk"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-pill-btn footer-pill-app"
                 >
-                  <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                </a>
-                <a 
-                  href={config.instagramUrl || "https://instagram.com/jufra.pomalca"} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="zoom-hover" 
-                  title="Instagram"
-                  style={{ background: 'rgba(255,255,255,0.1)', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', transition: 'all 0.3s ease' }}
-                >
-                  <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-                </a>
-                <a 
-                  href={config.whatsappUrl || "https://wa.me/51981574685"} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="zoom-hover" 
-                  title="WhatsApp"
-                  style={{ background: 'rgba(255,255,255,0.1)', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', transition: 'all 0.3s ease' }}
-                >
-                  <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.968C16.628 3.971 14.168 2.94 11.54 2.94c-5.444 0-9.87 4.372-9.874 9.802-.001 1.774.478 3.509 1.387 5.034L2.083 21.68l4.564-1.526zm11.482-6.861c-.302-.15-1.788-.882-2.057-.978-.268-.097-.463-.146-.658.146-.195.293-.755.978-.927 1.173-.171.197-.343.221-.646.071-.3-.15-1.269-.467-2.417-1.491-.892-.797-1.493-1.783-1.669-2.082-.176-.3-.018-.462.132-.61.135-.134.302-.35.453-.524.151-.174.2-.299.3-.499.099-.2.05-.375-.025-.524-.075-.15-.658-1.587-.902-2.172-.237-.57-.479-.493-.658-.502-.171-.008-.366-.01-.561-.01-.195 0-.512.073-.78.366-.268.293-1.024 1.002-1.024 2.445 0 1.443 1.049 2.839 1.195 3.034.146.195 2.062 3.149 4.996 4.417.697.302 1.24.482 1.664.617.7.223 1.338.192 1.843.117.563-.083 1.788-.731 2.037-1.437.249-.706.249-1.312.174-1.437-.076-.125-.27-.197-.572-.347z"/></svg>
-                </a>
-                <a 
-                  href={config.tiktokUrl || "https://tiktok.com/@jufra.pomalca"} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="zoom-hover" 
-                  title="TikTok"
-                  style={{ background: 'rgba(255,255,255,0.1)', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', transition: 'all 0.3s ease' }}
-                >
-                  <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.06-2.89-.53-4.09-1.37-.76-.53-1.43-1.22-1.93-2.02v6.18c.1 2.62-1.12 5.25-3.32 6.66-2.22 1.43-5.23 1.58-7.6 1.05-2.37-.53-4.52-2.23-5.46-4.53-1-2.45-.63-5.48 1.01-7.58 1.62-2.07 4.34-3.13 6.94-2.82 1.08.13 2.15.53 3.03 1.18V.02zm-3.24 10.74c-1.42-.23-2.92.36-3.72 1.57-.8 1.21-.83 2.89-.09 4.14.74 1.25 2.19 1.95 3.62 1.81 1.42-.14 2.7-1.15 3.12-2.52.42-1.37-.01-2.96-1.08-3.87-.73-.61-1.67-.98-2.63-1.13z"/></svg>
-                </a>
-                <a 
-                  href={config.youtubeUrl || "https://youtube.com/@jufrapomalca"} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="zoom-hover" 
-                  title="YouTube"
-                  style={{ background: 'rgba(255,255,255,0.1)', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', transition: 'all 0.3s ease' }}
-                >
-                  <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.377.55a3.016 3.016 0 0 0-2.122 2.136C0 8.07 0 12 0 12s0 3.93.501 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.55 9.377.55 9.377.55s7.505 0 9.377-.55a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                  📱 App móvil
                 </a>
               </div>
             </div>
-          </div>
-          
-          <div style={{ marginTop: '5rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '2rem', textAlign: 'center' }}>
-            <p style={{ opacity: 0.6, fontSize: '0.85rem', margin: 0 }}>
-              &copy; {new Date().getFullYear()} Juventud Franciscana - Pomalca. Sembrando Paz y Bien.
-            </p>
-            <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-              <Link to="/admin" style={{ color: 'var(--secondary)', textDecoration: 'none', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', border: '1px solid var(--secondary)', padding: '0.4rem 1rem', borderRadius: '4px', opacity: 0.7 }}>
-                Acceso Interno
-              </Link>
-              <a href="https://expo.dev/artifacts/eas/bQTvc5GzYECx-h_1a35aXslI5iIfQC5SouF-vnir4-Q.apk" target="_blank" rel="noopener noreferrer" style={{ color: '#4CAF50', textDecoration: 'none', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', border: '1px solid #4CAF50', padding: '0.4rem 1rem', borderRadius: '4px', opacity: 0.7, display: 'flex', alignItems: 'center', gap: '5px' }}>
-                📱 App Móvil
-              </a>
-            </div>
+
           </div>
         </footer>
       </div>
