@@ -603,14 +603,16 @@ const LandingView = () => {
               </div>
             </div>
 
-            {/* Columna Derecha: Tarjeta Gráfica Franciscana */}
+            {/* Columna Derecha: Tarjeta Gráfica Franciscana con foto comunitaria */}
             <div className="hero-editorial-right">
-              <div className="hero-graphic-card">
-                {/* Formas orgánicas abstractas estilo franciscano */}
-                <div className="hero-shape-amber" />
-                <div className="hero-shape-terracotta" />
-                <div className="hero-shape-teal" />
-                <div className="hero-shape-green" />
+              <div 
+                className="hero-graphic-card"
+                style={{
+                  backgroundImage: `url('/hero_jufra_background.png')`
+                }}
+              >
+                {/* Overlay cinematográfico para contraste y legibilidad */}
+                <div className="hero-card-photo-overlay" />
 
                 {/* Insignia TAU */}
                 <div className="hero-tau-badge">
