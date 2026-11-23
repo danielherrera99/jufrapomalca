@@ -850,11 +850,11 @@ input:focus {
 .content-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid rgba(139, 90, 43, 0.1);
-  margin-bottom: 2rem;
-  gap: 1.5rem;
+  align-items: center;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 1.75rem;
+  gap: 1.25rem;
 }
 
 @media (max-width: 768px) {
