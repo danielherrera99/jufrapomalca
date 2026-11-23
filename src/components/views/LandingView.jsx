@@ -862,12 +862,11 @@ const LandingView = () => {
                     {/* Fotografía Real del Símbolo */}
                     <div style={{
                       width: '100%',
-                      height: '135px',
+                      height: '140px',
                       borderRadius: '12px',
                       overflow: 'hidden',
                       marginBottom: '1.1rem',
                       backgroundColor: '#f5f5f4',
-                      position: 'relative',
                       border: '1px solid #ebe8e5',
                       boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
                     }}>
@@ -881,22 +880,6 @@ const LandingView = () => {
                           display: 'block'
                         }}
                       />
-                      <div style={{
-                        position: 'absolute',
-                        top: '8px',
-                        right: '8px',
-                        width: '32px',
-                        height: '32px',
-                        borderRadius: '8px',
-                        backgroundColor: item.color,
-                        color: '#ffffff',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.28)'
-                      }}>
-                        {item.iconSvg}
-                      </div>
                     </div>
 
                     <h3 style={{
