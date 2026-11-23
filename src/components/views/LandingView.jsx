@@ -568,27 +568,114 @@ const LandingView = () => {
         </nav>
 
       <div className="landing-page animate-fade">
-        {/* Hero Section */}
-        <header 
-          id="inicio" 
-          className="hero-section" 
-          style={{ backgroundImage: `url('/hero_jufra_background.png')` }}
-          role="img"
-          aria-label="Jóvenes de JUFRA Pomalca compartiendo en comunidad al atardecer"
-        >
-          <div className="hero-overlay-cinematic"></div>
-          <div className="hero-content">
-            <h1 className="hero-title reveal-title">{config.heroTitle}</h1>
-            <p className="hero-subtitle reveal-subtitle">
-              {config.heroSubtitle}
-            </p>
-            <div className="flex-responsive reveal-buttons" style={{ justifyContent: 'center', gap: '1rem', marginTop: '1.75rem', flexWrap: 'wrap' }}>
-              <button className="btn btn-primary zoom-hover" onClick={() => setIsInterestModalOpen(true)} style={{ padding: '0.85rem 2.25rem', boxShadow: '0 4px 15px rgba(139, 90, 43, 0.3)' }}>
-                Únete a nuestra fraternidad
-              </button>
-              <a href="#eventos" className="btn btn-ghost zoom-hover" style={{ padding: '0.85rem 2.25rem', borderColor: 'white', color: 'white', textDecoration: 'none' }}>
-                Ver actividades
-              </a>
+        {/* Hero Section Editorial (Estilo Foto 1) */}
+        <header id="inicio" className="hero-editorial">
+          <div className="hero-editorial-grid">
+            {/* Columna Izquierda: Información Principal */}
+            <div className="hero-editorial-left">
+              <span className="hero-editorial-tagline reveal-title">
+                Fraternidad juvenil católica · Pomalca, Lambayeque
+              </span>
+              
+              <h1 className="hero-editorial-title reveal-title">
+                Juventud Franciscana <br className="hero-title-break" />
+                de Pomalca
+              </h1>
+
+              <p className="hero-editorial-subtitle reveal-subtitle">
+                {config.heroSubtitle && !config.heroSubtitle.endsWith('...')
+                  ? config.heroSubtitle
+                  : 'Siguiendo los pasos de San Francisco de Asís y Santa Clara, viviendo el Evangelio en fraternidad, alegría y servicio desde nuestra comunidad.'}
+              </p>
+
+              <div className="hero-editorial-actions reveal-buttons">
+                <button
+                  type="button"
+                  className="hero-btn-primary zoom-hover"
+                  onClick={() => setIsInterestModalOpen(true)}
+                >
+                  <span>Únete a la fraternidad</span>
+                  <span className="hero-btn-arrow">&rarr;</span>
+                </button>
+                <a href="#eventos" className="hero-btn-secondary zoom-hover">
+                  Ver actividades
+                </a>
+              </div>
+            </div>
+
+            {/* Columna Derecha: Tarjeta Gráfica Franciscana */}
+            <div className="hero-editorial-right">
+              <div className="hero-graphic-card">
+                {/* Formas orgánicas abstractas estilo franciscano */}
+                <div className="hero-shape-amber" />
+                <div className="hero-shape-terracotta" />
+                <div className="hero-shape-teal" />
+                <div className="hero-shape-green" />
+
+                {/* Insignia TAU */}
+                <div className="hero-tau-badge">
+                  <span className="hero-tau-letter">T</span>
+                </div>
+
+                {/* Lema Franciscano */}
+                <span className="hero-paz-bien-badge">PAZ Y BIEN</span>
+
+                {/* Tarjeta Flotante: Nuestras celebraciones */}
+                <div className="hero-floating-event-card">
+                  <div className="hero-event-card-top">
+                    <span className="hero-event-label">Nuestras celebraciones</span>
+                    <span className="hero-event-time">5:00 PM</span>
+                  </div>
+                  <h3 className="hero-event-title">Encuentro Semanal Fraterno</h3>
+                  <div className="hero-event-meta">
+                    <span className="hero-event-meta-item">
+                      <span role="img" aria-label="calendario">📅</span> Todos los domingos
+                    </span>
+                    <span className="hero-event-meta-item">
+                      <span role="img" aria-label="ubicación">📍</span> Parroquia de Pomalca
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Fila inferior de 4 Tarjetas de Resumen / Métricas */}
+          <div className="hero-highlights-grid">
+            <div className="hero-highlight-card zoom-hover">
+              <div className="hero-card-header">
+                <span className="hero-card-label">Encuentro Semanal</span>
+                <span className="hero-card-dot" style={{ backgroundColor: '#c2410c' }} />
+              </div>
+              <h4 className="hero-card-title">Domingos · 5:00 PM</h4>
+              <p className="hero-card-subtitle">Salones de la Parroquia de Pomalca</p>
+            </div>
+
+            <div className="hero-highlight-card zoom-hover">
+              <div className="hero-card-header">
+                <span className="hero-card-label">Fundación Histórica</span>
+                <span className="hero-card-dot" style={{ backgroundColor: '#d97706' }} />
+              </div>
+              <h4 className="hero-card-title">18 de mayo, 2000</h4>
+              <p className="hero-card-subtitle">Reconocimiento oficial OFS · 2024</p>
+            </div>
+
+            <div className="hero-highlight-card zoom-hover">
+              <div className="hero-card-header">
+                <span className="hero-card-label">Etapas Formativas</span>
+                <span className="hero-card-dot" style={{ backgroundColor: '#16a34a' }} />
+              </div>
+              <h4 className="hero-card-title">3 etapas vivas</h4>
+              <p className="hero-card-subtitle">Iniciado · Aceptado · Comprometido</p>
+            </div>
+
+            <div className="hero-highlight-card zoom-hover">
+              <div className="hero-card-header">
+                <span className="hero-card-label">Comunión Nacional</span>
+                <span className="hero-card-dot" style={{ backgroundColor: '#0284c7' }} />
+              </div>
+              <h4 className="hero-card-title">JUFRA Perú</h4>
+              <p className="hero-card-subtitle">Región Norte · Diócesis de Chiclayo</p>
             </div>
           </div>
         </header>
