@@ -1,6 +1,7 @@
 import { getImageUrl } from './config/api';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import api from './config/api';
 import Consejo from './components/Consejo';
 import AnunciosView from './components/views/AnunciosView';
@@ -134,16 +135,27 @@ const getSafeDateForInput = (dateStr) => {
 };
 
 
-// Login Component (Premium Aesthetics)
+// Login Component (Premium Aesthetics - Split Screen)
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('rememberedUser');
+    if (savedUser) {
+      setUsername(savedUser);
+      setRememberMe(true);
+    }
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError('');
     try {
       const { data } = await api.post('/auth/login', { username, password });
       if (['admin', 'superadmin', 'admin_nacional', 'consejo'].includes(data.usuario.rol)) {
@@ -154,86 +166,182 @@ const Login = ({ onLogin }) => {
         }
         if (rememberMe) {
           localStorage.setItem('rememberedUser', username);
+        } else {
+          localStorage.removeItem('rememberedUser');
         }
         onLogin(data.usuario);
       } else {
         setError('Acceso denegado: Solo miembros del consejo o administración.');
       }
     } catch (err) {
-      if (err.code === 'ECONNABORTED' || err.message.includes('timeout') || err.message.includes('Network Error')) {
+      if (err.code === 'ECONNABORTED' || err.message?.includes('timeout') || err.message?.includes('Network Error')) {
         setError('El servidor se está despertando (puede tomar hasta 1 min). Vuelve a intentar en unos segundos.');
       } else {
         setError('Credenciales inválidas o cuenta no aprobada.');
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  const handleForgotPassword = () => {
+    Swal.fire({
+      title: '¿Olvidaste tu contraseña?',
+      text: 'Por motivos de seguridad, comunícate con el Administrador o con el Consejo Local de JUFRA Pomalca para restablecer tus credenciales.',
+      icon: 'info',
+      confirmButtonColor: '#c2410c',
+      confirmButtonText: 'Entendido, gracias'
+    });
+  };
+
   return (
-    <div className="login-container">
-      <div className="login-card glass-card animate-fade">
-        <div className="login-header">
-          <h2>JUFRA Admin</h2>
-          <p>Panel de Administración</p>
-        </div>
-        
-        {error && <div className="error-message animate-fade">{error}</div>}
-        
-        <form onSubmit={handleLogin}>
-          <div className="input-group">
-            <label>Usuario (o Email)</label>
-            <div className="input-wrapper">
-              <span className="input-icon">👤</span>
-              <input 
-                type="text" 
-                value={username} 
-                onChange={e => setUsername(e.target.value)} 
-                required 
-                placeholder="ej: francisco@jufra.org"
-                className="input-with-icon"
-              />
-            </div>
-          </div>
-          <div className="input-group">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <label>Contraseña</label>
-              <a href="#" style={{ fontSize: '0.75rem', color: 'var(--primary)', textDecoration: 'none' }}>¿Olvidaste tu contraseña?</a>
-            </div>
-            <div className="input-wrapper">
-              <span className="input-icon">🔒</span>
-              <input 
-                type={showPassword ? "text" : "password"} 
-                value={password} 
-                onChange={e => setPassword(e.target.value)} 
-                required 
-                className="input-with-icon"
-              />
-              <button 
-                type="button" 
-                className="password-toggle"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? '👁️' : '👁️‍🗨️'}
-              </button>
-            </div>
-          </div>
-          
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '1rem 0' }}>
-            <input 
-              type="checkbox" 
-              id="remember" 
-              checked={rememberMe} 
-              onChange={e => setRememberMe(e.target.checked)}
-              style={{ width: '16px', height: '16px', margin: 0, accentColor: 'var(--primary)', cursor: 'pointer' }}
-            />
-            <label htmlFor="remember" style={{ fontSize: '0.85rem', cursor: 'pointer', margin: 0 }}>Recordar sesión</label>
+    <div className="login-split-page">
+      {/* Columna Izquierda: Identidad y Carisma Franciscano */}
+      <div className="login-left-pane">
+        <div className="login-shape-1"></div>
+        <div className="login-shape-2"></div>
+        <div className="login-shape-3"></div>
+
+        <div className="login-left-content">
+          <div className="login-brand-badge">
+            <div className="login-brand-tau">T</div>
+            <span className="login-brand-name">JUFRA Pomalca</span>
           </div>
 
-          <button type="submit" className="btn btn-primary w-full">Ingresar al Panel</button>
-          
-          <a href="/" className="btn btn-ghost w-full" style={{ marginTop: '1rem', textDecoration: 'none', display: 'block', textAlign: 'center' }}>
-            ← Volver a la página principal
+          <div className="login-left-hero">
+            <span className="login-hero-tag">ACCESO INTERNO • CONSEJO LOCAL</span>
+            <h1 className="login-hero-title">
+              Gestión fraterna al servicio de la comunidad
+            </h1>
+            <p className="login-hero-desc">
+              Administra el directorio de hermanos, el registro de asistencia sabatina por QR, las etapas formativas y los mensajes de nuevos jóvenes.
+            </p>
+          </div>
+
+          <div className="login-left-footer">
+            Parroquia Ntra. Sra. del Perpetuo Socorro · Pomalca
+          </div>
+        </div>
+      </div>
+
+      {/* Columna Derecha: Formulario de Autenticación */}
+      <div className="login-right-pane">
+        <div className="login-right-content">
+          <a href="/" className="login-back-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Volver a la página principal
           </a>
-        </form>
+
+          <div className="login-form-heading">
+            <h2 className="login-form-title">JUFRA Admin</h2>
+            <p className="login-form-subtitle">Ingresa con tu cuenta de animador o consejo local.</p>
+          </div>
+
+          <div className="login-modern-card">
+            {error && (
+              <div className="login-alert-error animate-fade">
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleLogin}>
+              <div className="login-field">
+                <label className="login-field-label">Usuario o correo</label>
+                <div className="login-input-container">
+                  <span className="login-input-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                      <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                  </span>
+                  <input 
+                    type="text" 
+                    value={username} 
+                    onChange={e => setUsername(e.target.value)} 
+                    required 
+                    placeholder="francisco"
+                    className="login-modern-input"
+                    autoComplete="username"
+                  />
+                </div>
+              </div>
+
+              <div className="login-field">
+                <div className="login-label-split">
+                  <label className="login-field-label">Contraseña</label>
+                  <button 
+                    type="button" 
+                    onClick={handleForgotPassword}
+                    className="login-forgot-btn"
+                  >
+                    ¿Olvidaste tu contraseña?
+                  </button>
+                </div>
+                <div className="login-input-container">
+                  <span className="login-input-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                  </span>
+                  <input 
+                    type={showPassword ? "text" : "password"} 
+                    value={password} 
+                    onChange={e => setPassword(e.target.value)} 
+                    required 
+                    placeholder="••••••••••"
+                    className="login-modern-input is-password"
+                    autoComplete="current-password"
+                  />
+                  <button 
+                    type="button" 
+                    className="login-toggle-eye"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
+                  >
+                    {showPassword ? (
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                    ) : (
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div className="login-remember-box">
+                <input 
+                  type="checkbox" 
+                  id="remember" 
+                  checked={rememberMe} 
+                  onChange={e => setRememberMe(e.target.checked)}
+                />
+                <label htmlFor="remember">
+                  Recordar sesión en este equipo
+                </label>
+              </div>
+
+              <button 
+                type="submit" 
+                className="login-btn-primary"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Ingresando...' : 'Ingresar al Panel'}
+              </button>
+            </form>
+          </div>
+
+          <div className="login-peace-note">
+            Paz y Bien · Sistema interno de JUFRA Pomalca
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 /* src/components/FloatingChat.jsx */
 import React, { useState, useRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import api from '../config/api';
 import { getGeminiApiKey } from '../config/gemini';
@@ -7,6 +8,13 @@ import { estatutosJufra } from '../assets/estatutos';
 import './FloatingChat.css';
 
 const FloatingChat = () => {
+  const location = useLocation();
+
+  // Ocultar botones flotantes en panel de administración y login admin
+  if (location.pathname.startsWith('/admin') || location.pathname.startsWith('/dashboard')) {
+    return null;
+  }
+
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     { role: 'ai', content: '¡Paz y bien! Soy el Asistente Seráfico de JUFRA Pomalca. ¿En qué puedo ayudarte hoy?' }
