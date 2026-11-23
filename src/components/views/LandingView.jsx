@@ -377,7 +377,7 @@ const LandingView = () => {
       }
 
       // 2. Active Section Spy
-      const sections = ['inicio', 'mision', 'historia', 'nacional', 'galeria', 'eventos', 'contacto'];
+      const sections = ['inicio', 'mision', 'historia', 'quienes-somos', 'galeria', 'eventos', 'nacional', 'contacto'];
       const scrollPosition = window.scrollY + 200; // Offset for navbar
 
       for (const section of sections) {
@@ -538,20 +538,19 @@ const LandingView = () => {
           </button>
 
           <div className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
-            <a href="#inicio" className={activeSection === 'inicio' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Inicio</a>
-            <a href="#mision" className={activeSection === 'mision' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Misión y Visión</a>
-            <a href="#historia" className={activeSection === 'historia' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Nuestro Camino</a>
-            <a href="#quienes-somos" className={activeSection === 'quienes-somos' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Quiénes Somos</a>
-            <a href="#galeria" className={activeSection === 'galeria' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Galería</a>
-            <a href="#nacional" className={activeSection === 'nacional' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>JUFRA en el Perú</a>
-            <a href="#contacto" className={activeSection === 'contacto' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Contacto</a>
+            <a href="#mision" className={activeSection === 'mision' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Misión</a>
+            <a href="#historia" className={activeSection === 'historia' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Camino</a>
+            <a href="#quienes-somos" className={activeSection === 'quienes-somos' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Nosotros</a>
+            <a href="#galeria" className={activeSection === 'galeria' || activeSection === 'eventos' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Actividades</a>
+            <a href="#nacional" className={activeSection === 'nacional' ? 'active' : ''} onClick={() => setIsMenuOpen(false)}>Perú</a>
             <a 
               href="#contacto" 
+              className="nav-btn-unete"
               onClick={() => setIsMenuOpen(false)}
               style={{
                 backgroundColor: '#c2410c',
                 color: '#ffffff',
-                padding: '0.45rem 1.15rem',
+                padding: '0.45rem 1.25rem',
                 borderRadius: '10px',
                 fontWeight: '700',
                 fontSize: '0.88rem',

@@ -1294,6 +1294,16 @@ input:focus {
   font-weight: 800;
 }
 
+.landing-nav .nav-links a.nav-btn-unete::after {
+  display: none !important;
+}
+
+.landing-nav .nav-links a.nav-btn-unete:hover {
+  background-color: #9a3412 !important;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}
+
 /* 2. Hero Cinematic Masks & Reveal Animations */
 .hero-overlay-cinematic {
   position: absolute;
