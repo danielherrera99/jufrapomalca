@@ -36,6 +36,7 @@ const historiaItems = [
 const etapasItems = [
   {
     numero: '01',
+    symbol: '🌱',
     title: 'Iniciado',
     shortDesc: 'Tiempo de acercamiento, descubrimiento y conocimiento...',
     fullDesc: 'Tiempo de acercamiento, descubrimiento y conocimiento inicial de la Fraternidad y del hermoso carisma franciscano.',
@@ -47,6 +48,7 @@ const etapasItems = [
   },
   {
     numero: '02',
+    symbol: '🌿',
     title: 'Aceptado',
     shortDesc: 'Etapa de formación y discernimiento profundo de la vocació...',
     fullDesc: 'Etapa de formación y discernimiento profundo de la vocación, participando activamente en la vida y misión fraterna.',
@@ -58,6 +60,7 @@ const etapasItems = [
   },
   {
     numero: '03',
+    symbol: '🌳',
     title: 'Comprometido',
     shortDesc: 'Promesa formal ante Dios y la Iglesia de vivir el Santo Evangeli...',
     fullDesc: 'Promesa formal ante Dios y la Iglesia de vivir el Santo Evangelio a la manera de San Francisco de Asís.',
@@ -72,9 +75,10 @@ const etapasItems = [
 const simbolosItems = [
   {
     title: 'La Tau',
+    image: '/assets/simbolos/tau.jpg',
     color: '#c2410c',
     iconSvg: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M4 6h16" />
         <path d="M12 6v14" />
       </svg>
@@ -83,9 +87,10 @@ const simbolosItems = [
   },
   {
     title: 'Cristo de San Damián',
+    image: '/assets/simbolos/san_damian.jpg',
     color: '#d97706',
     iconSvg: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
         <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
       </svg>
@@ -94,9 +99,10 @@ const simbolosItems = [
   },
   {
     title: 'Corona Seráfica',
+    image: '/assets/simbolos/corona.png',
     color: '#0284c7',
     iconSvg: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
         <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
       </svg>
     ),
@@ -104,9 +110,10 @@ const simbolosItems = [
   },
   {
     title: 'El Escapulario',
+    image: '/assets/simbolos/escapulario.png',
     color: '#78350f',
     iconSvg: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="5" y="4" width="14" height="16" rx="2" />
         <path d="M9 9h6" />
         <path d="M9 13h6" />
@@ -116,9 +123,10 @@ const simbolosItems = [
   },
   {
     title: 'Cordón de los 3 Nudos',
+    image: '/assets/simbolos/cordon.png',
     color: '#16a34a',
     iconSvg: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M3 12h18" />
         <circle cx="7" cy="12" r="2.5" fill="currentColor" />
         <circle cx="12" cy="12" r="2.5" fill="currentColor" />
@@ -723,6 +731,10 @@ const LandingView = () => {
                           {etapa.numero}
                         </div>
 
+                        <span style={{ fontSize: '1.45rem', flexShrink: 0 }}>
+                          {etapa.symbol}
+                        </span>
+
                         <div style={{ flex: 1, overflow: 'hidden' }}>
                           <h4 style={{
                             margin: '0 0 0.25rem 0',
@@ -759,17 +771,27 @@ const LandingView = () => {
                   flexDirection: 'column',
                   justifyContent: 'center'
                 }}>
-                  <span style={{
-                    color: '#16a34a',
-                    fontWeight: '800',
-                    fontSize: '0.82rem',
-                    letterSpacing: '1px',
-                    textTransform: 'uppercase',
-                    marginBottom: '0.5rem',
-                    display: 'block'
-                  }}>
-                    ETAPA {etapasItems[activeEtapaIndex].numero}
-                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                    <span style={{
+                      color: '#16a34a',
+                      fontWeight: '800',
+                      fontSize: '0.82rem',
+                      letterSpacing: '1px',
+                      textTransform: 'uppercase',
+                      display: 'block'
+                    }}>
+                      ETAPA {etapasItems[activeEtapaIndex].numero}
+                    </span>
+                    <span style={{
+                      fontSize: '2rem',
+                      lineHeight: 1,
+                      padding: '4px 10px',
+                      backgroundColor: '#f5f5f4',
+                      borderRadius: '10px'
+                    }}>
+                      {etapasItems[activeEtapaIndex].symbol}
+                    </span>
+                  </div>
 
                   <h3 style={{
                     fontSize: '1.85rem',
@@ -819,7 +841,7 @@ const LandingView = () => {
               </div>
             )}
 
-            {/* PESTAÑA 3: SÍMBOLOS FRANCISCANOS */}
+            {/* PESTAÑA 3: SÍMBOLOS FRANCISCANOS CON IMÁGENES REALES */}
             {activeCaminoTab === 'simbolos' && (
               <div className="camino-grid-5 animate-fade">
                 {simbolosItems.map((item, idx) => (
@@ -828,44 +850,69 @@ const LandingView = () => {
                     style={{
                       backgroundColor: '#ffffff',
                       borderRadius: '18px',
-                      padding: '2rem 1.4rem',
+                      padding: '1.25rem',
                       border: '1px solid #e7e5e4',
-                      boxShadow: '0 4px 15px rgba(0,0,0,0.02)',
+                      boxShadow: '0 4px 15px rgba(0,0,0,0.03)',
                       display: 'flex',
                       flexDirection: 'column',
                       height: '100%',
                       transition: 'all 0.3s ease'
                     }}
                   >
+                    {/* Fotografía Real del Símbolo */}
                     <div style={{
-                      width: '38px',
-                      height: '38px',
-                      borderRadius: '8px',
-                      backgroundColor: item.color,
-                      color: '#ffffff',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginBottom: '1.2rem',
-                      boxShadow: '0 2px 6px rgba(0,0,0,0.12)'
+                      width: '100%',
+                      height: '135px',
+                      borderRadius: '12px',
+                      overflow: 'hidden',
+                      marginBottom: '1.1rem',
+                      backgroundColor: '#f5f5f4',
+                      position: 'relative',
+                      border: '1px solid #ebe8e5',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
                     }}>
-                      {item.iconSvg}
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          display: 'block'
+                        }}
+                      />
+                      <div style={{
+                        position: 'absolute',
+                        top: '8px',
+                        right: '8px',
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: '8px',
+                        backgroundColor: item.color,
+                        color: '#ffffff',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.28)'
+                      }}>
+                        {item.iconSvg}
+                      </div>
                     </div>
 
                     <h3 style={{
-                      fontSize: '1.18rem',
+                      fontSize: '1.15rem',
                       fontWeight: '800',
                       color: '#1c1917',
-                      margin: '0 0 0.8rem 0',
+                      margin: '0 0 0.6rem 0',
                       lineHeight: 1.3
                     }}>
                       {item.title}
                     </h3>
 
                     <p style={{
-                      fontSize: '0.91rem',
+                      fontSize: '0.88rem',
                       color: '#57534e',
-                      lineHeight: 1.65,
+                      lineHeight: 1.6,
                       margin: 0
                     }}>
                       {item.description}
