@@ -512,16 +512,16 @@ const Dashboard = ({ user, onLogout }) => {
           <div className="sidebar-brand" style={{ padding: 0, border: 'none', fontSize: '1.2rem' }}>JUFRA Admin</div>
           <button className="hamburger" onClick={() => setIsSidebarOpen(true)}>☰</button>
         </div>
-        <header className="content-header flex-responsive" style={{ marginBottom: '1.5rem', gap: '1.25rem', alignItems: 'center', borderBottom: '1px solid rgba(0,0,0,0.06)', paddingBottom: '1.25rem' }}>
+        <header className="content-header flex-responsive" style={{ marginBottom: '1.25rem', gap: '1rem', alignItems: 'center', borderBottom: '1px solid rgba(0,0,0,0.06)', paddingBottom: '0.85rem' }}>
             <div style={{ flexShrink: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '1.15rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '1rem' }}>
                 <span style={{ color: '#78716c', fontWeight: 500 }}>Gestión</span>
                 <span style={{ color: '#a8a29e', margin: '0 2px' }}>/</span>
                 <span style={{ color: '#1c1917', fontWeight: 700 }}>
                   {modules.find(m => m.id === activeTab)?.label || activeTab}
                 </span>
               </div>
-              <p style={{ color: '#78716c', fontSize: '0.825rem', margin: '4px 0 0 0', fontWeight: 400 }}>
+              <p style={{ color: '#78716c', fontSize: '0.78rem', margin: '2px 0 0 0', fontWeight: 400 }}>
                 {user?.fraternidadNombre || 'JUFRA Pomalca'} · {(() => {
                   const today = new Date();
                   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -529,11 +529,13 @@ const Dashboard = ({ user, onLogout }) => {
                 })()}
               </p>
             </div>
-          <div className="flex-responsive" style={{ gap: '0.75rem', alignItems: 'center', flex: 1, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+            
+            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexShrink: 0, flexWrap: 'nowrap' }}>
               <FraternidadSelector user={user} />
-              <div style={{ position: 'relative', minWidth: '220px', maxWidth: '320px', flex: '1 1 auto' }}>
-                <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', color: '#78716c', pointerEvents: 'none' }}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              
+              <div style={{ position: 'relative', width: '200px' }}>
+                <span style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', color: '#78716c', pointerEvents: 'none' }}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="11" cy="11" r="8"/>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"/>
                   </svg>
@@ -545,17 +547,19 @@ const Dashboard = ({ user, onLogout }) => {
                   onChange={(e) => setSearchTerm(e.target.value)}
                   style={{
                     width: '100%',
-                    padding: '7px 14px 7px 34px',
-                    borderRadius: '10px',
+                    height: '32px',
+                    padding: '0 10px 0 30px',
+                    borderRadius: '8px',
                     border: '1px solid #e7e5e4',
                     backgroundColor: '#ffffff',
-                    fontSize: '0.875rem',
+                    fontSize: '0.78rem',
                     color: '#1c1917',
                     outline: 'none',
                     boxSizing: 'border-box'
                   }}
                 />
               </div>
+
               <a 
                 href="/" 
                 target="_blank" 
@@ -564,24 +568,26 @@ const Dashboard = ({ user, onLogout }) => {
                   display: 'inline-flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  padding: '7px 16px',
-                  borderRadius: '10px',
+                  height: '32px',
+                  padding: '0 12px',
+                  borderRadius: '8px',
                   border: '1px solid #e7e5e4',
                   backgroundColor: '#ffffff',
                   color: '#1c1917',
-                  fontSize: '0.85rem',
+                  fontSize: '0.78rem',
                   fontWeight: 500,
                   textDecoration: 'none',
                   whiteSpace: 'nowrap',
                   transition: 'all 0.15s ease',
-                  boxShadow: '0 1px 2px rgba(0,0,0,0.03)'
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
+                  boxSizing: 'border-box'
                 }}
                 onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f5f5f4'}
                 onMouseLeave={e => e.currentTarget.style.backgroundColor = '#ffffff'}
               >
                 Ver web pública
               </a>
-          </div>
+            </div>
         </header>
 
         

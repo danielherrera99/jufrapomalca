@@ -15,19 +15,21 @@ export default function FraternidadSelector({ user }) {
         style={{
           display: 'inline-flex',
           alignItems: 'center',
-          gap: '8px',
+          gap: '6px',
+          height: '32px',
           backgroundColor: '#18130f',
           color: '#ffffff',
-          padding: '7px 16px',
+          padding: '0 12px',
           borderRadius: '9999px',
           boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
           border: '1px solid rgba(255,255,255,0.12)',
-          fontSize: '0.86rem',
+          fontSize: '0.8rem',
           fontWeight: 600,
-          whiteSpace: 'nowrap'
+          whiteSpace: 'nowrap',
+          boxSizing: 'border-box'
         }}
       >
-        <span style={{ fontSize: '1rem', color: '#fbbf24' }}>🌐</span>
+        <span style={{ fontSize: '0.9rem', color: '#fbbf24' }}>🌐</span>
         <span>{fratName}</span>
       </div>
     );
@@ -54,19 +56,21 @@ export default function FraternidadSelector({ user }) {
       style={{
         display: 'inline-flex',
         alignItems: 'center',
-        gap: '8px',
+        gap: '6px',
+        height: '32px',
         backgroundColor: '#18130f',
         color: '#ffffff',
-        padding: '7px 16px',
+        padding: '0 12px',
         borderRadius: '9999px',
-        boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
         border: '1px solid rgba(255,255,255,0.12)',
         position: 'relative',
         cursor: 'pointer',
-        whiteSpace: 'nowrap'
+        whiteSpace: 'nowrap',
+        boxSizing: 'border-box'
       }}
     >
-      <span style={{ fontSize: '1rem', color: '#fbbf24' }}>🌐</span>
+      <span style={{ fontSize: '0.9rem', color: '#fbbf24' }}>🌐</span>
       <select
         value={selectedFraternidadId}
         onChange={(e) => changeFraternidad(e.target.value)}
@@ -74,11 +78,11 @@ export default function FraternidadSelector({ user }) {
           background: 'transparent',
           color: '#ffffff',
           border: 'none',
-          fontSize: '0.86rem',
+          fontSize: '0.8rem',
           fontWeight: 600,
           cursor: 'pointer',
           outline: 'none',
-          paddingRight: '16px',
+          paddingRight: '14px',
           appearance: 'none',
           WebkitAppearance: 'none',
           MozAppearance: 'none'
@@ -100,7 +104,7 @@ export default function FraternidadSelector({ user }) {
           </optgroup>
         ))}
       </select>
-      <span style={{ position: 'absolute', right: '14px', pointerEvents: 'none', fontSize: '0.7rem', color: 'rgba(255,255,255,0.7)' }}>
+      <span style={{ position: 'absolute', right: '10px', pointerEvents: 'none', fontSize: '0.65rem', color: 'rgba(255,255,255,0.7)' }}>
         ▼
       </span>
     </div>

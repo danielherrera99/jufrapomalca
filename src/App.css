@@ -684,10 +684,11 @@ input:focus {
 .dashboard-layout {
   display: flex;
   min-height: 100vh;
+  zoom: 0.9;
 }
 
 .sidebar {
-  width: 270px;
+  width: 245px;
   background: var(--surface);
   border-right: 1px solid rgba(139, 90, 43, 0.1);
   box-shadow: 2px 0 10px rgba(0,0,0,0.02);
@@ -695,6 +696,7 @@ input:focus {
   flex-direction: column;
   z-index: 1001;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
 }
 
 @media (max-width: 768px) {
@@ -716,8 +718,8 @@ input:focus {
 }
 
 .sidebar-brand {
-  padding: 1.8rem 1.5rem;
-  font-size: 1.4rem;
+  padding: 1.25rem 1.25rem;
+  font-size: 1.25rem;
   font-weight: 800;
   background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
   -webkit-background-clip: text;
@@ -812,7 +814,7 @@ input:focus {
 
 .dashboard-content {
   flex: 1;
-  padding: 3rem;
+  padding: 1.5rem 2.25rem;
   overflow-y: auto;
   position: relative;
 }
