@@ -1041,7 +1041,7 @@ input:focus {
 
 .hero-editorial-grid {
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
+  grid-template-columns: 1.05fr 0.95fr;
   gap: 3.5rem;
   align-items: center;
 }
@@ -1165,13 +1165,13 @@ input:focus {
 
 .hero-graphic-card {
   width: 100%;
-  max-width: 480px;
-  height: 340px;
+  max-width: 540px;
+  height: 400px;
   background-color: #1a1009;
-  border-radius: 26px;
+  border-radius: 28px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 20px 40px -10px rgba(26, 16, 9, 0.3);
+  box-shadow: 0 24px 48px -12px rgba(26, 16, 9, 0.35);
   background-size: cover;
   background-position: center;
 }
@@ -1193,13 +1193,13 @@ input:focus {
 
 .hero-tau-badge {
   position: absolute;
-  top: 18px;
-  left: 18px;
-  width: 42px;
-  height: 42px;
+  top: 20px;
+  left: 20px;
+  width: 46px;
+  height: 46px;
   background: rgba(0, 0, 0, 0.45);
   border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 12px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1212,22 +1212,22 @@ input:focus {
   color: #f59e0b;
   font-family: var(--font-serif), Georgia, serif;
   font-weight: 800;
-  font-size: 1.35rem;
+  font-size: 1.5rem;
   line-height: 1;
 }
 
 .hero-paz-bien-badge {
   position: absolute;
-  top: 22px;
-  right: 20px;
+  top: 24px;
+  right: 22px;
   color: #fef3c7;
   background: rgba(0, 0, 0, 0.45);
-  padding: 0.25rem 0.65rem;
-  border-radius: 8px;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  font-size: 0.72rem;
+  font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   font-family: monospace, sans-serif;
@@ -1238,13 +1238,13 @@ input:focus {
 /* Tarjeta flotante en la tarjeta gráfica */
 .hero-floating-event-card {
   position: absolute;
-  bottom: 18px;
-  left: 18px;
-  right: 18px;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
   background: #ffffff;
-  border-radius: 18px;
-  padding: 1.1rem 1.3rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.22);
+  border-radius: 20px;
+  padding: 1.25rem 1.45rem;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
   z-index: 5;
 }
 
@@ -1252,19 +1252,19 @@ input:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.4rem;
 }
 
 .hero-event-label {
   color: #c2410c;
   font-weight: 700;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   letter-spacing: 0.01em;
 }
 
 .hero-event-time {
   color: #78716c;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 600;
   font-family: monospace, sans-serif;
 }
@@ -1272,17 +1272,17 @@ input:focus {
 .hero-event-title {
   color: #1c1917;
   font-weight: 800;
-  font-size: 1.05rem;
-  margin: 0 0 0.45rem 0;
+  font-size: 1.15rem;
+  margin: 0 0 0.5rem 0;
   letter-spacing: -0.01em;
 }
 
 .hero-event-meta {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 1.35rem;
   flex-wrap: wrap;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: #57534e;
   font-weight: 500;
 }
