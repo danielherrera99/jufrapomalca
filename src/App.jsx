@@ -42,6 +42,7 @@ import JufraPeruView from './components/views/JufraPeruView';
 import FraternidadDetailView from './components/views/FraternidadDetailView';
 import FinanzasView from './components/views/FinanzasView';
 import RegistrosMascotasAdminView from './components/views/RegistrosMascotasAdminView';
+import InventarioView from './components/views/InventarioView';
 import { FraternidadProvider, useFraternidad } from './context/FraternidadContext';
 import FraternidadSelector from './components/FraternidadSelector';
 import { format, parseISO } from 'date-fns';
@@ -723,6 +724,7 @@ const modules = [
   { id: 'Actas', label: 'Actas', icon: '📝' },
   { id: 'Documentos', label: 'Documentos', icon: '📄' },
   { id: 'Finanzas', label: 'Finanzas', icon: '💰' },
+  { id: 'Inventario', label: 'Inventario', icon: '📦', adminOnly: true },
   { id: 'Galeria', label: 'Galería', icon: '🖼️' },
   { id: 'Mapa', label: 'Mapa', icon: '🗺️' },
   { id: 'Mensajes', label: 'Mensajes (Control)', icon: '🕵️' },
@@ -746,6 +748,8 @@ const Dashboard = ({ user, onLogout }) => {
   const { selectedFraternidadId } = useFraternidad();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const esAdmin = ['admin', 'superadmin', 'admin_nacional'].includes(user?.rol);
 
   // Obtener el tab activo de la URL
   const activeTab = useMemo(() => {
@@ -820,7 +824,10 @@ const Dashboard = ({ user, onLogout }) => {
 
           {/* GRUPO: ADMIN */}
           <div className="nav-section-title" style={{ marginTop: '1.5rem' }}>ADMINISTRACIÓN</div>
-          {modules.filter(m => ['Documentos', 'Actas', 'Formacion', 'Galeria', 'Finanzas', 'Servicios', 'Comunicacion', 'Asistente', 'Mensajes', 'Perfil'].includes(m.id)).map((mod) => (
+          {modules.filter(m => {
+            if (m.id === 'Inventario') return esAdmin;
+            return ['Documentos', 'Actas', 'Formacion', 'Galeria', 'Finanzas', 'Servicios', 'Comunicacion', 'Asistente', 'Mensajes', 'Perfil'].includes(m.id);
+          }).map((mod) => (
              <a key={mod.id} href="#" onClick={(e) => { e.preventDefault(); setActiveTab(mod.id); setIsSidebarOpen(false); }}
               className={`nav-link ${activeTab === mod.id ? 'active' : ''}`}
             >
@@ -963,6 +970,7 @@ const Dashboard = ({ user, onLogout }) => {
           <Route path="actas" element={<ActasView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
           <Route path="documentos" element={<DocumentosView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
           <Route path="finanzas" element={<FinanzasView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
+          <Route path="inventario" element={esAdmin ? <InventarioView ActivityIndicator={ActivityIndicator} formatSafeDate={formatSafeDate} /> : <Navigate to="/dashboard" />} />
           <Route path="galeria" element={<GaleriaView formatSafeDate={formatSafeDate} SafeImage={SafeImage} ActivityIndicator={ActivityIndicator} />} />
           <Route path="cantos" element={<CantosView ActivityIndicator={ActivityIndicator} />} />
           <Route path="asistencia" element={<AsistenciaView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
