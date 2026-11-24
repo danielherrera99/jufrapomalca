@@ -574,6 +574,115 @@ input:focus {
   font-weight: 400;
 }
 
+/* Password Recovery Styles */
+.login-btn-secondary {
+  width: 100%;
+  height: 44px;
+  background-color: transparent;
+  color: #78716c;
+  border: 1px solid #d6d3d1;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-btn-secondary:hover:not(:disabled) {
+  background-color: #f5f5f4;
+  color: #292524;
+  border-color: #a8a29e;
+}
+
+.login-btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.login-alert-success {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.login-step-indicators {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.login-step-indicators::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: 20px;
+  right: 20px;
+  height: 2px;
+  background: #e7e5e4;
+  z-index: 0;
+}
+
+.login-step-item {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.login-step-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #d6d3d1;
+  color: #78716c;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.login-step-item.active .login-step-circle {
+  background: #c2410c;
+  border-color: #c2410c;
+  color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(194, 65, 12, 0.15);
+}
+
+.login-step-item.completed .login-step-circle {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: #ffffff;
+}
+
+.login-step-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #78716c;
+}
+
+.login-step-item.active .login-step-label {
+  color: #c2410c;
+}
+
+.login-step-item.completed .login-step-label {
+  color: #16a34a;
+}
+
 /* Responsive adjustments */
 @media (max-width: 960px) {
   .login-split-page {

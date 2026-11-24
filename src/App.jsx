@@ -137,12 +137,24 @@ const getSafeDateForInput = (dateStr) => {
 
 // Login Component (Premium Aesthetics - Split Screen)
 const Login = ({ onLogin }) => {
+  const [view, setView] = useState('login'); // 'login' | 'forgot'
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Estados para Recuperación de Contraseña (Flujo idéntico a la App Móvil)
+  const [recoverStep, setRecoverStep] = useState(1); // 1: Pedir correo/usuario, 2: Código 6 dígitos, 3: Nueva clave
+  const [recoverUser, setRecoverUser] = useState('');
+  const [recoverCode, setRecoverCode] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [recoverLoading, setRecoverLoading] = useState(false);
+  const [recoverError, setRecoverError] = useState('');
+  const [recoverSuccess, setRecoverSuccess] = useState('');
 
   useEffect(() => {
     const savedUser = localStorage.getItem('rememberedUser');
@@ -184,14 +196,104 @@ const Login = ({ onLogin }) => {
     }
   };
 
-  const handleForgotPassword = () => {
-    Swal.fire({
-      title: '¿Olvidaste tu contraseña?',
-      text: 'Por motivos de seguridad, comunícate con el Administrador o con el Consejo Local de JUFRA Pomalca para restablecer tus credenciales.',
-      icon: 'info',
-      confirmButtonColor: '#c2410c',
-      confirmButtonText: 'Entendido, gracias'
-    });
+  // --- Handlers de Recuperación de Contraseña ---
+  const handleOpenForgot = () => {
+    setView('forgot');
+    setRecoverStep(1);
+    setRecoverError('');
+    setRecoverSuccess('');
+    if (username.trim()) {
+      setRecoverUser(username.trim());
+    }
+  };
+
+  const handleSolicitarCodigo = async (e) => {
+    if (e) e.preventDefault();
+    if (!recoverUser.trim()) {
+      setRecoverError('Por favor ingresa tu usuario o correo electrónico.');
+      return;
+    }
+    setRecoverLoading(true);
+    setRecoverError('');
+    setRecoverSuccess('');
+    try {
+      const res = await api.post('/auth/recuperar-password', { usernameOrEmail: recoverUser.trim() });
+      if (res.data.success) {
+        setRecoverSuccess('¡Código enviado con éxito! Revisa tu bandeja de entrada o spam.');
+        setRecoverStep(2);
+      }
+    } catch (err) {
+      setRecoverError(err.response?.data?.message || 'No se pudo enviar el código. Verifica que el usuario o correo exista.');
+    } finally {
+      setRecoverLoading(false);
+    }
+  };
+
+  const handleVerificarCodigo = async (e) => {
+    if (e) e.preventDefault();
+    if (!recoverCode.trim() || recoverCode.trim().length !== 6) {
+      setRecoverError('Por favor ingresa el código numérico de 6 dígitos.');
+      return;
+    }
+    setRecoverLoading(true);
+    setRecoverError('');
+    setRecoverSuccess('');
+    try {
+      const res = await api.post('/auth/verificar-codigo', { 
+        usernameOrEmail: recoverUser.trim(), 
+        codigo: recoverCode.trim() 
+      });
+      if (res.data.success) {
+        setRecoverSuccess('Código verificado correctamente.');
+        setRecoverStep(3);
+      }
+    } catch (err) {
+      setRecoverError(err.response?.data?.message || 'Código incorrecto o expirado.');
+    } finally {
+      setRecoverLoading(false);
+    }
+  };
+
+  const handleRestablecerPassword = async (e) => {
+    if (e) e.preventDefault();
+    if (newPassword.length < 6) {
+      setRecoverError('La nueva contraseña debe tener al menos 6 caracteres.');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setRecoverError('Las contraseñas no coinciden. Verifícalas bien.');
+      return;
+    }
+    setRecoverLoading(true);
+    setRecoverError('');
+    setRecoverSuccess('');
+    try {
+      const res = await api.put('/auth/reset-password', { 
+        usernameOrEmail: recoverUser.trim(), 
+        codigo: recoverCode.trim(),
+        newPassword 
+      });
+      if (res.data.success) {
+        Swal.fire({
+          title: '¡Contraseña Restablecida! 🎉',
+          text: 'Tu contraseña se actualizó correctamente. Ya puedes ingresar con tu nueva clave.',
+          icon: 'success',
+          confirmButtonColor: '#c2410c',
+          confirmButtonText: 'Iniciar Sesión'
+        });
+        setUsername(recoverUser.trim());
+        setPassword('');
+        setView('login');
+        setRecoverStep(1);
+        setRecoverCode('');
+        setNewPassword('');
+        setConfirmPassword('');
+      }
+    } catch (err) {
+      setRecoverError(err.response?.data?.message || 'Error al restablecer la contraseña.');
+    } finally {
+      setRecoverLoading(false);
+    }
   };
 
   return (
@@ -204,7 +306,9 @@ const Login = ({ onLogin }) => {
 
         <div className="login-left-content">
           <div className="login-brand-badge">
-            <div className="login-brand-tau">T</div>
+            <div className="login-brand-tau" style={{ padding: '4px', background: '#271f1a', overflow: 'hidden' }}>
+              <img src="/logo_jufra.png" alt="Logo JUFRA" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+            </div>
             <span className="login-brand-name">JUFRA Pomalca</span>
           </div>
 
@@ -224,118 +328,374 @@ const Login = ({ onLogin }) => {
         </div>
       </div>
 
-      {/* Columna Derecha: Formulario de Autenticación */}
+      {/* Columna Derecha: Formulario de Autenticación o Recuperación */}
       <div className="login-right-pane">
         <div className="login-right-content">
-          <a href="/" className="login-back-btn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M19 12H5M12 19l-7-7 7-7"/>
-            </svg>
-            Volver a la página principal
-          </a>
+          {view === 'login' ? (
+            <a href="/" className="login-back-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+              Volver a la página principal
+            </a>
+          ) : (
+            <button 
+              type="button" 
+              onClick={() => { setView('login'); setRecoverStep(1); setRecoverError(''); setRecoverSuccess(''); }}
+              className="login-back-btn"
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+              Volver al inicio de sesión
+            </button>
+          )}
 
           <div className="login-form-heading">
-            <h2 className="login-form-title">JUFRA Admin</h2>
-            <p className="login-form-subtitle">Ingresa con tu cuenta de animador o consejo local.</p>
+            <h2 className="login-form-title">
+              {view === 'login' ? 'JUFRA Admin' : 'Recuperar Contraseña'}
+            </h2>
+            <p className="login-form-subtitle">
+              {view === 'login' && 'Ingresa con tu cuenta de animador o consejo local.'}
+              {view === 'forgot' && recoverStep === 1 && 'Ingresa tu usuario o correo para enviarte un código de seguridad.'}
+              {view === 'forgot' && recoverStep === 2 && 'Ingresa el código de 6 dígitos que enviamos a tu correo electrónico.'}
+              {view === 'forgot' && recoverStep === 3 && 'Crea tu nueva contraseña segura para acceder al panel.'}
+            </p>
           </div>
 
           <div className="login-modern-card">
-            {error && (
-              <div className="login-alert-error animate-fade">
-                {error}
+            {view === 'login' ? (
+              <>
+                {error && (
+                  <div className="login-alert-error animate-fade">
+                    {error}
+                  </div>
+                )}
+
+                <form onSubmit={handleLogin}>
+                  <div className="login-field">
+                    <label className="login-field-label">Usuario o correo</label>
+                    <div className="login-input-container">
+                      <span className="login-input-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                          <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                      </span>
+                      <input 
+                        type="text" 
+                        value={username} 
+                        onChange={e => setUsername(e.target.value)} 
+                        required 
+                        placeholder="francisco"
+                        className="login-modern-input"
+                        autoComplete="username"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="login-field">
+                    <div className="login-label-split">
+                      <label className="login-field-label">Contraseña</label>
+                      <button 
+                        type="button" 
+                        onClick={handleOpenForgot}
+                        className="login-forgot-btn"
+                      >
+                        ¿Olvidaste tu contraseña?
+                      </button>
+                    </div>
+                    <div className="login-input-container">
+                      <span className="login-input-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                      </span>
+                      <input 
+                        type={showPassword ? "text" : "password"} 
+                        value={password} 
+                        onChange={e => setPassword(e.target.value)} 
+                        required 
+                        placeholder="••••••••••"
+                        className="login-modern-input is-password"
+                        autoComplete="current-password"
+                      />
+                      <button 
+                        type="button" 
+                        className="login-toggle-eye"
+                        onClick={() => setShowPassword(!showPassword)}
+                        aria-label={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
+                      >
+                        {showPassword ? (
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                            <line x1="1" y1="1" x2="23" y2="23"/>
+                          </svg>
+                        ) : (
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                          </svg>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="login-remember-box">
+                    <input 
+                      type="checkbox" 
+                      id="remember" 
+                      checked={rememberMe} 
+                      onChange={e => setRememberMe(e.target.checked)}
+                    />
+                    <label htmlFor="remember">
+                      Recordar sesión en este equipo
+                    </label>
+                  </div>
+
+                  <button 
+                    type="submit" 
+                    className="login-btn-primary"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Ingresando...' : 'Ingresar al Panel'}
+                  </button>
+                </form>
+              </>
+            ) : (
+              /* Flujo de Recuperación de Contraseña */
+              <div className="animate-fade">
+                {/* Indicador de pasos */}
+                <div className="login-step-indicators">
+                  <div className={`login-step-item ${recoverStep === 1 ? 'active' : recoverStep > 1 ? 'completed' : ''}`}>
+                    <div className="login-step-circle">{recoverStep > 1 ? '✓' : '1'}</div>
+                    <span className="login-step-label">Correo</span>
+                  </div>
+                  <div className={`login-step-item ${recoverStep === 2 ? 'active' : recoverStep > 2 ? 'completed' : ''}`}>
+                    <div className="login-step-circle">{recoverStep > 2 ? '✓' : '2'}</div>
+                    <span className="login-step-label">Código</span>
+                  </div>
+                  <div className={`login-step-item ${recoverStep === 3 ? 'active' : ''}`}>
+                    <div className="login-step-circle">3</div>
+                    <span className="login-step-label">Nueva Clave</span>
+                  </div>
+                </div>
+
+                {recoverError && (
+                  <div className="login-alert-error animate-fade">
+                    {recoverError}
+                  </div>
+                )}
+
+                {recoverSuccess && (
+                  <div className="login-alert-success animate-fade">
+                    {recoverSuccess}
+                  </div>
+                )}
+
+                {/* Paso 1: Solicitar Código */}
+                {recoverStep === 1 && (
+                  <form onSubmit={handleSolicitarCodigo}>
+                    <div className="login-field">
+                      <label className="login-field-label">Usuario o correo electrónico</label>
+                      <div className="login-input-container">
+                        <span className="login-input-icon">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                          </svg>
+                        </span>
+                        <input 
+                          type="text" 
+                          value={recoverUser} 
+                          onChange={e => setRecoverUser(e.target.value)} 
+                          required 
+                          placeholder="Ej: francisco o correo@gmail.com"
+                          className="login-modern-input"
+                          autoFocus
+                        />
+                      </div>
+                    </div>
+
+                    <button 
+                      type="submit" 
+                      className="login-btn-primary" 
+                      disabled={recoverLoading}
+                      style={{ marginTop: '1.5rem' }}
+                    >
+                      {recoverLoading ? 'Enviando código...' : 'Enviar Código al Correo'}
+                    </button>
+                  </form>
+                )}
+
+                {/* Paso 2: Verificar Código de 6 Dígitos */}
+                {recoverStep === 2 && (
+                  <form onSubmit={handleVerificarCodigo}>
+                    <div className="login-field">
+                      <div className="login-label-split">
+                        <label className="login-field-label">Código de seguridad (6 dígitos)</label>
+                        <button 
+                          type="button" 
+                          onClick={() => { setRecoverStep(1); setRecoverError(''); }} 
+                          className="login-forgot-btn"
+                        >
+                          Cambiar usuario
+                        </button>
+                      </div>
+                      <div className="login-input-container">
+                        <span className="login-input-icon">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <circle cx="12" cy="16" r="1"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                          </svg>
+                        </span>
+                        <input 
+                          type="text" 
+                          value={recoverCode} 
+                          onChange={e => setRecoverCode(e.target.value.replace(/\D/g, '').slice(0, 6))} 
+                          required 
+                          maxLength={6}
+                          placeholder="123456"
+                          className="login-modern-input"
+                          style={{ letterSpacing: '4px', fontSize: '1.25rem', fontWeight: 'bold', textAlign: 'center' }}
+                          autoFocus
+                        />
+                      </div>
+                      <p style={{ margin: '8px 0 0', fontSize: '0.8rem', color: '#78716c' }}>
+                        Revisa tu bandeja de entrada o spam para <strong>{recoverUser}</strong>. Expira en 15 minutos.
+                      </p>
+                    </div>
+
+                    <button 
+                      type="submit" 
+                      className="login-btn-primary" 
+                      disabled={recoverLoading}
+                      style={{ marginTop: '1.25rem' }}
+                    >
+                      {recoverLoading ? 'Verificando...' : 'Verificar Código'}
+                    </button>
+
+                    <button 
+                      type="button" 
+                      onClick={handleSolicitarCodigo}
+                      disabled={recoverLoading}
+                      className="login-btn-secondary"
+                      style={{ marginTop: '0.75rem' }}
+                    >
+                      Reenviar código
+                    </button>
+                  </form>
+                )}
+
+                {/* Paso 3: Restablecer Contraseña */}
+                {recoverStep === 3 && (
+                  <form onSubmit={handleRestablecerPassword}>
+                    <div className="login-field">
+                      <label className="login-field-label">Nueva Contraseña</label>
+                      <div className="login-input-container">
+                        <span className="login-input-icon">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                          </svg>
+                        </span>
+                        <input 
+                          type={showNewPassword ? "text" : "password"} 
+                          value={newPassword} 
+                          onChange={e => setNewPassword(e.target.value)} 
+                          required 
+                          placeholder="Mínimo 6 caracteres"
+                          className="login-modern-input is-password"
+                          autoFocus
+                        />
+                        <button 
+                          type="button" 
+                          className="login-toggle-eye"
+                          onClick={() => setShowNewPassword(!showNewPassword)}
+                          aria-label={showNewPassword ? "Ocultar" : "Mostrar"}
+                        >
+                          {showNewPassword ? (
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                              <line x1="1" y1="1" x2="23" y2="23"/>
+                            </svg>
+                          ) : (
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                              <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="login-field">
+                      <label className="login-field-label">Confirmar Contraseña</label>
+                      <div className="login-input-container">
+                        <span className="login-input-icon">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                          </svg>
+                        </span>
+                        <input 
+                          type={showNewPassword ? "text" : "password"} 
+                          value={confirmPassword} 
+                          onChange={e => setConfirmPassword(e.target.value)} 
+                          required 
+                          placeholder="Repite la nueva contraseña"
+                          className="login-modern-input is-password"
+                        />
+                      </div>
+                    </div>
+
+                    <button 
+                      type="submit" 
+                      className="login-btn-primary" 
+                      disabled={recoverLoading}
+                      style={{ marginTop: '1.25rem' }}
+                    >
+                      {recoverLoading ? 'Restableciendo...' : 'Restablecer Contraseña'}
+                    </button>
+                  </form>
+                )}
+
+                {/* Ayuda directa por WhatsApp (idéntico a la app) */}
+                <div style={{ marginTop: '1.75rem', paddingTop: '1.25rem', borderTop: '1px solid #e7e5e4', textAlign: 'center' }}>
+                  <p style={{ margin: '0 0 0.75rem', fontSize: '0.85rem', color: '#78716c' }}>
+                    ¿No recibes el código o necesitas ayuda?
+                  </p>
+                  <a 
+                    href="https://wa.me/51981574685?text=Hola%20hermano,%20tengo%20un%20problema%20en%20la%20web%20para%20recuperar%20mi%20contrase%C3%B1a,%20por%20favor%20me%20ayudas"
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      width: '100%',
+                      padding: '10px 16px',
+                      borderRadius: '8px',
+                      background: '#f0fdf4',
+                      border: '1px solid #bbf7d0',
+                      color: '#166534',
+                      fontSize: '0.875rem',
+                      fontWeight: '600',
+                      textDecoration: 'none',
+                      transition: 'all 0.15s ease'
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.background = '#dcfce7'}
+                    onMouseLeave={e => e.currentTarget.style.background = '#f0fdf4'}
+                  >
+                    <span>💬</span> Ayuda por WhatsApp con el Consejo
+                  </a>
+                </div>
               </div>
             )}
-
-            <form onSubmit={handleLogin}>
-              <div className="login-field">
-                <label className="login-field-label">Usuario o correo</label>
-                <div className="login-input-container">
-                  <span className="login-input-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                      <circle cx="12" cy="7" r="4"/>
-                    </svg>
-                  </span>
-                  <input 
-                    type="text" 
-                    value={username} 
-                    onChange={e => setUsername(e.target.value)} 
-                    required 
-                    placeholder="francisco"
-                    className="login-modern-input"
-                    autoComplete="username"
-                  />
-                </div>
-              </div>
-
-              <div className="login-field">
-                <div className="login-label-split">
-                  <label className="login-field-label">Contraseña</label>
-                  <button 
-                    type="button" 
-                    onClick={handleForgotPassword}
-                    className="login-forgot-btn"
-                  >
-                    ¿Olvidaste tu contraseña?
-                  </button>
-                </div>
-                <div className="login-input-container">
-                  <span className="login-input-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                    </svg>
-                  </span>
-                  <input 
-                    type={showPassword ? "text" : "password"} 
-                    value={password} 
-                    onChange={e => setPassword(e.target.value)} 
-                    required 
-                    placeholder="••••••••••"
-                    className="login-modern-input is-password"
-                    autoComplete="current-password"
-                  />
-                  <button 
-                    type="button" 
-                    className="login-toggle-eye"
-                    onClick={() => setShowPassword(!showPassword)}
-                    aria-label={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
-                  >
-                    {showPassword ? (
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-                        <line x1="1" y1="1" x2="23" y2="23"/>
-                      </svg>
-                    ) : (
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                        <circle cx="12" cy="12" r="3"/>
-                      </svg>
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              <div className="login-remember-box">
-                <input 
-                  type="checkbox" 
-                  id="remember" 
-                  checked={rememberMe} 
-                  onChange={e => setRememberMe(e.target.checked)}
-                />
-                <label htmlFor="remember">
-                  Recordar sesión en este equipo
-                </label>
-              </div>
-
-              <button 
-                type="submit" 
-                className="login-btn-primary"
-                disabled={isLoading}
-              >
-                {isLoading ? 'Ingresando...' : 'Ingresar al Panel'}
-              </button>
-            </form>
           </div>
 
           <div className="login-peace-note">
