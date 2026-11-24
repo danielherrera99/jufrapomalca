@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import api from '../../config/api';
 
-const AsistenciaView = () => {
+const AsistenciaView = ({ user }) => {
+  const esConsejo = ['admin', 'superadmin', 'admin_nacional', 'consejo'].includes(user?.rol);
   const [data, setData] = useState([]);
   const [hermanos, setHermanos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -134,26 +135,28 @@ const AsistenciaView = () => {
 
   return (
     <div className="animate-fade" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
-      <div className="flex-responsive" style={{ gap: '1rem', marginBottom: '1rem' }}>
-        <button 
-          className="btn zoom-hover" 
-          style={{ background: '#1D6F42', color: 'white', border: 'none', fontWeight: 'bold' }} 
-          onClick={() => setIsExportModalOpen(true)}
-        >
-          📊 <span className="desktop-only">Descargar Excel</span>
-        </button>
-        <button 
-          onClick={() => {
-            const hActivos = hermanos.filter(h => h.activo);
-            setBulkList(hActivos.map(h => ({ ...h, estado: 'falta' })));
-            setShowBulkAsistencia(true);
-          }}
-          className="btn btn-primary zoom-hover" 
-          style={{ background: 'var(--primary)', boxShadow: '0 4px 15px rgba(139, 90, 43, 0.4)', fontWeight: 'bold', whiteSpace: 'nowrap' }}
-        >
-          📝 Tomar Asistencia
-        </button>
-      </div>
+      {esConsejo && (
+        <div className="flex-responsive" style={{ gap: '1rem', marginBottom: '1rem' }}>
+          <button 
+            className="btn zoom-hover" 
+            style={{ background: '#1D6F42', color: 'white', border: 'none', fontWeight: 'bold' }} 
+            onClick={() => setIsExportModalOpen(true)}
+          >
+            📊 <span className="desktop-only">Descargar Excel</span>
+          </button>
+          <button 
+            onClick={() => {
+              const hActivos = hermanos.filter(h => h.activo);
+              setBulkList(hActivos.map(h => ({ ...h, estado: 'falta' })));
+              setShowBulkAsistencia(true);
+            }}
+            className="btn btn-primary zoom-hover" 
+            style={{ background: 'var(--primary)', boxShadow: '0 4px 15px rgba(139, 90, 43, 0.4)', fontWeight: 'bold', whiteSpace: 'nowrap' }}
+          >
+            📝 Tomar Asistencia
+          </button>
+        </div>
+      )}
       
       {!groupedAsistencias || Object.keys(groupedAsistencias).length === 0 ? (
         <div className="glass-card animate-fade">

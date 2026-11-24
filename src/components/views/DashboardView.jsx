@@ -47,6 +47,7 @@ export const resolveEtapa = (h) => {
 };
 
 const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, setIsModalOpen }) => {
+  const esConsejo = ['admin', 'superadmin', 'admin_nacional', 'consejo'].includes(user?.rol);
   const [data, setData] = useState({ hermanos: [], anuncios: [], eventos: [], asistencias: [], metricas: null });
   const [loading, setLoading] = useState(true);
 
@@ -165,7 +166,7 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
           </h3>
           <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
             {/* Tarjeta TikTok */}
-            <div onClick={() => setActiveTab('Redes')} className="glass-card zoom-hover" style={{ cursor: 'pointer', padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'linear-gradient(135deg, #F3F4F6, #E5E7EB)', borderLeft: '5px solid #000000' }}>
+            <div onClick={() => esConsejo && setActiveTab('Redes')} className="glass-card zoom-hover" style={{ cursor: esConsejo ? 'pointer' : 'default', padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'linear-gradient(135deg, #F3F4F6, #E5E7EB)', borderLeft: '5px solid #000000' }}>
                <div style={{ fontSize: '2.5rem' }}>🎵</div>
                <div>
                   <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>TIKTOK (SEGUIDORES)</p>
@@ -178,7 +179,7 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
                </div>
             </div>
             {/* Tarjeta Instagram */}
-            <div onClick={() => setActiveTab('Redes')} className="glass-card zoom-hover" style={{ cursor: 'pointer', padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'linear-gradient(135deg, #FDF2F8, #FCE7F3)', borderLeft: '5px solid #E1306C' }}>
+            <div onClick={() => esConsejo && setActiveTab('Redes')} className="glass-card zoom-hover" style={{ cursor: esConsejo ? 'pointer' : 'default', padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'linear-gradient(135deg, #FDF2F8, #FCE7F3)', borderLeft: '5px solid #E1306C' }}>
                <div style={{ fontSize: '2.5rem' }}>📸</div>
                <div>
                   <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>INSTAGRAM (SEGUIDORES)</p>
@@ -191,7 +192,7 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
                </div>
             </div>
             {/* Tarjeta YouTube */}
-            <div onClick={() => setActiveTab('Redes')} className="glass-card zoom-hover" style={{ cursor: 'pointer', padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'linear-gradient(135deg, #FEF2F2, #FEE2E2)', borderLeft: '5px solid #EF4444' }}>
+            <div onClick={() => esConsejo && setActiveTab('Redes')} className="glass-card zoom-hover" style={{ cursor: esConsejo ? 'pointer' : 'default', padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'linear-gradient(135deg, #FEF2F2, #FEE2E2)', borderLeft: '5px solid #EF4444' }}>
                <div style={{ fontSize: '2.5rem' }}>🔴</div>
                <div>
                   <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>YOUTUBE (SUSCRIPTORES)</p>
@@ -204,7 +205,7 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
                </div>
             </div>
             {/* Tarjeta Facebook */}
-            <div onClick={() => setActiveTab('Redes')} className="glass-card zoom-hover" style={{ cursor: 'pointer', padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'linear-gradient(135deg, #EFF6FF, #DBEAFE)', borderLeft: '5px solid #3B82F6' }}>
+            <div onClick={() => esConsejo && setActiveTab('Redes')} className="glass-card zoom-hover" style={{ cursor: esConsejo ? 'pointer' : 'default', padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'linear-gradient(135deg, #EFF6FF, #DBEAFE)', borderLeft: '5px solid #3B82F6' }}>
                <div style={{ fontSize: '2.5rem' }}>📘</div>
                <div>
                   <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>FACEBOOK (SEGUIDORES)</p>
@@ -217,7 +218,7 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
                </div>
             </div>
             {/* Tarjeta Web */}
-            <div onClick={() => setActiveTab('Redes')} className="glass-card zoom-hover" style={{ cursor: 'pointer', padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'linear-gradient(135deg, #F0FDF4, #DCFCE7)', borderLeft: '5px solid #22C55E' }}>
+            <div onClick={() => esConsejo && setActiveTab('Redes')} className="glass-card zoom-hover" style={{ cursor: esConsejo ? 'pointer' : 'default', padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'linear-gradient(135deg, #F0FDF4, #DCFCE7)', borderLeft: '5px solid #22C55E' }}>
                <div style={{ fontSize: '2.5rem' }}>🌐</div>
                <div>
                   <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 'bold' }}>VISITAS WEB (30 DÍAS)</p>
@@ -235,7 +236,7 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
         {[
           { label: 'HERMANOS TOTALES', value: totalHermanos, icon: '👥', color: 'var(--text-main)', bg: 'linear-gradient(135deg, #EFF6FF, #DBEAFE)', tab: 'Hermanos' },
           { label: 'ACTIVOS', value: activos, icon: '✅', color: '#10B981', border: '#10B981', tab: 'Hermanos' },
-          { label: 'PENDIENTES', value: pendientes, icon: '⏳', color: '#F59E0B', border: '#F59E0B', tab: 'Hermanos' },
+          ...(esConsejo ? [{ label: 'PENDIENTES', value: pendientes, icon: '⏳', color: '#F59E0B', border: '#F59E0B', tab: 'Hermanos' }] : []),
           { label: 'EN CALENDARIO', value: data.eventos?.length || 0, icon: '📅', color: '#6366F1', border: '#6366F1', tab: 'Eventos' }
         ].map((stat, i) => (
           <div key={i} onClick={() => setActiveTab(stat.tab)} className="glass-card zoom-hover" style={{ 

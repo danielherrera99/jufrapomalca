@@ -290,7 +290,7 @@ const Login = ({ onLogin }) => {
     setError('');
     try {
       const { data } = await api.post('/auth/login', { username, password });
-      if (['admin', 'superadmin', 'admin_nacional', 'consejo'].includes(data.usuario.rol)) {
+      if (data && data.usuario && data.token) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.usuario));
         if (data.usuario.fraternidadId) {
@@ -303,13 +303,13 @@ const Login = ({ onLogin }) => {
         }
         onLogin(data.usuario);
       } else {
-        setError('Acceso denegado: Solo miembros del consejo o administración.');
+        setError('No se pudo verificar la sesión. Intenta de nuevo.');
       }
     } catch (err) {
       if (err.code === 'ECONNABORTED' || err.message?.includes('timeout') || err.message?.includes('Network Error')) {
         setError('El servidor se está despertando (puede tomar hasta 1 min). Vuelve a intentar en unos segundos.');
       } else {
-        setError('Credenciales inválidas o cuenta no aprobada.');
+        setError(err.response?.data?.message || 'Credenciales inválidas o cuenta no aprobada.');
       }
     } finally {
       setIsLoading(false);
@@ -438,21 +438,21 @@ const Login = ({ onLogin }) => {
                 ? 'FAMILIA FRANCISCANA • REGISTRO' 
                 : view === 'forgot' 
                 ? 'SEGURIDAD • CUENTA FRATERNA' 
-                : 'ACCESO INTERNO • CONSEJO LOCAL'}
+                : 'PORTAL FRATERNO • COMUNIDAD JUFRA'}
             </span>
             <h1 className="login-hero-title">
               {view === 'register' 
                 ? 'Únete a la fraternidad de la JUFRA' 
                 : view === 'forgot' 
                 ? 'Recupera tu acceso al panel' 
-                : 'Gestión fraterna al servicio de la comunidad'}
+                : 'Vida fraterna y servicio en comunidad'}
             </h1>
             <p className="login-hero-desc">
               {view === 'register'
                 ? 'Crea tu cuenta como nuevo hermano para formar parte de la comunidad, participar de los encuentros sabatinos y caminar juntos en el Evangelio.'
                 : view === 'forgot'
                 ? 'Te enviaremos un código de seguridad para que puedas restablecer tu contraseña y volver a ingresar al sistema.'
-                : 'Administra el directorio de hermanos, el registro de asistencia sabatina por QR, las etapas formativas y los mensajes de nuevos jóvenes.'}
+                : 'Accede a la vida fraterna, espiritualidad, cancionero, formación, anuncios y gestión comunitaria de la JUFRA.'}
             </p>
           </div>
 
@@ -488,10 +488,10 @@ const Login = ({ onLogin }) => {
 
           <div className="login-form-heading">
             <h2 className="login-form-title">
-              {view === 'login' ? 'JUFRA Admin' : view === 'register' ? 'Crear Cuenta' : 'Recuperar Contraseña'}
+              {view === 'login' ? 'Portal Fraterno' : view === 'register' ? 'Crear Cuenta' : 'Recuperar Contraseña'}
             </h2>
             <p className="login-form-subtitle">
-              {view === 'login' && 'Ingresa con tu cuenta de animador o consejo local.'}
+              {view === 'login' && 'Ingresa con tu cuenta de hermano o consejo local.'}
               {view === 'register' && 'Completa tus datos para unirte a la fraternidad.'}
               {view === 'forgot' && recoverStep === 1 && 'Ingresa tu usuario o correo para enviarte un código de seguridad.'}
               {view === 'forgot' && recoverStep === 2 && 'Ingresa el código de 6 dígitos que enviamos a tu correo electrónico.'}
@@ -1189,8 +1189,16 @@ const Dashboard = ({ user, onLogout }) => {
   const location = useLocation();
 
   const esAdmin = ['admin', 'superadmin', 'admin_nacional'].includes(user?.rol);
+  const esConsejo = ['admin', 'superadmin', 'admin_nacional', 'consejo'].includes(user?.rol);
 
-  // Obtener el tab activo de la URL
+  // Módulos reservados exclusivamente para el Consejo Local y Administradores
+  const modulosConsejo = useMemo(() => [
+    'Consejo', 'Actas', 'Finanzas', 'Inventario', 'Solicitudes', 'Redes', 
+    'GaleriaWeb', 'QuienesSomos', 'WebConfig', 'Campanas', 'RegistrosMascotas', 
+    'OfsConfig', 'OfsFraternidades', 'Fraternidades', 'Comunicacion', 'Mensajes', 'Asistente'
+  ], []);
+
+  // Obtener el tab activo de la URL con protección de rol
   const activeTab = useMemo(() => {
     const segments = location.pathname.split('/');
     const lastSegment = segments[segments.length - 1];
@@ -1198,11 +1206,17 @@ const Dashboard = ({ user, onLogout }) => {
     if (lastSegment === 'dashboard' || !lastSegment) return 'Dashboard';
     
     const foundModule = modules.find(m => m.id.toLowerCase() === lastSegment.toLowerCase());
-    return foundModule ? foundModule.id : 'Dashboard';
-  }, [location.pathname]);
+    if (!foundModule) return 'Dashboard';
+    if (!esConsejo && modulosConsejo.includes(foundModule.id)) return 'Dashboard';
+    return foundModule.id;
+  }, [location.pathname, esConsejo, modulosConsejo]);
 
   const setActiveTab = (tabId) => {
     setSearchTerm('');
+    if (!esConsejo && modulosConsejo.includes(tabId)) {
+      navigate('/dashboard');
+      return;
+    }
     if (tabId === 'Dashboard') navigate('/dashboard');
     else navigate(`/dashboard/${tabId.toLowerCase()}`);
   };
@@ -1239,11 +1253,18 @@ const Dashboard = ({ user, onLogout }) => {
         ></div>
       )}
       <aside className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
-        <div className="sidebar-brand">JUFRA Admin</div>
+        <div className="sidebar-brand">
+          {esConsejo ? 'JUFRA Admin' : 'JUFRA Fraternidad'}
+        </div>
         <nav className="nav-menu">
-          {/* GRUPO: GESTIÓN */}
-          <div className="nav-section-title">GESTIÓN</div>
-          {modules.filter(m => ['Dashboard', 'Hermanos', 'Consejo', 'Asistencia'].includes(m.id)).map((mod) => (
+          {/* GRUPO: GESTIÓN O VIDA FRATERNA */}
+          <div className="nav-section-title">
+            {esConsejo ? 'GESTIÓN' : 'VIDA FRATERNA'}
+          </div>
+          {modules.filter(m => {
+            if (m.id === 'Consejo' && !esConsejo) return false;
+            return ['Dashboard', 'Hermanos', 'Consejo', 'Asistencia'].includes(m.id);
+          }).map((mod) => (
              <a key={mod.id} href="#" onClick={(e) => { e.preventDefault(); setActiveTab(mod.id); setIsSidebarOpen(false); }}
               className={`nav-link ${activeTab === mod.id ? 'active' : ''}`}
             >
@@ -1251,8 +1272,8 @@ const Dashboard = ({ user, onLogout }) => {
             </a>
           ))}
 
-          {/* GRUPO: VIDA FRATERNA */}
-          <div className="nav-section-title" style={{ marginTop: '1.5rem' }}>VIDA FRATERNA</div>
+          {/* GRUPO: VIDA FRATERNA / ESPIRITUALIDAD */}
+          <div className="nav-section-title" style={{ marginTop: '1.5rem' }}>ESPIRITUALIDAD Y COMUNIDAD</div>
           {modules.filter(m => ['Espiritu', 'Peticiones', 'Cantos', 'Anuncios', 'Eventos', 'Chat', 'Mapa'].includes(m.id)).map((mod) => (
              <a key={mod.id} href="#" onClick={(e) => { e.preventDefault(); setActiveTab(mod.id); setIsSidebarOpen(false); }}
               className={`nav-link ${activeTab === mod.id ? 'active' : ''}`}
@@ -1261,9 +1282,14 @@ const Dashboard = ({ user, onLogout }) => {
             </a>
           ))}
 
-          {/* GRUPO: ADMIN */}
-          <div className="nav-section-title" style={{ marginTop: '1.5rem' }}>ADMINISTRACIÓN</div>
+          {/* GRUPO: ADMINISTRACIÓN O RECURSOS */}
+          <div className="nav-section-title" style={{ marginTop: '1.5rem' }}>
+            {esConsejo ? 'ADMINISTRACIÓN' : 'RECURSOS Y FORMACIÓN'}
+          </div>
           {modules.filter(m => {
+            if (!esConsejo) {
+              return ['Formacion', 'Documentos', 'Galeria', 'Servicios', 'Perfil'].includes(m.id);
+            }
             if (m.id === 'Inventario') return esAdmin;
             return ['Documentos', 'Actas', 'Formacion', 'Galeria', 'Finanzas', 'Servicios', 'Comunicacion', 'Asistente', 'Mensajes', 'Perfil'].includes(m.id);
           }).map((mod) => (
@@ -1274,15 +1300,19 @@ const Dashboard = ({ user, onLogout }) => {
             </a>
           ))}
 
-          {/* GRUPO: GESTIÓN WEB */}
-          <div className="nav-section-title" style={{ marginTop: '1.5rem' }}>GESTIÓN WEB</div>
-          {modules.filter(m => ['Solicitudes', 'Redes', 'GaleriaWeb', 'QuienesSomos', 'WebConfig', 'Campanas', 'RegistrosMascotas', 'OfsConfig', 'OfsFraternidades', 'Fraternidades'].includes(m.id)).map((mod) => (
-             <a key={mod.id} href="#" onClick={(e) => { e.preventDefault(); setActiveTab(mod.id); setIsSidebarOpen(false); }}
-              className={`nav-link ${activeTab === mod.id ? 'active' : ''}`}
-            >
-              <span style={{ marginRight: '8px' }}>{mod.icon}</span> {mod.label}
-            </a>
-          ))}
+          {/* GRUPO: GESTIÓN WEB (SOLO CONSEJO Y ADMIN) */}
+          {esConsejo && (
+            <>
+              <div className="nav-section-title" style={{ marginTop: '1.5rem' }}>GESTIÓN WEB</div>
+              {modules.filter(m => ['Solicitudes', 'Redes', 'GaleriaWeb', 'QuienesSomos', 'WebConfig', 'Campanas', 'RegistrosMascotas', 'OfsConfig', 'OfsFraternidades', 'Fraternidades'].includes(m.id)).map((mod) => (
+                 <a key={mod.id} href="#" onClick={(e) => { e.preventDefault(); setActiveTab(mod.id); setIsSidebarOpen(false); }}
+                  className={`nav-link ${activeTab === mod.id ? 'active' : ''}`}
+                >
+                  <span style={{ marginRight: '8px' }}>{mod.icon}</span> {mod.label}
+                </a>
+              ))}
+            </>
+          )}
         </nav>
         <div className="sidebar-footer">
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
@@ -1290,7 +1320,7 @@ const Dashboard = ({ user, onLogout }) => {
               width: '36px',
               height: '36px',
               borderRadius: '50%',
-              background: user.rol === 'superadmin' ? '#d97706' : '#b45309',
+              background: user.rol === 'superadmin' ? '#d97706' : esConsejo ? '#b45309' : '#059669',
               color: '#fff',
               display: 'flex',
               alignItems: 'center',
@@ -1306,7 +1336,11 @@ const Dashboard = ({ user, onLogout }) => {
                 {user.nombre} {user.apellido}
               </p>
               <span style={{ fontSize: '0.74rem', color: user.rol === 'superadmin' ? '#d97706' : 'var(--text-muted)', fontWeight: 600 }}>
-                {user.rol === 'superadmin' ? '👑 Super Admin Nacional' : (user.fraternidadNombre || 'JUFRA Pomalca')}
+                {user.rol === 'superadmin' 
+                  ? '👑 Super Admin Nacional' 
+                  : esConsejo 
+                    ? (user.cargo && user.cargo !== 'ninguno' ? `🛡️ ${user.cargo}` : '🛡️ Consejo')
+                    : '🕊️ Hermano(a) JUFRA'}
               </span>
             </div>
           </div>
@@ -1315,13 +1349,17 @@ const Dashboard = ({ user, onLogout }) => {
       </aside>
       <main className="dashboard-content">
         <div className="mobile-header">
-          <div className="sidebar-brand" style={{ padding: 0, border: 'none', fontSize: '1.2rem' }}>JUFRA Admin</div>
+          <div className="sidebar-brand" style={{ padding: 0, border: 'none', fontSize: '1.2rem' }}>
+            {esConsejo ? 'JUFRA Admin' : 'JUFRA Fraternidad'}
+          </div>
           <button className="hamburger" onClick={() => setIsSidebarOpen(true)}>☰</button>
         </div>
         <header className="content-header flex-responsive" style={{ marginBottom: '1.25rem', gap: '1rem', alignItems: 'center', borderBottom: '1px solid rgba(0,0,0,0.06)', paddingBottom: '0.85rem' }}>
             <div style={{ flexShrink: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '1rem' }}>
-                <span style={{ color: '#78716c', fontWeight: 500 }}>Gestión</span>
+                <span style={{ color: '#78716c', fontWeight: 500 }}>
+                  {esConsejo ? 'Gestión' : 'Fraternidad'}
+                </span>
                 <span style={{ color: '#a8a29e', margin: '0 2px' }}>/</span>
                 <span style={{ color: '#1c1917', fontWeight: 700 }}>
                   {modules.find(m => m.id === activeTab)?.label || activeTab}
@@ -1399,38 +1437,41 @@ const Dashboard = ({ user, onLogout }) => {
         
         <div className="mt-4" key={selectedFraternidadId || 'all-peru'}>
           <Routes>
+          {/* Vistas comunes: Hermanos y Consejo */}
           <Route path="/" element={<DashboardView user={user} formatSafeDate={formatSafeDate} setActiveTab={setActiveTab} ActivityIndicator={ActivityIndicator} />} />
-          <Route path="hermanos" element={<HermanosView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
+          <Route path="hermanos" element={<HermanosView user={user} formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
           <Route path="anuncios" element={<AnunciosView formatSafeDate={formatSafeDate} SafeImage={SafeImage} ActivityIndicator={ActivityIndicator} />} />
           <Route path="eventos" element={<EventosView formatSafeDate={formatSafeDate} SafeImage={SafeImage} ActivityIndicator={ActivityIndicator} />} />
           <Route path="servicios" element={<ServiciosView formatSafeDate={formatSafeDate} SafeImage={SafeImage} ActivityIndicator={ActivityIndicator} />} />
           <Route path="peticiones" element={<PeticionesView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
           <Route path="formacion" element={<FormacionView formatSafeDate={formatSafeDate} SafeImage={SafeImage} ActivityIndicator={ActivityIndicator} />} />
-          <Route path="actas" element={<ActasView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
           <Route path="documentos" element={<DocumentosView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
-          <Route path="finanzas" element={<FinanzasView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
-          <Route path="inventario" element={esAdmin ? <InventarioView ActivityIndicator={ActivityIndicator} formatSafeDate={formatSafeDate} /> : <Navigate to="/dashboard" />} />
           <Route path="galeria" element={<GaleriaView formatSafeDate={formatSafeDate} SafeImage={SafeImage} ActivityIndicator={ActivityIndicator} />} />
           <Route path="cantos" element={<CantosView ActivityIndicator={ActivityIndicator} />} />
-          <Route path="asistencia" element={<AsistenciaView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
-          <Route path="solicitudes" element={<SolicitudesView formatSafeDate={formatSafeDate} />} />
+          <Route path="asistencia" element={<AsistenciaView user={user} formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} />} />
           <Route path="mapa" element={<MapaView ActivityIndicator={ActivityIndicator} setActiveTab={setActiveTab} />} />
           <Route path="chat" element={<MisMensajesView ActivityIndicator={ActivityIndicator} SafeImage={SafeImage} user={user} formatSafeDate={formatSafeDate} />} />
           <Route path="perfil" element={<PerfilView ActivityIndicator={ActivityIndicator} SafeImage={SafeImage} />} />
-          <Route path="redes" element={<RedesAdminView />} />
-          <Route path="webconfig" element={<WebConfigView />} />
-          <Route path="campanas" element={<CampaignsAdminView ActivityIndicator={ActivityIndicator} />} />
-          <Route path="registrosmascotas" element={<RegistrosMascotasAdminView />} />
-          <Route path="ofsconfig" element={<OfsConfigView />} />
-          <Route path="ofsfraternidades" element={<OfsFraternidadesAdminView ActivityIndicator={ActivityIndicator} />} />
-          <Route path="fraternidades" element={<FraternidadesAdminView />} />
-          <Route path="consejo" element={<Consejo />} />
-          <Route path="comunicacion" element={<ComunicacionView ActivityIndicator={ActivityIndicator} />} />
-          <Route path="mensajes" element={<MensajesAdminView ActivityIndicator={ActivityIndicator} formatSafeDate={formatSafeDate} />} />
           <Route path="espiritu" element={<EspirituView />} />
-          <Route path="asistente" element={<AsistenteIAView />} />
-          <Route path="galeriaweb" element={<GaleriaWebAdminView />} />
-          <Route path="quienessomos" element={<QuienesSomosView />} />
+
+          {/* Vistas exclusivas de Consejo y Administración */}
+          <Route path="actas" element={esConsejo ? <ActasView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} /> : <Navigate to="/dashboard" />} />
+          <Route path="finanzas" element={esConsejo ? <FinanzasView formatSafeDate={formatSafeDate} ActivityIndicator={ActivityIndicator} /> : <Navigate to="/dashboard" />} />
+          <Route path="inventario" element={esAdmin ? <InventarioView ActivityIndicator={ActivityIndicator} formatSafeDate={formatSafeDate} /> : <Navigate to="/dashboard" />} />
+          <Route path="solicitudes" element={esConsejo ? <SolicitudesView formatSafeDate={formatSafeDate} /> : <Navigate to="/dashboard" />} />
+          <Route path="redes" element={esConsejo ? <RedesAdminView /> : <Navigate to="/dashboard" />} />
+          <Route path="webconfig" element={esConsejo ? <WebConfigView /> : <Navigate to="/dashboard" />} />
+          <Route path="campanas" element={esConsejo ? <CampaignsAdminView ActivityIndicator={ActivityIndicator} /> : <Navigate to="/dashboard" />} />
+          <Route path="registrosmascotas" element={esConsejo ? <RegistrosMascotasAdminView /> : <Navigate to="/dashboard" />} />
+          <Route path="ofsconfig" element={esConsejo ? <OfsConfigView /> : <Navigate to="/dashboard" />} />
+          <Route path="ofsfraternidades" element={esConsejo ? <OfsFraternidadesAdminView ActivityIndicator={ActivityIndicator} /> : <Navigate to="/dashboard" />} />
+          <Route path="fraternidades" element={esConsejo ? <FraternidadesAdminView /> : <Navigate to="/dashboard" />} />
+          <Route path="consejo" element={esConsejo ? <Consejo /> : <Navigate to="/dashboard" />} />
+          <Route path="comunicacion" element={esConsejo ? <ComunicacionView ActivityIndicator={ActivityIndicator} /> : <Navigate to="/dashboard" />} />
+          <Route path="mensajes" element={esConsejo ? <MensajesAdminView ActivityIndicator={ActivityIndicator} formatSafeDate={formatSafeDate} /> : <Navigate to="/dashboard" />} />
+          <Route path="asistente" element={esConsejo ? <AsistenteIAView /> : <Navigate to="/dashboard" />} />
+          <Route path="galeriaweb" element={esConsejo ? <GaleriaWebAdminView /> : <Navigate to="/dashboard" />} />
+          <Route path="quienessomos" element={esConsejo ? <QuienesSomosView /> : <Navigate to="/dashboard" />} />
         </Routes>
         </div>
 

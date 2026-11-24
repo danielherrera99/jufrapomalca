@@ -10,7 +10,8 @@ const etapaBadgeMap = {
   'promesado': { label: 'Promesado(a)', bg: '#DCFCE7', color: '#15803D' }
 };
 
-const HermanosView = ({ handleApprove }) => {
+const HermanosView = ({ handleApprove, user }) => {
+  const esConsejo = ['admin', 'superadmin', 'admin_nacional', 'consejo'].includes(user?.rol);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -101,9 +102,11 @@ const HermanosView = ({ handleApprove }) => {
               className="search-input"
             />
           </div>
-          <button className="btn btn-primary" onClick={() => alert('Los hermanos deben registrarse ellos mismos desde su propia App Móvil.')}>
-            ➕ Añadir
-          </button>
+          {esConsejo && (
+            <button className="btn btn-primary" onClick={() => alert('Los hermanos deben registrarse ellos mismos desde su propia App Móvil.')}>
+              ➕ Añadir
+            </button>
+          )}
         </div>
       </div>
 
@@ -113,7 +116,7 @@ const HermanosView = ({ handleApprove }) => {
           onClick={() => setHermanosFilter('todos')}
           style={{ background: hermanosFilter !== 'todos' ? 'var(--surface)' : '', color: hermanosFilter !== 'todos' ? 'var(--text-main)' : '', border: '1px solid var(--border)', flex: 1 }}
         >
-          Todos los Registros
+          {esConsejo ? 'Todos los Registros' : 'Directorio Fraterno'}
         </button>
         <button 
           className={`btn ${hermanosFilter === 'activos' ? 'btn-primary' : ''}`}
@@ -122,18 +125,20 @@ const HermanosView = ({ handleApprove }) => {
         >
           Hermanos Activos
         </button>
-        <button 
-          className={`btn ${hermanosFilter === 'inactivos' ? 'btn-primary' : ''}`}
-          onClick={() => setHermanosFilter('inactivos')}
-          style={{ background: hermanosFilter !== 'inactivos' ? 'var(--surface)' : '', color: hermanosFilter !== 'inactivos' ? 'var(--text-main)' : '', border: '1px solid var(--border)', flex: 1, position: 'relative' }}
-        >
-          Solicitudes Pendientes
-          {Array.isArray(data) && data.filter(h => !h.activo).length > 0 && (
-            <span style={{ marginLeft: '8px', background: 'var(--accent)', color: 'white', padding: '2px 8px', borderRadius: '10px', fontSize: '0.7rem', fontWeight: 'bold' }}>
-              {data.filter(h => !h.activo).length}
-            </span>
-          )}
-        </button>
+        {esConsejo && (
+          <button 
+            className={`btn ${hermanosFilter === 'inactivos' ? 'btn-primary' : ''}`}
+            onClick={() => setHermanosFilter('inactivos')}
+            style={{ background: hermanosFilter !== 'inactivos' ? 'var(--surface)' : '', color: hermanosFilter !== 'inactivos' ? 'var(--text-main)' : '', border: '1px solid var(--border)', flex: 1, position: 'relative' }}
+          >
+            Solicitudes Pendientes
+            {Array.isArray(data) && data.filter(h => !h.activo).length > 0 && (
+              <span style={{ marginLeft: '8px', background: 'var(--accent)', color: 'white', padding: '2px 8px', borderRadius: '10px', fontSize: '0.7rem', fontWeight: 'bold' }}>
+                {data.filter(h => !h.activo).length}
+              </span>
+            )}
+          </button>
+        )}
       </div>
 
       {loading ? (
@@ -144,8 +149,8 @@ const HermanosView = ({ handleApprove }) => {
             <div 
               key={item._id || index} 
               className="glass-card animate-fade" 
-              style={{ padding: '1.5rem', position: 'relative', cursor: 'pointer' }}
-              onClick={() => openEditModal(item)}
+              style={{ padding: '1.5rem', position: 'relative', cursor: esConsejo ? 'pointer' : 'default' }}
+              onClick={() => esConsejo && openEditModal(item)}
             >
               <h3 style={{ marginBottom: '0.5rem', color: 'var(--primary)' }}>
                 {item.nombreCompleto || item.nombre || 'Registro sin título'}
@@ -173,7 +178,7 @@ const HermanosView = ({ handleApprove }) => {
                     🛡️ {item.cargo}
                   </span>
                 )}
-                {!item.activo && (
+                {!item.activo && esConsejo && (
                   <button 
                     onClick={(e) => localHandleApprove(item._id, e)}
                     style={{ display: 'block', marginTop: '6px', background: '#4CAF50', color: 'white', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '8px', cursor: 'pointer', width: '100%', fontWeight: 'bold', fontSize: '0.85rem' }}>
