@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mantenimiento · JUFRA Pomalca</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      width: 100%;
+      background-color: #18110b;
+      color: #ffffff;
+      font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+    .glow-amber {
+      position: absolute;
+      top: -15%;
+      right: -10%;
+      width: 450px;
+      height: 450px;
+      border-radius: 50%;
+      background-color: rgba(245, 158, 11, 0.12);
+      filter: blur(100px);
+      pointer-events: none;
+    }
+    .glow-terracotta {
+      position: absolute;
+      bottom: -15%;
+      left: -10%;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background-color: rgba(194, 65, 12, 0.14);
+      filter: blur(120px);
+      pointer-events: none;
+    }
+    .card {
+      max-width: 620px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 28px;
+      padding: 3rem 2.5rem;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
+    }
+    .tau-badge {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.5rem;
+      box-shadow: 0 8px 24px rgba(245, 158, 11, 0.15);
+    }
+    .tau-symbol {
+      color: #f59e0b;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-weight: 800;
+      font-size: 1.85rem;
+      line-height: 1;
+    }
+    .paz-bien {
+      display: block;
+      color: #fef3c7;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      font-family: monospace, sans-serif;
+      text-transform: uppercase;
+      margin-bottom: 1.75rem;
+    }
+    h1 {
+      font-size: clamp(2rem, 4.5vw, 2.75rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.025em;
+    }
+    p.desc {
+      color: #d6d3d1;
+      font-size: 1.05rem;
+      line-height: 1.65;
+      margin-bottom: 1.75rem;
+    }
+    .quote-box {
+      background: rgba(0, 0, 0, 0.35);
+      border-left: 3px solid #f59e0b;
+      padding: 1.1rem 1.35rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      text-align: left;
+    }
+    .quote-text {
+      color: #f5f5f4;
+      font-style: italic;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      margin-bottom: 0.35rem;
+    }
+    .quote-author {
+      color: #fbbf24;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .status-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 0.5rem 1.1rem;
+      border-radius: 50px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 2rem;
+      font-size: 0.82rem;
+      color: #e7e5e4;
+    }
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background-color: #f59e0b;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+    .actions {
+      display: flex;
+      gap: 0.85rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+    .btn-primary {
+      background: #c2410c;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 0.85rem 1.75rem;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(194, 65, 12, 0.35);
+      display: inline-flex;
+      align-items: center;
+      transition: all 0.2s;
+    }
+    .btn-primary:hover {
+      background: #9a3412;
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.85rem 1.75rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.18);
+      transform: translateY(-2px);
+    }
+    .footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 1.5rem;
+      color: #a8a29e;
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+    .footer a {
+      color: #f59e0b;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="glow-amber"></div>
+  <div class="glow-terracotta"></div>
+
+  <div class="card">
+    <div class="tau-badge">
+      <span class="tau-symbol">T</span>
+    </div>
+    <span class="paz-bien">PAZ Y BIEN</span>
+
+    <h1>Momento de Oración<br>&amp; Mantenimiento</h1>
+
+    <p class="desc">
+      Paz y Bien, hermanos. Nuestra plataforma web comunitaria se encuentra temporalmente en 
+      proceso de actualización y optimización de servidores para brindarte una mejor experiencia fraterna.
+    </p>
+
+    <div class="quote-box">
+      <p class="quote-text">«Empieza por hacer lo necesario, luego lo que es posible, y de pronto estarás haciendo lo imposible.»</p>
+      <span class="quote-author">— San Francisco de Asís</span>
+    </div>
+
+    <div class="status-box">
+      <div class="status-dot"></div>
+      <span>Actualización y mantenimiento en curso</span>
+    </div>
+
+    <div class="actions">
+      <a href="https://wa.me/51982225200?text=Paz%20y%20Bien,%20quisiera%20consultar%20sobre%20la%20plataforma%20de%20JUFRA%20Pomalca" target="_blank" rel="noopener noreferrer" class="btn-primary">
+        💬 Contactar por WhatsApp
+      </a>
+      <button onclick="window.location.reload()" class="btn-secondary">
+        🔄 Reintentar conexión
+      </button>
+    </div>
+
+    <div class="footer">
+      <p>Fraternidad Juventud Franciscana de Pomalca<br>Parroquia Ntra. Sra. del Perpetuo Socorro · Lambayeque, Perú</p>
+    </div>
+  </div>
+</body>
+</html>

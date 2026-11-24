@@ -43,6 +43,7 @@ import FraternidadDetailView from './components/views/FraternidadDetailView';
 import FinanzasView from './components/views/FinanzasView';
 import RegistrosMascotasAdminView from './components/views/RegistrosMascotasAdminView';
 import InventarioView from './components/views/InventarioView';
+import MantenimientoView from './components/views/MantenimientoView';
 import { FraternidadProvider, useFraternidad } from './context/FraternidadContext';
 import FraternidadSelector from './components/FraternidadSelector';
 import { format, parseISO } from 'date-fns';
@@ -1457,18 +1458,7 @@ class ErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
-      return (
-        <div style={{ padding: '2rem', background: '#ffebee', color: '#c62828', fontFamily: 'monospace', minHeight: '100vh', textAlign: 'left' }}>
-          <h1>¡Cuidado! Error crítico detectado en la pantalla.</h1>
-          <p>Toma una captura de esto y envíaselo al asistente:</p>
-          <hr />
-          <h3>Mensaje: {this.state.error?.toString()}</h3>
-          <pre style={{ overflowX: 'auto', background: 'rgba(0,0,0,0.1)', padding: '1rem' }}>
-            {this.state.errorInfo?.componentStack}
-          </pre>
-          <button onClick={() => window.location.reload()} style={{ marginTop: '1rem', padding: '10px', cursor: 'pointer' }}>Recargar Página</button>
-        </div>
-      );
+      return <MantenimientoView />;
     }
     return this.props.children;
   }
@@ -1500,6 +1490,7 @@ function App() {
         <Routes>
           {/* Cara Pública */}
           <Route path="/" element={<LandingView />} />
+          <Route path="/mantenimiento" element={<MantenimientoView />} />
           <Route path="/campana" element={<CampaignView />} />
           <Route path="/familia" element={<OfsView />} />
           <Route path="/ofs" element={<TerceraOrdenView />} />
