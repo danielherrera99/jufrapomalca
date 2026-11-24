@@ -138,13 +138,33 @@ const getSafeDateForInput = (dateStr) => {
 
 // Login Component (Premium Aesthetics - Split Screen)
 const Login = ({ onLogin }) => {
-  const [view, setView] = useState('login'); // 'login' | 'forgot'
+  const [view, setView] = useState('login'); // 'login' | 'forgot' | 'register'
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Estados para Registro de Nueva Cuenta (Flujo idéntico a la App Móvil)
+  const [regData, setRegData] = useState({
+    nombre: '',
+    apellido: '',
+    email: '',
+    telefono: '',
+    fechaNacimiento: '',
+    nombreContactoEmergencia: '',
+    contactoEmergencia: '',
+    fraternidadId: '00000000-6a0f-b53a-d327-e42a6db2faf7',
+    username: '',
+    password: '',
+    confirmarPassword: ''
+  });
+  const [fraternidades, setFraternidades] = useState([]);
+  const [regLoading, setRegLoading] = useState(false);
+  const [regError, setRegError] = useState('');
+  const [showRegPassword, setShowRegPassword] = useState(false);
+  const [showRegConfirmPassword, setShowRegConfirmPassword] = useState(false);
 
   // Estados para Recuperación de Contraseña (Flujo idéntico a la App Móvil)
   const [recoverStep, setRecoverStep] = useState(1); // 1: Pedir correo/usuario, 2: Código 6 dígitos, 3: Nueva clave
@@ -163,7 +183,105 @@ const Login = ({ onLogin }) => {
       setUsername(savedUser);
       setRememberMe(true);
     }
+
+    const fetchFraternidades = async () => {
+      try {
+        const res = await api.get('/fraternidades');
+        if (res.data?.data && Array.isArray(res.data.data)) {
+          setFraternidades(res.data.data);
+          const pomalca = res.data.data.find(f => f.id === '00000000-6a0f-b53a-d327-e42a6db2faf7' || f.nombre?.toLowerCase().includes('pomalca'));
+          if (pomalca) {
+            setRegData(prev => ({ ...prev, fraternidadId: pomalca.id }));
+          }
+        }
+      } catch (e) {
+        console.error('Error al cargar fraternidades:', e);
+      }
+    };
+    fetchFraternidades();
   }, []);
+
+  // --- Handler de Registro de Nueva Cuenta ---
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setRegError('');
+
+    if (!regData.nombre.trim()) {
+      setRegError('El nombre es requerido.');
+      return;
+    }
+    if (!regData.apellido.trim()) {
+      setRegError('El apellido es requerido.');
+      return;
+    }
+    if (!regData.email.trim()) {
+      setRegError('El correo es requerido para recuperar la contraseña y notificaciones.');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(regData.email.trim())) {
+      setRegError('Ingresa un correo electrónico válido.');
+      return;
+    }
+    if (!regData.telefono.trim()) {
+      setRegError('El teléfono es requerido.');
+      return;
+    }
+    if (!regData.username.trim()) {
+      setRegError('El usuario es requerido.');
+      return;
+    }
+    if (regData.username.trim().length < 4) {
+      setRegError('El usuario debe tener al menos 4 caracteres.');
+      return;
+    }
+    if (!regData.password) {
+      setRegError('La contraseña es requerida.');
+      return;
+    }
+    if (regData.password.length < 6) {
+      setRegError('La contraseña debe tener al menos 6 caracteres.');
+      return;
+    }
+    if (regData.password !== regData.confirmarPassword) {
+      setRegError('Las contraseñas no coinciden.');
+      return;
+    }
+
+    setRegLoading(true);
+    try {
+      const payload = {
+        nombre: regData.nombre.trim(),
+        apellido: regData.apellido.trim(),
+        email: regData.email.trim(),
+        telefono: regData.telefono.trim(),
+        fechaNacimiento: regData.fechaNacimiento || undefined,
+        contactoEmergencia: regData.contactoEmergencia.trim() || undefined,
+        nombreContactoEmergencia: regData.nombreContactoEmergencia.trim() || undefined,
+        fraternidadId: regData.fraternidadId || '00000000-6a0f-b53a-d327-e42a6db2faf7',
+        username: regData.username.trim(),
+        password: regData.password
+      };
+
+      const res = await api.post('/auth/registro', payload);
+      if (res.data.success) {
+        Swal.fire({
+          title: '¡Solicitud Enviada! 🎉',
+          text: res.data.message || 'Tu cuenta está pendiente de aprobación por el Consejo.',
+          icon: 'success',
+          confirmButtonColor: '#c2410c',
+          confirmButtonText: 'Entendido e Iniciar Sesión'
+        });
+        setUsername(regData.username.trim());
+        setPassword('');
+        setView('login');
+        setRegError('');
+      }
+    } catch (err) {
+      setRegError(err.response?.data?.message || 'Error al procesar el registro. Intenta de nuevo.');
+    } finally {
+      setRegLoading(false);
+    }
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -314,12 +432,26 @@ const Login = ({ onLogin }) => {
           </div>
 
           <div className="login-left-hero">
-            <span className="login-hero-tag">ACCESO INTERNO • CONSEJO LOCAL</span>
+            <span className="login-hero-tag">
+              {view === 'register' 
+                ? 'FAMILIA FRANCISCANA • REGISTRO' 
+                : view === 'forgot' 
+                ? 'SEGURIDAD • CUENTA FRATERNA' 
+                : 'ACCESO INTERNO • CONSEJO LOCAL'}
+            </span>
             <h1 className="login-hero-title">
-              Gestión fraterna al servicio de la comunidad
+              {view === 'register' 
+                ? 'Únete a la fraternidad de la JUFRA' 
+                : view === 'forgot' 
+                ? 'Recupera tu acceso al panel' 
+                : 'Gestión fraterna al servicio de la comunidad'}
             </h1>
             <p className="login-hero-desc">
-              Administra el directorio de hermanos, el registro de asistencia sabatina por QR, las etapas formativas y los mensajes de nuevos jóvenes.
+              {view === 'register'
+                ? 'Crea tu cuenta como nuevo hermano para formar parte de la comunidad, participar de los encuentros sabatinos y caminar juntos en el Evangelio.'
+                : view === 'forgot'
+                ? 'Te enviaremos un código de seguridad para que puedas restablecer tu contraseña y volver a ingresar al sistema.'
+                : 'Administra el directorio de hermanos, el registro de asistencia sabatina por QR, las etapas formativas y los mensajes de nuevos jóvenes.'}
             </p>
           </div>
 
@@ -329,9 +461,9 @@ const Login = ({ onLogin }) => {
         </div>
       </div>
 
-      {/* Columna Derecha: Formulario de Autenticación o Recuperación */}
+      {/* Columna Derecha: Formulario de Autenticación, Registro o Recuperación */}
       <div className="login-right-pane">
-        <div className="login-right-content">
+        <div className={`login-right-content ${view === 'register' ? 'is-register' : ''}`}>
           {view === 'login' ? (
             <a href="/" className="login-back-btn">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -342,7 +474,7 @@ const Login = ({ onLogin }) => {
           ) : (
             <button 
               type="button" 
-              onClick={() => { setView('login'); setRecoverStep(1); setRecoverError(''); setRecoverSuccess(''); }}
+              onClick={() => { setView('login'); setRecoverStep(1); setRecoverError(''); setRecoverSuccess(''); setRegError(''); }}
               className="login-back-btn"
               style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
             >
@@ -355,10 +487,11 @@ const Login = ({ onLogin }) => {
 
           <div className="login-form-heading">
             <h2 className="login-form-title">
-              {view === 'login' ? 'JUFRA Admin' : 'Recuperar Contraseña'}
+              {view === 'login' ? 'JUFRA Admin' : view === 'register' ? 'Crear Cuenta' : 'Recuperar Contraseña'}
             </h2>
             <p className="login-form-subtitle">
               {view === 'login' && 'Ingresa con tu cuenta de animador o consejo local.'}
+              {view === 'register' && 'Completa tus datos para unirte a la fraternidad.'}
               {view === 'forgot' && recoverStep === 1 && 'Ingresa tu usuario o correo para enviarte un código de seguridad.'}
               {view === 'forgot' && recoverStep === 2 && 'Ingresa el código de 6 dígitos que enviamos a tu correo electrónico.'}
               {view === 'forgot' && recoverStep === 3 && 'Crea tu nueva contraseña segura para acceder al panel.'}
@@ -463,8 +596,313 @@ const Login = ({ onLogin }) => {
                   >
                     {isLoading ? 'Ingresando...' : 'Ingresar al Panel'}
                   </button>
+
+                  <div style={{ marginTop: '1.5rem', paddingTop: '1.25rem', borderTop: '1px solid #e7e5e4', textAlign: 'center' }}>
+                    <p style={{ margin: '0 0 0.6rem', fontSize: '0.85rem', color: '#78716c' }}>
+                      ¿Aún no tienes una cuenta fraterna?
+                    </p>
+                    <button 
+                      type="button" 
+                      onClick={() => { setView('register'); setRegError(''); }}
+                      className="login-btn-secondary"
+                      style={{ width: '100%', fontWeight: '600', color: '#c2410c', borderColor: '#fdba74' }}
+                    >
+                      ✨ Crear Cuenta de Hermano
+                    </button>
+                  </div>
                 </form>
               </>
+            ) : view === 'register' ? (
+              /* Flujo de Registro de Nueva Cuenta (Idéntico a la App Móvil) */
+              <div className="animate-fade">
+                {regError && (
+                  <div className="login-alert-error animate-fade">
+                    {regError}
+                  </div>
+                )}
+
+                <form onSubmit={handleRegister}>
+                  {/* Sección 1: Información Personal */}
+                  <div className="login-form-section-title">
+                    <span>👤</span> Información Personal
+                  </div>
+
+                  <div className="login-form-grid-2">
+                    <div className="login-field">
+                      <label className="login-field-label">Nombres</label>
+                      <div className="login-input-container">
+                        <span className="login-input-icon">👤</span>
+                        <input 
+                          type="text" 
+                          value={regData.nombre} 
+                          onChange={e => setRegData({ ...regData, nombre: e.target.value })} 
+                          required 
+                          placeholder="Tus nombres"
+                          className="login-modern-input"
+                          autoFocus
+                        />
+                      </div>
+                    </div>
+                    <div className="login-field">
+                      <label className="login-field-label">Apellidos</label>
+                      <div className="login-input-container">
+                        <span className="login-input-icon">👤</span>
+                        <input 
+                          type="text" 
+                          value={regData.apellido} 
+                          onChange={e => setRegData({ ...regData, apellido: e.target.value })} 
+                          required 
+                          placeholder="Tus apellidos"
+                          className="login-modern-input"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="login-field">
+                    <label className="login-field-label">Correo Electrónico</label>
+                    <div className="login-input-container">
+                      <span className="login-input-icon">📧</span>
+                      <input 
+                        type="email" 
+                        value={regData.email} 
+                        onChange={e => setRegData({ ...regData, email: e.target.value })} 
+                        required 
+                        placeholder="ejemplo@gmail.com"
+                        className="login-modern-input"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="login-form-grid-2">
+                    <div className="login-field">
+                      <label className="login-field-label">Fecha de Nacimiento</label>
+                      <div className="login-input-container">
+                        <span className="login-input-icon">📅</span>
+                        <input 
+                          type="date" 
+                          value={regData.fechaNacimiento} 
+                          onChange={e => setRegData({ ...regData, fechaNacimiento: e.target.value })} 
+                          className="login-modern-input"
+                        />
+                      </div>
+                    </div>
+                    <div className="login-field">
+                      <label className="login-field-label">Teléfono / WhatsApp</label>
+                      <div className="login-input-container">
+                        <span className="login-input-icon">📱</span>
+                        <input 
+                          type="tel" 
+                          value={regData.telefono} 
+                          onChange={e => setRegData({ ...regData, telefono: e.target.value })} 
+                          required 
+                          placeholder="+51 999 999 999"
+                          className="login-modern-input"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="login-form-grid-2">
+                    <div className="login-field">
+                      <label className="login-field-label">Contacto de Emergencia <span style={{ fontWeight: 'normal', color: '#78716c' }}>(Opcional)</span></label>
+                      <div className="login-input-container">
+                        <span className="login-input-icon">👥</span>
+                        <input 
+                          type="text" 
+                          value={regData.nombreContactoEmergencia} 
+                          onChange={e => setRegData({ ...regData, nombreContactoEmergencia: e.target.value })} 
+                          placeholder="Ej: Mamá / Papá"
+                          className="login-modern-input"
+                        />
+                      </div>
+                    </div>
+                    <div className="login-field">
+                      <label className="login-field-label">Número de Emergencia <span style={{ fontWeight: 'normal', color: '#78716c' }}>(Opcional)</span></label>
+                      <div className="login-input-container">
+                        <span className="login-input-icon">📞</span>
+                        <input 
+                          type="tel" 
+                          value={regData.contactoEmergencia} 
+                          onChange={e => setRegData({ ...regData, contactoEmergencia: e.target.value })} 
+                          placeholder="+51 999 999 999"
+                          className="login-modern-input"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Sección 2: Fraternidad */}
+                  <div className="login-form-section-title">
+                    <span>📍</span> Tu Fraternidad
+                  </div>
+
+                  <div className="login-field">
+                    <label className="login-field-label">Selecciona tu fraternidad en Perú</label>
+                    <div className="login-input-container">
+                      <span className="login-input-icon">🏛️</span>
+                      <select 
+                        value={regData.fraternidadId} 
+                        onChange={e => setRegData({ ...regData, fraternidadId: e.target.value })}
+                        className="login-modern-input"
+                        style={{ cursor: 'pointer' }}
+                      >
+                        {fraternidades.length > 0 ? (
+                          fraternidades.map(f => (
+                            <option key={f.id} value={f.id}>
+                              {f.nombre} ({f.departamento || f.zona || 'Perú'})
+                            </option>
+                          ))
+                        ) : (
+                          <option value="00000000-6a0f-b53a-d327-e42a6db2faf7">JUFRA Pomalca (Lambayeque)</option>
+                        )}
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Sección 3: Información de la Cuenta */}
+                  <div className="login-form-section-title">
+                    <span>🔒</span> Información de la Cuenta
+                  </div>
+
+                  <div className="login-field">
+                    <label className="login-field-label">Usuario</label>
+                    <div className="login-input-container">
+                      <span className="login-input-icon">👤</span>
+                      <input 
+                        type="text" 
+                        value={regData.username} 
+                        onChange={e => setRegData({ ...regData, username: e.target.value.toLowerCase().replace(/\s+/g, '') })} 
+                        required 
+                        placeholder="Elige tu nombre de usuario"
+                        className="login-modern-input"
+                        autoCapitalize="none"
+                      />
+                    </div>
+                    <small style={{ fontSize: '0.75rem', color: '#78716c', marginTop: '4px', display: 'block' }}>
+                      Mínimo 4 caracteres. Sin espacios.
+                    </small>
+                  </div>
+
+                  <div className="login-form-grid-2">
+                    <div className="login-field">
+                      <label className="login-field-label">Contraseña</label>
+                      <div className="login-input-container">
+                        <span className="login-input-icon">🔒</span>
+                        <input 
+                          type={showRegPassword ? "text" : "password"} 
+                          value={regData.password} 
+                          onChange={e => setRegData({ ...regData, password: e.target.value })} 
+                          required 
+                          placeholder="Mínimo 6 caracteres"
+                          className="login-modern-input is-password"
+                        />
+                        <button 
+                          type="button" 
+                          className="login-toggle-eye"
+                          onClick={() => setShowRegPassword(!showRegPassword)}
+                          aria-label={showRegPassword ? "Ocultar" : "Mostrar"}
+                        >
+                          {showRegPassword ? (
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                              <line x1="1" y1="1" x2="23" y2="23"/>
+                            </svg>
+                          ) : (
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                              <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="login-field">
+                      <label className="login-field-label">Confirmar Contraseña</label>
+                      <div className="login-input-container">
+                        <span className="login-input-icon">🔒</span>
+                        <input 
+                          type={showRegConfirmPassword ? "text" : "password"} 
+                          value={regData.confirmarPassword} 
+                          onChange={e => setRegData({ ...regData, confirmarPassword: e.target.value })} 
+                          required 
+                          placeholder="Repite la clave"
+                          className="login-modern-input is-password"
+                        />
+                        <button 
+                          type="button" 
+                          className="login-toggle-eye"
+                          onClick={() => setShowRegConfirmPassword(!showRegConfirmPassword)}
+                          aria-label={showRegConfirmPassword ? "Ocultar" : "Mostrar"}
+                        >
+                          {showRegConfirmPassword ? (
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                              <line x1="1" y1="1" x2="23" y2="23"/>
+                            </svg>
+                          ) : (
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                              <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button 
+                    type="submit" 
+                    className="login-btn-primary" 
+                    disabled={regLoading}
+                    style={{ marginTop: '1.5rem' }}
+                  >
+                    {regLoading ? 'Registrando cuenta...' : 'Crear Cuenta'}
+                  </button>
+
+                  <button 
+                    type="button" 
+                    onClick={() => { setView('login'); setRegError(''); }}
+                    className="login-btn-secondary"
+                    style={{ marginTop: '0.75rem' }}
+                  >
+                    Ya tengo una cuenta · Iniciar Sesión
+                  </button>
+                </form>
+
+                {/* Ayuda directa por WhatsApp (idéntico a la app) */}
+                <div style={{ marginTop: '1.75rem', paddingTop: '1.25rem', borderTop: '1px solid #e7e5e4', textAlign: 'center' }}>
+                  <p style={{ margin: '0 0 0.75rem', fontSize: '0.85rem', color: '#78716c' }}>
+                    ¿Problemas con el registro o necesitas ayuda?
+                  </p>
+                  <a 
+                    href="https://wa.me/51981574685?text=Hola%20hermano,%20tengo%20un%20problema%20en%20la%20web%20para%20crear%20mi%20cuenta,%20por%20favor%20me%20ayudas"
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      width: '100%',
+                      padding: '10px 16px',
+                      borderRadius: '8px',
+                      background: '#f0fdf4',
+                      border: '1px solid #bbf7d0',
+                      color: '#166534',
+                      fontSize: '0.875rem',
+                      fontWeight: '600',
+                      textDecoration: 'none',
+                      transition: 'all 0.15s ease'
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.background = '#dcfce7'}
+                    onMouseLeave={e => e.currentTarget.style.background = '#f0fdf4'}
+                  >
+                    <span>💬</span> Ayuda por WhatsApp con el Consejo
+                  </a>
+                </div>
+              </div>
             ) : (
               /* Flujo de Recuperación de Contraseña */
               <div className="animate-fade">

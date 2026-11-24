@@ -349,11 +349,18 @@ input:focus {
   padding: 2.5rem 2rem;
   background-color: #faf9f6;
   box-sizing: border-box;
+  overflow-y: auto;
+  max-height: 100vh;
 }
 
 .login-right-content {
   width: 100%;
   max-width: 460px;
+  transition: max-width 0.2s ease;
+}
+
+.login-right-content.is-register {
+  max-width: 540px;
 }
 
 .login-back-btn {
@@ -611,6 +618,37 @@ input:focus {
   font-size: 0.85rem;
   margin-bottom: 1.25rem;
   text-align: center;
+}
+
+/* Registration Form Specific Styles */
+.login-form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 600px) {
+  .login-form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.login-form-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.775rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9a3412;
+  margin: 1.25rem 0 0.75rem;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #fed7aa;
+}
+
+.login-form-section-title:first-of-type {
+  margin-top: 0;
 }
 
 .login-step-indicators {
