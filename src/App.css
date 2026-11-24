@@ -932,13 +932,13 @@ input:focus {
 .landing-layout-wrapper {
   zoom: 0.9;
   width: 100%;
-  background: #ffffff;
+  background: #FAF6F0;
   --section-padding-y: 5.5rem;
   --section-padding-x: 8%;
 }
 
 .landing-page {
-  background: #ffffff;
+  background: #FAF6F0;
   overflow-x: hidden;
 }
 
@@ -949,14 +949,14 @@ input:focus {
   width: 100%;
   box-sizing: border-box;
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(250, 246, 240, 0.94);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   padding: 0.85rem var(--section-padding-x);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(139, 90, 43, 0.1);
   transition: all 0.3s ease;
 }
 
@@ -1324,10 +1324,10 @@ input:focus {
 
 .hero-highlight-card {
   background: #ffffff;
-  border: 1px solid rgba(139, 90, 43, 0.08);
+  border: 1px solid rgba(139, 90, 43, 0.12);
   border-radius: 16px;
   padding: 1.15rem 1.35rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 4px 14px rgba(139, 90, 43, 0.05);
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
@@ -1652,7 +1652,7 @@ input:focus {
 
 /* 3. Pilares Redesign (Glassmorphism & SVGs) */
 .features-grid-wrapper {
-  background: #ffffff;
+  background: #FAF6F0;
   padding: 2.5rem 0 1rem 0;
 }
 
