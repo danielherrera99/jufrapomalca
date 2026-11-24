@@ -85,7 +85,8 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
     const attendanceMap = {};
     (data.asistencias || []).forEach(asis => {
       const date = formatSafeDate(asis.fecha, 'dd/MM');
-      attendanceMap[date] = (attendanceMap[date] || 0) + (asis.presentes?.length || 0);
+      const count = asis.presentes?.length ?? (asis.presente || asis.estado === 'presente' ? 1 : 0);
+      attendanceMap[date] = (attendanceMap[date] || 0) + count;
     });
     
     const attendance = Object.keys(attendanceMap).map(date => ({
