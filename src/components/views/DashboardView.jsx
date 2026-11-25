@@ -34,11 +34,18 @@ export const resolveEtapa = (h) => {
   // 4. Si tiene fecha de ingreso o creación, deducir según tiempo en la fraternidad (Estatutos JUFRA)
   const fechaIngreso = h.fechaIngreso || h.fecha_ingreso || h.createdAt || h.created_at;
   if (fechaIngreso) {
-    const meses = (new Date() - new Date(fechaIngreso)) / (1000 * 60 * 60 * 24 * 30.44);
-    if (!isNaN(meses)) {
-      if (meses >= 24) return 'promesado';
-      if (meses >= 9) return 'en_formacion';
-      if (meses >= 3) return 'iniciado';
+    try {
+      const dIngreso = new Date(fechaIngreso);
+      if (!isNaN(dIngreso.getTime())) {
+        const meses = (new Date() - dIngreso) / (1000 * 60 * 60 * 24 * 30.44);
+        if (!isNaN(meses)) {
+          if (meses >= 24) return 'promesado';
+          if (meses >= 9) return 'en_formacion';
+          if (meses >= 3) return 'iniciado';
+          return 'aspirante';
+        }
+      }
+    } catch {
       return 'aspirante';
     }
   }
@@ -117,12 +124,21 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
     const todayStr = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
 
     (data.hermanos || []).forEach(h => {
+      if (!h) return;
       const etapa = resolveEtapa(h);
       if (stagesMap[etapa]) stagesMap[etapa].value++;
 
-      if (h.fechaNacimiento || h.fecha_nacimiento) {
-        const bdayStr = new Date(h.fechaNacimiento || h.fecha_nacimiento).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
-        if (bdayStr === todayStr) birthdays.push(h);
+      const fNac = h.fechaNacimiento || h.fecha_nacimiento;
+      if (fNac) {
+        try {
+          const dNac = new Date(fNac);
+          if (!isNaN(dNac.getTime())) {
+            const bdayStr = dNac.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+            if (bdayStr === todayStr) birthdays.push(h);
+          }
+        } catch {
+          // Ignorar error de fecha de cumpleanos invalida
+        }
       }
     });
 
@@ -137,7 +153,11 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
   const activos = data.hermanos?.filter(h => h.activo)?.length || 0;
   const pendientes = totalHermanos - activos;
   const proxEvento = (data.eventos || [])
-    .filter(e => new Date(e.fecha) >= new Date())
+    .filter(e => {
+      if (!e || !e.fecha) return false;
+      const d = new Date(e.fecha);
+      return !isNaN(d.getTime()) && d >= new Date();
+    })
     .sort((a,b) => new Date(a.fecha) - new Date(b.fecha))[0];
   const ultimosAnuncios = (data.anuncios || []).slice(0, 3);
 
@@ -161,7 +181,7 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
             <h4 style={{ margin: 0, color: '#BE123C' }}>¡Hoy tenemos fiesta en la fraternidad!</h4>
             <p style={{ margin: 0, fontSize: '0.9rem', color: '#E11D48' }}>
               Cumpleaños de: {chartData.birthdays.map((h, i) => (
-                <strong key={h._id}>{h.nombre} {h.apellido}{i < chartData.birthdays.length - 1 ? ', ' : ''}</strong>
+                <strong key={h._id || h.id || i}>{h.nombre} {h.apellido}{i < chartData.birthdays.length - 1 ? ', ' : ''}</strong>
               ))}
             </p>
           </div>
@@ -420,8 +440,8 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 {ultimosAnuncios.length > 0 ? (
-                  ultimosAnuncios.map(an => (
-                    <div key={an._id} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', borderBottom: '1px solid rgba(0,0,0,0.05)', paddingBottom: '0.8rem' }}>
+                  ultimosAnuncios.map((an, aIdx) => (
+                    <div key={an._id || an.id || aIdx} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', borderBottom: '1px solid rgba(0,0,0,0.05)', paddingBottom: '0.8rem' }}>
                       <div style={{ fontSize: '1.2rem', padding: '8px', background: '#FEF3C7', borderRadius: '10px' }}>📢</div>
                       <div style={{ flex: 1 }}>
                         <p style={{ margin: 0, fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-main)' }}>{an.titulo}</p>
@@ -430,7 +450,7 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
                         </p>
                       </div>
                       <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
-                        {formatSafeDate(an.createdAt, 'dd MMM')}
+                        {formatSafeDate(an.createdAt || an.created_at || an.fecha, 'dd MMM')}
                       </span>
                     </div>
                   ))
@@ -442,7 +462,7 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
           </div>
 
           {/* Sección de Oración Comunitaria */}
-          {data.peticiones && data.peticiones.length > 0 && (
+          {Array.isArray(data.peticiones) && data.peticiones.length > 0 && (
             <div className="glass-card" style={{ padding: '2rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.8rem' }}>
                 <h3 style={{ margin: 0, color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -457,16 +477,27 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
                 </button>
               </div>
               <div className="responsive-grid" style={{ '--grid-min': '280px', gap: '1rem' }}>
-                {data.peticiones.slice(0, 3).map((p, idx) => (
-                  <div key={p._id || idx} style={{ background: '#FFF7ED', border: '1px solid #FFEDD5', padding: '1rem', borderRadius: '12px' }}>
-                    <p style={{ margin: 0, fontSize: '0.88rem', color: '#9A3412', fontStyle: 'italic', lineHeight: 1.4 }}>
-                      «{p.contenido}»
-                    </p>
-                    <p style={{ margin: '8px 0 0 0', fontSize: '0.75rem', color: '#C2410C', fontWeight: 600 }}>
-                      {p.anonimo ? '🕊️ Hermano en oración' : (p.hermano?.nombre || p.autor || 'Fraternidad')}
-                    </p>
-                  </div>
-                ))}
+                {data.peticiones.slice(0, 3).map((p, idx) => {
+                  const autorTexto = p.anonimo 
+                    ? '🕊️ Hermano en oración' 
+                    : (p.hermano?.nombre 
+                        ? `${p.hermano.nombre} ${p.hermano.apellido || ''}`.trim()
+                        : (p.autor && typeof p.autor === 'object' && p.autor.nombre 
+                            ? `${p.autor.nombre} ${p.autor.apellido || ''}`.trim()
+                            : (typeof p.autor === 'string' ? p.autor : 'Fraternidad')
+                          )
+                      );
+                  return (
+                    <div key={p._id || p.id || idx} style={{ background: '#FFF7ED', border: '1px solid #FFEDD5', padding: '1rem', borderRadius: '12px' }}>
+                      <p style={{ margin: 0, fontSize: '0.88rem', color: '#9A3412', fontStyle: 'italic', lineHeight: 1.4 }}>
+                        «{p.contenido}»
+                      </p>
+                      <p style={{ margin: '8px 0 0 0', fontSize: '0.75rem', color: '#C2410C', fontWeight: 600 }}>
+                        {autorTexto}
+                      </p>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}

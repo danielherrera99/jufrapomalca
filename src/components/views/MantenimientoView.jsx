@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../config/api';
 
-const MantenimientoView = () => {
+const MantenimientoView = ({ onRetry }) => {
   const [comprobando, setComprobando] = useState(false);
   const [estadoBackend, setEstadoBackend] = useState('verificando'); // 'online' | 'offline' | 'verificando'
 
@@ -87,8 +87,10 @@ const MantenimientoView = () => {
           <button
             onClick={() => {
               verificarEstado();
-              if (estadoBackend === 'online') {
-                window.location.href = '/';
+              if (onRetry) {
+                onRetry();
+              } else {
+                window.location.reload();
               }
             }}
             style={styles.secondaryButton}

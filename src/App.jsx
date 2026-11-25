@@ -1497,13 +1497,32 @@ class ErrorBoundary extends React.Component {
     console.error("ErrorBoundary caught an error:", error, errorInfo);
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.locationKey !== this.props.locationKey && this.state.hasError) {
+      this.setState({ hasError: false, error: null, errorInfo: null });
+    }
+  }
+
   render() {
     if (this.state.hasError) {
-      return <MantenimientoView />;
+      return (
+        <MantenimientoView 
+          onRetry={() => this.setState({ hasError: false, error: null, errorInfo: null })} 
+        />
+      );
     }
     return this.props.children;
   }
 }
+
+const ErrorBoundaryWithLocation = ({ children }) => {
+  const location = useLocation();
+  return (
+    <ErrorBoundary locationKey={location.pathname} key={location.pathname}>
+      {children}
+    </ErrorBoundary>
+  );
+};
 
 import FloatingChat from './components/FloatingChat';
 
@@ -1527,7 +1546,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <ErrorBoundary>
+      <ErrorBoundaryWithLocation>
         <Routes>
           {/* Cara Pública */}
           <Route path="/" element={<LandingView />} />
@@ -1541,13 +1560,13 @@ function App() {
           <Route path="/jufra-peru/:slug" element={<FraternidadDetailView />} />
           
           {/* Panel de Administración (Privado) */}
-          <Route path="/admin" element={!user ? <Login onLogin={setUser} /> : <Navigate to="/dashboard" />} />
+          <Route path="/admin" element={!user ? <Login onLogin={setUser} /> : <Navigate to="/dashboard" replace />} />
           <Route path="/dashboard/*" element={
             user ? (
               <FraternidadProvider user={user}>
                 <Dashboard user={user} onLogout={handleLogout} />
               </FraternidadProvider>
-            ) : <Navigate to="/admin" />
+            ) : <Navigate to="/admin" replace />
           } />
           
           {/* Redirección por defecto */}
@@ -1555,7 +1574,7 @@ function App() {
         </Routes>
         {/* El Chatbot Flotante Premium */}
         <FloatingChat />
-      </ErrorBoundary>
+      </ErrorBoundaryWithLocation>
     </BrowserRouter>
   );
 }
