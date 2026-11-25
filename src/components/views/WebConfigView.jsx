@@ -29,10 +29,38 @@ const WebConfigView = () => {
     promoDescripcion: '',
     promoImagenUrl: '',
     promoBotonTexto: '',
-    promoBotonLink: ''
+    promoBotonLink: '',
+    appApkUrl: '',
+    appVersion: 'v1.0.0'
   });
   const [selectedPromoFile, setSelectedPromoFile] = useState(null);
   const [promoPreviewUrl, setPromoPreviewUrl] = useState(null);
+
+  const convertToDirectDownloadLink = (url) => {
+    if (!url) return '';
+    const trimmed = url.trim();
+
+    // 1. Detección automática de Google Drive
+    // Formatos: https://drive.google.com/file/d/FILE_ID/view o id=FILE_ID
+    const driveMatch = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || trimmed.match(/id=([a-zA-Z0-9_-]+)/);
+    if (driveMatch && driveMatch[1]) {
+      const fileId = driveMatch[1];
+      return `https://drive.google.com/uc?export=download&id=${fileId}&confirm=t`;
+    }
+
+    // 2. Detección de Dropbox: cambiar dl=0 a dl=1
+    if (trimmed.includes('dropbox.com') && trimmed.includes('dl=0')) {
+      return trimmed.replace('dl=0', 'dl=1');
+    }
+
+    return trimmed;
+  };
+
+  const handleApkUrlChange = (e) => {
+    const rawVal = e.target.value;
+    const converted = convertToDirectDownloadLink(rawVal);
+    setConfig(prev => ({ ...prev, appApkUrl: converted }));
+  };
 
   useEffect(() => {
     fetchConfig();
@@ -378,6 +406,57 @@ const WebConfigView = () => {
                   />
                 </div>
               </div>
+            </div>
+          </section>
+
+          {/* SECCIÓN: APLICACIÓN MÓVIL (APK ANDROID) */}
+          <section style={{ marginBottom: '2.5rem', borderBottom: '1px solid var(--border)', paddingBottom: '2rem' }}>
+            <h3 style={{ color: 'var(--primary)', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span>📱</span> Aplicación Móvil (APK Android)
+            </h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginBottom: '1.25rem' }}>
+              Configura el enlace de descarga oficial de la app móvil para que los jóvenes puedan instalarla en sus celulares desde la Landing Page.
+            </p>
+
+            <div className="input-group" style={{ marginBottom: '1rem' }}>
+              <label style={{ fontWeight: 600 }}>Enlace de Descarga Directa del APK:</label>
+              <input 
+                type="url" 
+                value={config.appApkUrl || ''} 
+                onChange={handleApkUrlChange}
+                placeholder="Ej: https://drive.google.com/file/d/... o enlace directo al archivo .apk"
+              />
+              <div style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: '#78716c', background: '#f5f5f4', padding: '0.65rem 0.9rem', borderRadius: '8px', lineHeight: 1.5 }}>
+                💡 <strong>Consejo Google Drive:</strong> Puedes copiar el enlace de compartir de Drive (ej. <code>https://drive.google.com/file/d/.../view</code>) y pegarlo aquí; el sistema lo detectará y convertirá automáticamente en enlace de descarga directa para que el celular lo baje como <strong>Jufra-Pomalca.apk</strong>.
+              </div>
+            </div>
+
+            <div className="row" style={{ gap: '1rem', display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end' }}>
+              <div className="col" style={{ flex: 1, minWidth: '220px' }}>
+                <div className="input-group" style={{ marginBottom: 0 }}>
+                  <label style={{ fontWeight: 600 }}>Versión de la App (Opcional):</label>
+                  <input 
+                    type="text" 
+                    value={config.appVersion || ''} 
+                    onChange={e => setConfig({...config, appVersion: e.target.value})} 
+                    placeholder="Ej: v1.0.4 o Edición Pomalca"
+                  />
+                </div>
+              </div>
+
+              {config.appApkUrl && (
+                <div className="col" style={{ flex: 1, minWidth: '200px' }}>
+                  <a 
+                    href={config.appApkUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="btn btn-secondary"
+                    style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '0.65rem 1.25rem' }}
+                  >
+                    🔗 Probar Descarga
+                  </a>
+                </div>
+              )}
             </div>
           </section>
 

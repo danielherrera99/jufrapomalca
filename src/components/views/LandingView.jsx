@@ -2161,12 +2161,14 @@ const LandingView = () => {
                   🔒 Acceso interno
                 </Link>
                 <a
-                  href="https://expo.dev/artifacts/eas/bQTvc5GzYECx-h_1a35aXslI5iIfQC5SouF-vnir4-Q.apk"
+                  href={config.appApkUrl || "https://expo.dev/artifacts/eas/bQTvc5GzYECx-h_1a35aXslI5iIfQC5SouF-vnir4-Q.apk"}
                   target="_blank"
                   rel="noopener noreferrer"
+                  download="Jufra-Pomalca.apk"
                   className="footer-pill-btn footer-pill-app"
+                  title={config.appVersion ? `Descargar APK JUFRA Pomalca (${config.appVersion})` : "Descargar APK JUFRA Pomalca"}
                 >
-                  📱 App móvil
+                  📱 App móvil {config.appVersion && <span style={{ fontSize: '0.72rem', opacity: 0.85, marginLeft: '4px', fontWeight: 600 }}>({config.appVersion})</span>}
                 </a>
               </div>
             </div>
