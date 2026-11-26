@@ -1760,15 +1760,50 @@ input:focus {
   transform: translateY(-1px);
 }
 
-/* 2. Hero Cinematic Masks & Reveal Animations */
+/* 2. Hero Sections & Cinematic Masks */
+.hero-section {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 4rem 1.5rem;
+  overflow: hidden;
+  color: #ffffff;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+.hero-title {
+  color: #ffffff;
+  font-weight: 800;
+  line-height: 1.15;
+  margin: 0;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+}
+
+.hero-subtitle {
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.6;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
+}
+
 .hero-overlay-cinematic {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   background: linear-gradient(
     to bottom,
     rgba(45, 27, 14, 0.5) 0%,
-    rgba(29, 17, 9, 0.75) 50%,
-    rgba(17, 10, 5, 0.98) 1000%
+    rgba(29, 17, 9, 0.72) 55%,
+    rgba(17, 10, 5, 0.88) 100%
   );
   z-index: 1;
 }
