@@ -77,10 +77,10 @@ const JufraPeruView = () => {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#FAF9F6', color: '#1C1917' }}>
-      {/* Navegación Pública Estándar */}
+      {/* Navegación Pública con Estándar Visual de Barra */}
       <nav className={`landing-nav ${isScrolled ? 'scrolled' : ''}`}>
-        <Link to="/" className="logo">
-          JUFRA POMALCA
+        <Link to="/jufra-peru" className="logo">
+          JUFRA PERÚ
         </Link>
 
         <button className="nav-toggle" onClick={() => setIsMenuOpen(!isMenuOpen)}>
@@ -88,13 +88,10 @@ const JufraPeruView = () => {
         </button>
 
         <div className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
-          <a href="/#mision" onClick={() => setIsMenuOpen(false)}>Misión</a>
-          <a href="/#historia" onClick={() => setIsMenuOpen(false)}>Camino</a>
-          <a href="/#quienes-somos" onClick={() => setIsMenuOpen(false)}>Nosotros</a>
-          <a href="/#galeria" onClick={() => setIsMenuOpen(false)}>Actividades</a>
-          <a href="#directorio" className="active" onClick={() => setIsMenuOpen(false)}>Perú</a>
-          <a
-            href="/#contacto"
+          <Link to="/" onClick={() => setIsMenuOpen(false)}>Inicio</Link>
+          <a href="#directorio" className="active" onClick={() => setIsMenuOpen(false)}>Directorio</a>
+          <Link
+            to="/"
             className="nav-btn-unete"
             onClick={() => setIsMenuOpen(false)}
             style={{
@@ -109,11 +106,13 @@ const JufraPeruView = () => {
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
+              gap: '6px',
               marginLeft: '0.5rem'
             }}
           >
-            Únete
-          </a>
+            <span>←</span>
+            <span>Volver a Pomalca</span>
+          </Link>
         </div>
       </nav>
 
