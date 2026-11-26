@@ -76,8 +76,9 @@ const JufraPeruView = () => {
   }, [fratsByZone]);
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#FAF9F6', color: '#1C1917' }}>
-      {/* Navegación Pública con Estándar Visual de Barra */}
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg, #FAF6F0)', color: 'var(--text-main, #1C1917)' }}>
+
+      {/* Navegación pública estándar */}
       <nav className={`landing-nav ${isScrolled ? 'scrolled' : ''}`}>
         <Link to="/jufra-peru" className="logo">
           JUFRA PERÚ
@@ -95,14 +96,14 @@ const JufraPeruView = () => {
             className="nav-btn-unete"
             onClick={() => setIsMenuOpen(false)}
             style={{
-              backgroundColor: '#c2410c',
+              backgroundColor: 'var(--accent, #c2410c)',
               color: '#ffffff',
               padding: '0.45rem 1.25rem',
               borderRadius: '10px',
               fontWeight: '700',
               fontSize: '0.88rem',
               textDecoration: 'none',
-              boxShadow: '0 2px 8px rgba(194, 65, 12, 0.25)',
+              boxShadow: '0 2px 8px rgba(194,65,12,0.25)',
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -116,10 +117,10 @@ const JufraPeruView = () => {
         </div>
       </nav>
 
-      {/* Hero Editorial Oscuro */}
+      {/* Hero editorial oscuro */}
       <header style={{
         position: 'relative',
-        background: '#1A110B',
+        background: 'var(--hero-bg, #1A110B)',
         minHeight: '280px',
         marginTop: '62px',
         padding: '4.5rem 1.5rem',
@@ -129,42 +130,27 @@ const JufraPeruView = () => {
         textAlign: 'center',
         overflow: 'hidden'
       }}>
-        {/* Formas orgánicas sutiles de fondo */}
+        {/* Formas orgánicas de fondo */}
         <div style={{
-          position: 'absolute',
-          bottom: '-120px',
-          left: '-40px',
-          width: '320px',
-          height: '320px',
-          borderRadius: '50%',
-          background: 'rgba(154, 52, 18, 0.25)',
-          pointerEvents: 'none'
+          position: 'absolute', bottom: '-120px', left: '-40px',
+          width: '320px', height: '320px', borderRadius: '50%',
+          background: 'rgba(154,52,18,0.25)', pointerEvents: 'none'
         }} />
         <div style={{
-          position: 'absolute',
-          top: '-100px',
-          right: '60px',
-          width: '300px',
-          height: '300px',
-          borderRadius: '50%',
-          background: 'rgba(161, 98, 7, 0.18)',
-          pointerEvents: 'none'
+          position: 'absolute', top: '-100px', right: '60px',
+          width: '300px', height: '300px', borderRadius: '50%',
+          background: 'rgba(161,98,7,0.18)', pointerEvents: 'none'
         }} />
         <div style={{
-          position: 'absolute',
-          bottom: '-110px',
-          right: '18%',
-          width: '210px',
-          height: '210px',
-          borderRadius: '50%',
-          background: 'rgba(30, 41, 59, 0.4)',
-          pointerEvents: 'none'
+          position: 'absolute', bottom: '-110px', right: '18%',
+          width: '210px', height: '210px', borderRadius: '50%',
+          background: 'rgba(30,41,59,0.4)', pointerEvents: 'none'
         }} />
 
         <div style={{ position: 'relative', zIndex: 2, maxWidth: '640px' }}>
           <p style={{
             margin: '0 0 0.75rem 0',
-            color: '#D97706',
+            color: 'var(--secondary, #D97706)',
             fontSize: '0.72rem',
             fontWeight: 700,
             letterSpacing: '0.16em',
@@ -184,7 +170,7 @@ const JufraPeruView = () => {
           </h1>
           <p style={{
             margin: 0,
-            color: '#D6D3D1',
+            color: 'rgba(255,255,255,0.80)',
             fontSize: '0.98rem',
             lineHeight: 1.6
           }}>
@@ -193,8 +179,8 @@ const JufraPeruView = () => {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main id="directorio" style={{ flex: 1, padding: '3rem 1.5rem 4.5rem' }}>
+      {/* Contenido Principal */}
+      <main id="directorio" style={{ flex: 1, padding: '3rem 1.5rem 4.5rem', background: 'var(--bg, #FAF6F0)' }}>
         <div style={{ maxWidth: '1160px', margin: '0 auto' }}>
 
           {/* Encabezado del Directorio + Buscador */}
@@ -207,24 +193,21 @@ const JufraPeruView = () => {
             marginBottom: '1.5rem'
           }}>
             <div>
-              <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, color: '#1C1917', letterSpacing: '-0.01em' }}>
+              <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-main, #1C1917)', letterSpacing: '-0.01em' }}>
                 Directorio de Fraternidades
               </h2>
-              <p style={{ margin: '4px 0 0 0', fontSize: '0.85rem', color: '#78716C' }}>
+              <p style={{ margin: '4px 0 0 0', fontSize: '0.85rem', color: 'var(--text-muted, #78716C)' }}>
                 {filteredFrats.length} {filteredFrats.length === 1 ? 'fraternidad local' : 'fraternidades locales'} en {activeZonesCount} {activeZonesCount === 1 ? 'zona' : 'zonas'} del país
               </p>
             </div>
 
+            {/* Buscador */}
             <div style={{ position: 'relative', width: '100%', maxWidth: '300px' }}>
               <span style={{
-                position: 'absolute',
-                left: '12px',
-                top: '50%',
+                position: 'absolute', left: '12px', top: '50%',
                 transform: 'translateY(-50%)',
-                color: '#A8A29E',
-                display: 'flex',
-                alignItems: 'center',
-                pointerEvents: 'none'
+                color: 'var(--text-muted, #A8A29E)',
+                display: 'flex', alignItems: 'center', pointerEvents: 'none'
               }}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="11" cy="11" r="8" />
@@ -240,13 +223,13 @@ const JufraPeruView = () => {
                   width: '100%',
                   padding: '0.62rem 1rem 0.62rem 2.35rem',
                   borderRadius: '10px',
-                  border: '1px solid #E7E5E4',
-                  background: '#FFFFFF',
+                  border: '1px solid var(--border, #E7E5E4)',
+                  background: 'var(--surface, #FFFFFF)',
                   fontSize: '0.84rem',
-                  color: '#1C1917',
+                  color: 'var(--text-main, #1C1917)',
                   outline: 'none',
                   boxSizing: 'border-box',
-                  boxShadow: '0 1px 2px rgba(0,0,0,0.02)'
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.04)'
                 }}
               />
             </div>
@@ -257,10 +240,10 @@ const JufraPeruView = () => {
             display: 'inline-flex',
             flexWrap: 'wrap',
             gap: '0.35rem',
-            background: '#F3EFE9',
+            background: 'var(--surface-alt, #F3EFE9)',
             padding: '4px',
             borderRadius: '10px',
-            border: '1px solid #E7E5E4',
+            border: '1px solid var(--border, #E7E5E4)',
             marginBottom: '2.5rem'
           }}>
             {[
@@ -276,8 +259,8 @@ const JufraPeruView = () => {
                   key={tab.id}
                   onClick={() => setSelectedZone(tab.id)}
                   style={{
-                    background: isActive ? '#291D14' : 'transparent',
-                    color: isActive ? '#FFFFFF' : '#57534E',
+                    background: isActive ? 'var(--primary, #8B5A2B)' : 'transparent',
+                    color: isActive ? '#FFFFFF' : 'var(--text-muted, #57534E)',
                     border: 'none',
                     borderRadius: '7px',
                     padding: '0.45rem 0.9rem',
@@ -293,20 +276,13 @@ const JufraPeruView = () => {
             })}
           </div>
 
-          {/* Listado de Fraternidades */}
+          {/* Listado por Zona */}
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '4rem 1rem', color: '#78716C' }}>
+            <div style={{ textAlign: 'center', padding: '4rem 1rem', color: 'var(--text-muted, #78716C)' }}>
               Cargando fraternidades...
             </div>
           ) : filteredFrats.length === 0 ? (
-            <div style={{
-              textAlign: 'center',
-              padding: '4rem 1.5rem',
-              background: '#FFFFFF',
-              borderRadius: '14px',
-              border: '1px solid #E7E5E4',
-              color: '#78716C'
-            }}>
+            <div className="glass-card" style={{ textAlign: 'center', padding: '4rem 1.5rem', color: 'var(--text-muted, #78716C)' }}>
               No se encontraron fraternidades que coincidan con tu búsqueda.
             </div>
           ) : (
@@ -322,28 +298,25 @@ const JufraPeruView = () => {
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                      borderBottom: '1px solid #E7E5E4',
+                      borderBottom: '1px solid var(--border, #E7E5E4)',
                       paddingBottom: '0.6rem',
                       marginBottom: '1.25rem'
                     }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span style={{
-                          width: '8px',
-                          height: '8px',
-                          borderRadius: '50%',
-                          background: zonaInfo.color,
-                          display: 'inline-block'
+                          width: '8px', height: '8px', borderRadius: '50%',
+                          background: zonaInfo.color, display: 'inline-block'
                         }} />
-                        <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: '#1C1917' }}>
+                        <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: 'var(--text-main, #1C1917)' }}>
                           {zonaInfo.label}
                         </h3>
                       </div>
-                      <span style={{ fontSize: '0.78rem', color: '#78716C', fontWeight: 500 }}>
+                      <span style={{ fontSize: '0.78rem', color: 'var(--text-muted, #78716C)', fontWeight: 500 }}>
                         {frats.length} {frats.length === 1 ? 'fraternidad' : 'fraternidades'}
                       </span>
                     </div>
 
-                    {/* Grid de Tarjetas (hasta 4 columnas en escritorio) */}
+                    {/* Grid de tarjetas */}
                     <div style={{
                       display: 'grid',
                       gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
@@ -356,17 +329,18 @@ const JufraPeruView = () => {
                         return (
                           <div
                             key={f._id || f.id || f.nombre}
-                            className="zoom-hover"
+                            className="glass-card zoom-hover"
                             style={{
-                              background: '#FFFFFF',
-                              border: isPomalca ? '1.5px solid #C2410C' : '1px solid #E7E5E4',
-                              borderRadius: '14px',
-                              padding: '1.25rem',
-                              boxShadow: isPomalca ? '0 4px 16px rgba(194, 65, 12, 0.08)' : '0 1px 3px rgba(0,0,0,0.02)',
+                              border: isPomalca
+                                ? '1.5px solid var(--accent, #C2410C)'
+                                : '1px solid var(--border, #E7E5E4)',
+                              boxShadow: isPomalca
+                                ? '0 4px 16px rgba(194,65,12,0.10)'
+                                : undefined,
                               display: 'flex',
                               flexDirection: 'column',
                               justifyContent: 'space-between',
-                              transition: 'transform 0.15s ease, box-shadow 0.15s ease'
+                              padding: '1.25rem'
                             }}
                           >
                             <div>
@@ -375,12 +349,12 @@ const JufraPeruView = () => {
                                 <span style={{
                                   fontSize: '0.73rem',
                                   fontWeight: 600,
-                                  color: isPomalca ? '#C2410C' : zonaInfo.color
+                                  color: isPomalca ? 'var(--accent, #C2410C)' : zonaInfo.color
                                 }}>
                                   {f.departamento || 'Perú'}
                                 </span>
                                 {isPomalca && (
-                                  <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#C2410C' }}>
+                                  <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--accent, #C2410C)' }}>
                                     Web Oficial
                                   </span>
                                 )}
@@ -391,7 +365,7 @@ const JufraPeruView = () => {
                                 to={webUrl}
                                 style={{
                                   textDecoration: 'none',
-                                  color: '#1C1917',
+                                  color: 'var(--text-main, #1C1917)',
                                   fontSize: '0.98rem',
                                   fontWeight: 700,
                                   lineHeight: 1.35,
@@ -406,7 +380,7 @@ const JufraPeruView = () => {
                               <p style={{
                                 margin: 0,
                                 fontSize: '0.78rem',
-                                color: '#78716C',
+                                color: 'var(--text-muted, #78716C)',
                                 display: 'flex',
                                 alignItems: 'flex-start',
                                 gap: '5px',
@@ -421,7 +395,7 @@ const JufraPeruView = () => {
                                 <div style={{
                                   marginTop: '0.65rem',
                                   fontSize: '0.76rem',
-                                  color: '#57534E',
+                                  color: 'var(--text-muted, #57534E)',
                                   display: 'flex',
                                   flexDirection: 'column',
                                   gap: '3px'
@@ -436,7 +410,7 @@ const JufraPeruView = () => {
                             <div style={{
                               marginTop: '1.15rem',
                               paddingTop: '0.8rem',
-                              borderTop: '1px solid #F5F5F4',
+                              borderTop: '1px solid var(--border, #F5F5F4)',
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'space-between',
@@ -446,7 +420,7 @@ const JufraPeruView = () => {
                                 <Link
                                   to={webUrl}
                                   style={{
-                                    background: '#C2410C',
+                                    background: 'var(--accent, #C2410C)',
                                     color: '#FFFFFF',
                                     borderRadius: '8px',
                                     padding: '0.48rem 0.95rem',
@@ -467,7 +441,7 @@ const JufraPeruView = () => {
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   style={{
-                                    color: '#292524',
+                                    color: 'var(--primary, #8B5A2B)',
                                     fontSize: '0.78rem',
                                     fontWeight: 600,
                                     textDecoration: 'none',
@@ -483,7 +457,7 @@ const JufraPeruView = () => {
                                 <Link
                                   to={webUrl}
                                   style={{
-                                    color: '#292524',
+                                    color: 'var(--primary, #8B5A2B)',
                                     fontSize: '0.78rem',
                                     fontWeight: 600,
                                     textDecoration: 'none',
@@ -509,8 +483,8 @@ const JufraPeruView = () => {
         </div>
       </main>
 
-      {/* Footer Oscuro Minimalista */}
-      <footer style={{ background: '#1A110B', color: '#FFFFFF', padding: '1.25rem 1.5rem' }}>
+      {/* Footer oscuro minimalista */}
+      <footer style={{ background: 'var(--hero-bg, #1A110B)', color: '#FFFFFF', padding: '1.25rem 1.5rem' }}>
         <div style={{
           maxWidth: '1160px',
           margin: '0 auto',
@@ -521,10 +495,10 @@ const JufraPeruView = () => {
           gap: '0.75rem'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ color: '#F59E0B', fontWeight: 800, fontSize: '1rem' }}>T</span>
+            <span style={{ color: 'var(--secondary, #F59E0B)', fontWeight: 800, fontSize: '1rem' }}>✟</span>
             <span style={{ fontWeight: 700, fontSize: '0.85rem' }}>JUFRA Perú</span>
           </div>
-          <p style={{ margin: 0, fontSize: '0.78rem', color: '#A8A29E' }}>
+          <p style={{ margin: 0, fontSize: '0.78rem', color: 'rgba(255,255,255,0.55)' }}>
             © {new Date().getFullYear()} JUFRA Perú. Paz y Bien.
           </p>
         </div>
