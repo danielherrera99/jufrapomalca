@@ -13,10 +13,17 @@ const ZONAS_CONFIG = {
 
 const JufraPeruView = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [fraternidades, setFraternidades] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedZone, setSelectedZone] = useState('todas');
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,85 +77,52 @@ const JufraPeruView = () => {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#FAF9F6', color: '#1C1917' }}>
-      {/* Navegación Editorial Limpia */}
-      <nav style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 50,
-        background: '#FFFFFF',
-        borderBottom: '1px solid #EFECE6',
-        padding: '0 1.5rem',
-        height: '64px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-      }}>
-        <div style={{ maxWidth: '1160px', width: '100%', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Link to="/jufra-peru" style={{ textDecoration: 'none', color: '#1C1917', fontWeight: 800, fontSize: '1.05rem', letterSpacing: '-0.01em' }}>
-            JUFRA Perú
-          </Link>
+      {/* Navegación Pública Estándar */}
+      <nav className={`landing-nav ${isScrolled ? 'scrolled' : ''}`}>
+        <Link to="/" className="logo">
+          JUFRA POMALCA
+        </Link>
 
-          <div className="desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-            <Link to="/" style={{ textDecoration: 'none', color: '#57534E', fontSize: '0.88rem', fontWeight: 500 }}>
-              Inicio
-            </Link>
-            <a href="#directorio" style={{ textDecoration: 'none', color: '#1C1917', fontSize: '0.88rem', fontWeight: 600 }}>
-              Directorio
-            </a>
-          </div>
+        <button className="nav-toggle" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          {isMenuOpen ? '✕' : '☰'}
+        </button>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <Link
-              to="/"
-              style={{
-                textDecoration: 'none',
-                background: '#F5F0EA',
-                border: '1px solid #E5DDD3',
-                color: '#291D14',
-                padding: '0.42rem 0.95rem',
-                borderRadius: '9999px',
-                fontSize: '0.8rem',
-                fontWeight: 600,
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '5px'
-              }}
-            >
-              <span>←</span>
-              <span>Volver a Pomalca</span>
-            </Link>
-
-            <button
-              className="nav-toggle"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              style={{ background: 'none', border: 'none', fontSize: '1.3rem', cursor: 'pointer', color: '#1C1917' }}
-            >
-              {isMenuOpen ? '✕' : '☰'}
-            </button>
-          </div>
+        <div className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
+          <a href="/#mision" onClick={() => setIsMenuOpen(false)}>Misión</a>
+          <a href="/#historia" onClick={() => setIsMenuOpen(false)}>Camino</a>
+          <a href="/#quienes-somos" onClick={() => setIsMenuOpen(false)}>Nosotros</a>
+          <a href="/#galeria" onClick={() => setIsMenuOpen(false)}>Actividades</a>
+          <a href="#directorio" className="active" onClick={() => setIsMenuOpen(false)}>Perú</a>
+          <a
+            href="/#contacto"
+            className="nav-btn-unete"
+            onClick={() => setIsMenuOpen(false)}
+            style={{
+              backgroundColor: '#c2410c',
+              color: '#ffffff',
+              padding: '0.45rem 1.25rem',
+              borderRadius: '10px',
+              fontWeight: '700',
+              fontSize: '0.88rem',
+              textDecoration: 'none',
+              boxShadow: '0 2px 8px rgba(194, 65, 12, 0.25)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginLeft: '0.5rem'
+            }}
+          >
+            Únete
+          </a>
         </div>
       </nav>
-
-      {/* Menú móvil desplegable */}
-      {isMenuOpen && (
-        <div style={{
-          background: '#FFFFFF',
-          borderBottom: '1px solid #EFECE6',
-          padding: '1rem 1.5rem',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '0.75rem'
-        }}>
-          <Link to="/" onClick={() => setIsMenuOpen(false)} style={{ textDecoration: 'none', color: '#57534E', fontWeight: 600 }}>Inicio</Link>
-          <a href="#directorio" onClick={() => setIsMenuOpen(false)} style={{ textDecoration: 'none', color: '#1C1917', fontWeight: 600 }}>Directorio</a>
-        </div>
-      )}
 
       {/* Hero Editorial Oscuro */}
       <header style={{
         position: 'relative',
         background: '#1A110B',
         minHeight: '280px',
+        marginTop: '62px',
         padding: '4.5rem 1.5rem',
         display: 'flex',
         alignItems: 'center',
