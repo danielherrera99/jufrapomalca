@@ -1,41 +1,53 @@
-import React from 'react';
-import { useFraternidad } from '../context/FraternidadContext';
+import React, { useState, useRef, useEffect } from 'react';
+import { useFraternidad, POMALCA_ID } from '../context/FraternidadContext';
 
 export default function FraternidadSelector({ user, isSidebar = true }) {
-  const { fraternidades, selectedFraternidadId, changeFraternidad, activeFraternidad, isSuperAdmin } = useFraternidad();
-  const POMALCA_ID = '00000000-6a0f-b53a-d327-e42a6db2faf7';
+  const { fraternidades, selectedFraternidadId, changeFraternidad, isSuperAdmin } = useFraternidad();
+  const [isOpen, setIsOpen] = useState(false);
+  const [filterText, setFilterText] = useState('');
+  const dropdownRef = useRef(null);
 
   const currentFratId = selectedFraternidadId || POMALCA_ID;
-  const currentFrat = fraternidades.find(f => f.id === currentFratId);
-  const fratName = currentFrat?.nombre 
-    ? `${currentFrat.nombre} (${currentFrat.departamento || currentFrat.zona || 'Local'})`
-    : (user?.fraternidadNombre || 'JUFRA Pomalca (Lambayeque)');
+  const isAllPeru = currentFratId === 'all-peru';
+  const currentFrat = isAllPeru 
+    ? { nombre: 'Todo el Perú', departamento: 'Consolidado Nacional' } 
+    : (fraternidades.find(f => f.id === currentFratId) || { nombre: 'JUFRA Pomalca', departamento: 'Lambayeque' });
 
-  // Si no es Super Admin, mostramos la tarjeta informativa en la barra lateral
+  // Cerrar al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Si no es Super Admin, tarjeta elegante y clara
   if (!isSuperAdmin) {
     return (
       <div 
         style={{
-          background: 'rgba(255, 255, 255, 0.06)',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
-          borderRadius: '10px',
-          padding: '8px 12px',
-          color: '#ffffff',
+          background: '#f8fafc',
+          border: '1px solid #e2e8f0',
+          borderRadius: '8px',
+          padding: '8px 10px',
           boxSizing: 'border-box'
         }}
       >
-        <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#fbbf24', fontWeight: 700, marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+        <div style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.4px', color: '#64748b', fontWeight: 700, marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
           <span>🏛️</span>
           <span>Fraternidad Local</span>
         </div>
-        <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#fef3c7', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-          {fratName}
+        <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {currentFrat.nombre}
         </div>
       </div>
     );
   }
 
-  // Agrupar fraternidades por zona para el selector del Super Admin (excluyendo Pomalca para evitar duplicado)
+  // Agrupación por zonas
   const zonasMap = {
     norte: 'Zona Norte',
     centro: 'Zona Centro',
@@ -45,7 +57,6 @@ export default function FraternidadSelector({ user, isSidebar = true }) {
   };
 
   const grouped = fraternidades.reduce((acc, f) => {
-    // Excluir Pomalca de los grupos ya que tiene opción destacada fija arriba
     if (f.id === POMALCA_ID || (f.nombre && f.nombre.toUpperCase().includes('POMALCA'))) {
       return acc;
     }
@@ -55,70 +66,216 @@ export default function FraternidadSelector({ user, isSidebar = true }) {
     return acc;
   }, {});
 
+  const handleSelect = (id) => {
+    changeFraternidad(id);
+    setIsOpen(false);
+    setFilterText('');
+  };
+
+  // Filtrado de fraternidades si el usuario busca
+  const term = filterText.toLowerCase().trim();
+  const filterList = (items) => {
+    if (!term) return items;
+    return items.filter(f => 
+      f.nombre?.toLowerCase().includes(term) || 
+      f.departamento?.toLowerCase().includes(term) ||
+      f.zona?.toLowerCase().includes(term)
+    );
+  };
+
   return (
-    <div 
-      style={{
-        background: 'rgba(255, 255, 255, 0.05)',
-        border: '1px solid rgba(255, 255, 255, 0.12)',
-        borderRadius: '10px',
-        padding: '8px 10px',
-        color: '#ffffff',
-        boxSizing: 'border-box',
-        transition: 'all 0.2s ease'
-      }}
-    >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-        <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#fbbf24', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+    <div ref={dropdownRef} style={{ position: 'relative', width: '100%', boxSizing: 'border-box' }}>
+      {/* Etiqueta superior limpia (sin amarillo) */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
+        <span style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.4px', color: '#64748b', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
           <span>🏛️</span> Fraternidad Activa
         </span>
-        <span style={{ fontSize: '0.62rem', color: 'rgba(255, 255, 255, 0.5)', background: 'rgba(255,255,255,0.1)', padding: '1px 6px', borderRadius: '4px' }}>
-          Nacional
+        <span style={{ fontSize: '0.62rem', color: '#0369a1', background: '#e0f2fe', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>
+          Superadmin
         </span>
       </div>
 
-      <div style={{ position: 'relative', width: '100%' }}>
-        <select
-          value={currentFratId}
-          onChange={(e) => changeFraternidad(e.target.value)}
+      {/* Botón trigger claro, de alto contraste */}
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        style={{
+          width: '100%',
+          background: '#ffffff',
+          color: '#0f172a',
+          border: '1.5px solid #cbd5e1',
+          borderRadius: '8px',
+          padding: '8px 10px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          cursor: 'pointer',
+          textAlign: 'left',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+          transition: 'all 0.15s ease',
+          boxSizing: 'border-box'
+        }}
+        onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#94a3b8'; e.currentTarget.style.background = '#f8fafc'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#cbd5e1'; e.currentTarget.style.background = '#ffffff'; }}
+      >
+        <div style={{ overflow: 'hidden', paddingRight: '6px' }}>
+          <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {isAllPeru ? '🇵🇪 Todo el Perú' : `📍 ${currentFrat.nombre}`}
+          </div>
+          <div style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 500 }}>
+            {isAllPeru ? 'Consolidado Nacional' : (currentFrat.departamento || currentFrat.zona || 'Sede')}
+          </div>
+        </div>
+        <span style={{ fontSize: '0.7rem', color: '#64748b', transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease', flexShrink: 0 }}>
+          ▼
+        </span>
+      </button>
+
+      {/* Menú desplegable claro, 100% legible sobre fondo blanco */}
+      {isOpen && (
+        <div 
           style={{
-            width: '100%',
-            background: '#231b15',
-            color: '#fef3c7',
-            border: '1px solid rgba(255, 255, 255, 0.16)',
-            borderRadius: '6px',
-            fontSize: '0.78rem',
-            fontWeight: 600,
-            cursor: 'pointer',
-            outline: 'none',
-            padding: '7px 24px 7px 8px',
-            appearance: 'none',
-            WebkitAppearance: 'none',
-            MozAppearance: 'none',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
+            position: 'absolute',
+            top: 'calc(100% + 4px)',
+            left: 0,
+            width: '260px',
+            background: '#ffffff',
+            border: '1px solid #cbd5e1',
+            borderRadius: '10px',
+            boxShadow: '0 12px 30px rgba(0, 0, 0, 0.18), 0 4px 6px rgba(0,0,0,0.06)',
+            zIndex: 9999,
+            maxHeight: '340px',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
             boxSizing: 'border-box'
           }}
         >
-          <option value={POMALCA_ID} style={{ color: '#000000', fontWeight: 'bold' }}>
-            📍 JUFRA Pomalca (Lambayeque)
-          </option>
-          <option value="all-peru" style={{ color: '#000000', fontWeight: 'bold' }}>
-            🇵🇪 Todo el Perú (Consolidado Nacional)
-          </option>
-          {Object.entries(grouped).map(([zonaKey, items]) => (
-            <optgroup key={zonaKey} label={`── ${zonasMap[zonaKey] || zonaKey} ──`} style={{ color: '#000000', fontWeight: 'bold' }}>
-              {items.map((f) => (
-                <option key={f.id} value={f.id} style={{ color: '#000000', fontWeight: 'normal' }}>
-                  {f.nombre} ({f.departamento || f.zona || 'Local'})
-                </option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
-        <span style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', fontSize: '0.65rem', color: '#fbbf24' }}>
-          ▼
-        </span>
-      </div>
+          {/* Buscador interno rápido */}
+          <div style={{ padding: '8px', borderBottom: '1px solid #f1f5f9', background: '#f8fafc' }}>
+            <input 
+              type="text" 
+              placeholder="🔍 Buscar fraternidad..." 
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+              autoFocus
+              style={{
+                width: '100%',
+                padding: '6px 8px',
+                fontSize: '0.78rem',
+                border: '1px solid #cbd5e1',
+                borderRadius: '6px',
+                outline: 'none',
+                boxSizing: 'border-box'
+              }}
+            />
+          </div>
+
+          {/* Lista de opciones */}
+          <div style={{ overflowY: 'auto', padding: '6px', flex: 1 }}>
+            {/* 1. JUFRA Pomalca */}
+            {(!term || 'pomalca'.includes(term) || 'lambayeque'.includes(term)) && (
+              <div 
+                onClick={() => handleSelect(POMALCA_ID)}
+                style={{
+                  padding: '8px 10px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  background: currentFratId === POMALCA_ID ? '#fff7ed' : 'transparent',
+                  borderLeft: currentFratId === POMALCA_ID ? '3px solid #ea580c' : '3px solid transparent',
+                  marginBottom: '2px',
+                  transition: 'background 0.1s ease'
+                }}
+                onMouseEnter={(e) => { if (currentFratId !== POMALCA_ID) e.currentTarget.style.background = '#f1f5f9'; }}
+                onMouseLeave={(e) => { if (currentFratId !== POMALCA_ID) e.currentTarget.style.background = 'transparent'; }}
+              >
+                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: currentFratId === POMALCA_ID ? '#c2410c' : '#0f172a' }}>
+                  📍 JUFRA Pomalca
+                </div>
+                <div style={{ fontSize: '0.68rem', color: '#64748b' }}>
+                  Lambayeque · Sede Principal
+                </div>
+              </div>
+            )}
+
+            {/* 2. Consolidado Nacional */}
+            {(!term || 'peru'.includes(term) || 'todo'.includes(term) || 'nacional'.includes(term)) && (
+              <div 
+                onClick={() => handleSelect('all-peru')}
+                style={{
+                  padding: '8px 10px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  background: isAllPeru ? '#fff7ed' : 'transparent',
+                  borderLeft: isAllPeru ? '3px solid #ea580c' : '3px solid transparent',
+                  marginBottom: '6px',
+                  transition: 'background 0.1s ease'
+                }}
+                onMouseEnter={(e) => { if (!isAllPeru) e.currentTarget.style.background = '#f1f5f9'; }}
+                onMouseLeave={(e) => { if (!isAllPeru) e.currentTarget.style.background = 'transparent'; }}
+              >
+                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: isAllPeru ? '#c2410c' : '#0f172a' }}>
+                  🇵🇪 Todo el Perú
+                </div>
+                <div style={{ fontSize: '0.68rem', color: '#64748b' }}>
+                  Consolidado Nacional (Todas las fraternidades)
+                </div>
+              </div>
+            )}
+
+            {/* 3. Fraternidades Agrupadas */}
+            {Object.entries(grouped).map(([zonaKey, items]) => {
+              const matchedItems = filterList(items);
+              if (matchedItems.length === 0) return null;
+
+              return (
+                <div key={zonaKey} style={{ marginTop: '6px' }}>
+                  <div style={{ 
+                    fontSize: '0.65rem', 
+                    fontWeight: 700, 
+                    color: '#9a3412', 
+                    background: '#fdf4ec', 
+                    padding: '3px 8px', 
+                    borderRadius: '4px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px',
+                    marginBottom: '3px'
+                  }}>
+                    {zonasMap[zonaKey] || zonaKey}
+                  </div>
+                  {matchedItems.map((f) => {
+                    const isSelected = currentFratId === f.id;
+                    return (
+                      <div
+                        key={f.id}
+                        onClick={() => handleSelect(f.id)}
+                        style={{
+                          padding: '7px 10px',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          background: isSelected ? '#fff7ed' : 'transparent',
+                          borderLeft: isSelected ? '3px solid #ea580c' : '3px solid transparent',
+                          marginBottom: '2px',
+                          transition: 'background 0.1s ease'
+                        }}
+                        onMouseEnter={(e) => { if (!isSelected) e.currentTarget.style.background = '#f1f5f9'; }}
+                        onMouseLeave={(e) => { if (!isSelected) e.currentTarget.style.background = 'transparent'; }}
+                      >
+                        <div style={{ fontSize: '0.78rem', fontWeight: isSelected ? 700 : 500, color: isSelected ? '#c2410c' : '#1e293b' }}>
+                          {f.nombre}
+                        </div>
+                        <div style={{ fontSize: '0.68rem', color: '#64748b' }}>
+                          {f.departamento || f.zona || 'Local'}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
