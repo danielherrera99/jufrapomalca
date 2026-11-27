@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { 
   BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   PieChart, Pie, Cell, Legend, AreaChart, Area 
 } from 'recharts';
 import api from '../../config/api';
+import { useFraternidad } from '../../context/FraternidadContext';
 
 export const resolveEtapa = (h) => {
   if (!h) return 'aspirante';
@@ -62,38 +63,48 @@ const etapaBadgeMap = {
 
 const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, setIsModalOpen, handleApprove }) => {
   const esConsejo = ['admin', 'superadmin', 'admin_nacional', 'consejo'].includes(user?.rol);
+  const { selectedFraternidadId, activeFraternidad } = useFraternidad();
   const [data, setData] = useState({ hermanos: [], anuncios: [], eventos: [], asistencias: [], peticiones: [], metricas: null });
   const [loading, setLoading] = useState(true);
   const [showQRModal, setShowQRModal] = useState(false);
 
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [hermanosRes, anunciosRes, eventosRes, asisRes, peticionesRes, metricasRes] = await Promise.all([
+        api.get('/hermanos?todos=true'),
+        api.get('/anuncios'),
+        api.get('/eventos?todos=true'),
+        api.get('/asistencia'),
+        api.get('/peticiones').catch(() => ({ data: { peticiones: [] } })),
+        api.get('/metricas-sociales').catch(() => ({ data: { data: {} } }))
+      ]);
+      setData({
+        hermanos: hermanosRes.data.hermanos || [],
+        anuncios: anunciosRes.data.anuncios || [],
+        eventos: eventosRes.data.eventos || [],
+        asistencias: asisRes.data.asistencias || (Array.isArray(asisRes.data) ? asisRes.data : []),
+        peticiones: peticionesRes.data?.peticiones || (Array.isArray(peticionesRes.data) ? peticionesRes.data : []),
+        metricas: metricasRes?.data?.data || {}
+      });
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [selectedFraternidadId]);
+
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const [hermanosRes, anunciosRes, eventosRes, asisRes, peticionesRes, metricasRes] = await Promise.all([
-          api.get('/hermanos?todos=true'),
-          api.get('/anuncios'),
-          api.get('/eventos?todos=true'),
-          api.get('/asistencia'),
-          api.get('/peticiones').catch(() => ({ data: { peticiones: [] } })),
-          api.get('/metricas-sociales').catch(() => ({ data: { data: {} } }))
-        ]);
-        setData({
-          hermanos: hermanosRes.data.hermanos || [],
-          anuncios: anunciosRes.data.anuncios || [],
-          eventos: eventosRes.data.eventos || [],
-          asistencias: asisRes.data.asistencias || (Array.isArray(asisRes.data) ? asisRes.data : []),
-          peticiones: peticionesRes.data?.peticiones || (Array.isArray(peticionesRes.data) ? peticionesRes.data : []),
-          metricas: metricasRes?.data?.data || {}
-        });
-      } catch (error) {
-        console.error('Error fetching dashboard data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchData();
-  }, []);
+  }, [fetchData]);
+
+  useEffect(() => {
+    const handleFratChange = () => {
+      fetchData();
+    };
+    window.addEventListener('fraternidad_changed', handleFratChange);
+    return () => window.removeEventListener('fraternidad_changed', handleFratChange);
+  }, [fetchData]);
 
   // Procesamiento de Datos para Gráficos
   const chartData = useMemo(() => {

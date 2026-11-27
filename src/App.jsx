@@ -1185,7 +1185,7 @@ const modules = [
 ];
 
 const Dashboard = ({ user, onLogout }) => {
-  const { selectedFraternidadId } = useFraternidad();
+  const { selectedFraternidadId, activeFraternidad } = useFraternidad();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -1257,6 +1257,12 @@ const Dashboard = ({ user, onLogout }) => {
         <div className="sidebar-brand">
           {esConsejo ? 'JUFRA Admin' : 'JUFRA Fraternidad'}
         </div>
+
+        {/* Selector de Fraternidad en la Barra Lateral Izquierda (arriba de los menús) */}
+        <div style={{ padding: '0 0.85rem 0.85rem' }}>
+          <FraternidadSelector user={user} isSidebar={true} />
+        </div>
+
         <nav className="nav-menu">
           {/* GRUPO: GESTIÓN O VIDA FRATERNA */}
           <div className="nav-section-title">
@@ -1367,7 +1373,9 @@ const Dashboard = ({ user, onLogout }) => {
                 </span>
               </div>
               <p style={{ color: '#78716c', fontSize: '0.78rem', margin: '2px 0 0 0', fontWeight: 400 }}>
-                {user?.fraternidadNombre || 'JUFRA Pomalca'} · {(() => {
+                {activeFraternidad?.nombre 
+                  ? `${activeFraternidad.nombre} (${activeFraternidad.departamento || activeFraternidad.zona || 'Local'})`
+                  : (selectedFraternidadId === 'all-peru' ? 'Consolidado Nacional · Todo el Perú' : (user?.fraternidadNombre || 'JUFRA Pomalca'))} · {(() => {
                   const today = new Date();
                   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
                   return today.toLocaleDateString('es-ES', options).replace(/^./, str => str.toUpperCase());
@@ -1376,8 +1384,6 @@ const Dashboard = ({ user, onLogout }) => {
             </div>
             
             <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexShrink: 0, flexWrap: 'nowrap' }}>
-              <FraternidadSelector user={user} />
-              
               <div style={{ position: 'relative', width: '200px' }}>
                 <span style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', color: '#78716c', pointerEvents: 'none' }}>
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">

@@ -13,7 +13,7 @@ api.interceptors.request.use((config) => {
   
   // Inyectar fraternidadId activa si está seleccionada (para Multi-Tenant)
   const selectedFraternidadId = localStorage.getItem('selected_fraternidad_id');
-  if (selectedFraternidadId && !config.params?.fraternidadId) {
+  if (selectedFraternidadId && selectedFraternidadId !== 'all-peru' && selectedFraternidadId !== 'all' && !config.params?.fraternidadId) {
     config.params = {
       ...config.params,
       fraternidadId: selectedFraternidadId

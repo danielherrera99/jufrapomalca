@@ -3,6 +3,8 @@ import api from '../config/api';
 
 const FraternidadContext = createContext();
 
+export const POMALCA_ID = '00000000-6a0f-b53a-d327-e42a6db2faf7';
+
 export const FraternidadProvider = ({ children, user }) => {
   const [fraternidades, setFraternidades] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,8 +12,10 @@ export const FraternidadProvider = ({ children, user }) => {
 
   const [selectedFraternidadId, setSelectedFraternidadId] = useState(() => {
     const saved = localStorage.getItem('selected_fraternidad_id');
-    if (saved) return saved;
-    return user?.fraternidadId || '';
+    if (saved && saved !== 'undefined' && saved !== 'null' && saved !== '') {
+      return saved;
+    }
+    return user?.fraternidadId || POMALCA_ID;
   });
 
   useEffect(() => {
@@ -29,14 +33,11 @@ export const FraternidadProvider = ({ children, user }) => {
   }, []);
 
   const changeFraternidad = (id) => {
-    if (id) {
-      localStorage.setItem('selected_fraternidad_id', id);
-    } else {
-      localStorage.removeItem('selected_fraternidad_id');
-    }
-    setSelectedFraternidadId(id);
+    const targetId = id || POMALCA_ID;
+    localStorage.setItem('selected_fraternidad_id', targetId);
+    setSelectedFraternidadId(targetId);
     // Disparar evento para que vistas que escuchen puedan re-consultar sus datos
-    window.dispatchEvent(new CustomEvent('fraternidad_changed', { detail: id }));
+    window.dispatchEvent(new CustomEvent('fraternidad_changed', { detail: targetId }));
   };
 
   const activeFraternidad = fraternidades.find(f => f.id === selectedFraternidadId) || null;
@@ -49,7 +50,8 @@ export const FraternidadProvider = ({ children, user }) => {
         changeFraternidad,
         activeFraternidad,
         isSuperAdmin,
-        loading
+        loading,
+        POMALCA_ID
       }}
     >
       {children}

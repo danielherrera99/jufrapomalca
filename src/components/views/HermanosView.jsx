@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import api from '../../config/api';
 import HermanosEditModal from '../HermanosEditModal';
 import { resolveEtapa } from './DashboardView';
+import { useFraternidad } from '../../context/FraternidadContext';
 
 const etapaBadgeMap = {
   'aspirante': { label: 'Aspirante', bg: '#F1F5F9', color: '#475569' },
@@ -20,7 +21,9 @@ const HermanosView = ({ handleApprove, user }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
-  const fetchData = async () => {
+  const { selectedFraternidadId } = useFraternidad();
+
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const response = await api.get('/hermanos?todos=true');
@@ -31,11 +34,19 @@ const HermanosView = ({ handleApprove, user }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedFraternidadId]);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
+
+  useEffect(() => {
+    const handleFratChange = () => {
+      fetchData();
+    };
+    window.addEventListener('fraternidad_changed', handleFratChange);
+    return () => window.removeEventListener('fraternidad_changed', handleFratChange);
+  }, [fetchData]);
 
   const filteredData = useMemo(() => {
     let filtered = Array.isArray(data) ? data : [];
