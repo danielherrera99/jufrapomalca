@@ -4,7 +4,7 @@ import {
   PieChart, Pie, Cell, Legend, AreaChart, Area 
 } from 'recharts';
 import api from '../../config/api';
-import { useFraternidad } from '../../context/FraternidadContext';
+import { useFraternidad, POMALCA_ID } from '../../context/FraternidadContext';
 
 export const resolveEtapa = (h) => {
   if (!h) return 'aspirante';
@@ -64,6 +64,9 @@ const etapaBadgeMap = {
 const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, setIsModalOpen, handleApprove }) => {
   const esConsejo = ['admin', 'superadmin', 'admin_nacional', 'consejo'].includes(user?.rol);
   const { selectedFraternidadId, activeFraternidad } = useFraternidad();
+  const isPomalca = (selectedFraternidadId === POMALCA_ID) || 
+    (!selectedFraternidadId && user?.fraternidadId === POMALCA_ID) ||
+    (activeFraternidad?.nombre && activeFraternidad.nombre.toUpperCase().includes('POMALCA'));
   const [data, setData] = useState({ hermanos: [], anuncios: [], eventos: [], asistencias: [], peticiones: [], metricas: null });
   const [loading, setLoading] = useState(true);
   const [showQRModal, setShowQRModal] = useState(false);
@@ -518,8 +521,8 @@ const DashboardView = ({ user, formatSafeDate, setActiveTab, ActivityIndicator, 
         /* 2. VISTA ANALÍTICA EXISTENTE PARA EL CONSEJO (esConsejo) */
         /* ======================================================== */
         <>
-          {/* Impacto Digital (Métricas Sociales) */}
-          {data.metricas && Object.keys(data.metricas).length > 0 && (
+          {/* Impacto Digital (Métricas Sociales) - Exclusivo de JUFRA Pomalca hasta configurar redes para otras fraternidades */}
+          {isPomalca && data.metricas && Object.keys(data.metricas).length > 0 && (
             <div style={{ marginBottom: '2rem' }}>
               <h3 style={{ marginTop: 0, fontSize: '1.1rem', color: 'var(--primary)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
                 🌍 Nuestro Impacto Digital

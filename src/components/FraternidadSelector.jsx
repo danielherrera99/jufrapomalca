@@ -47,7 +47,7 @@ export default function FraternidadSelector({ user, isSidebar = true }) {
     );
   }
 
-  // Agrupación por zonas
+  // Agrupación por zonas con JUFRA Pomalca integrada en la Zona Norte
   const zonasMap = {
     norte: 'Zona Norte',
     centro: 'Zona Centro',
@@ -56,15 +56,52 @@ export default function FraternidadSelector({ user, isSidebar = true }) {
     otros: 'Otras Fraternidades'
   };
 
-  const grouped = fraternidades.reduce((acc, f) => {
-    if (f.id === POMALCA_ID || (f.nombre && f.nombre.toUpperCase().includes('POMALCA'))) {
-      return acc;
+  const allFraternidadesWithPomalca = useMemo(() => {
+    let list = [...fraternidades];
+    const hasPomalca = list.some(f => f.id === POMALCA_ID || (f.nombre && f.nombre.toUpperCase().includes('POMALCA')));
+    if (!hasPomalca) {
+      list.unshift({
+        id: POMALCA_ID,
+        nombre: 'JUFRA Pomalca',
+        departamento: 'Lambayeque',
+        zona: 'norte'
+      });
+    } else {
+      list = list.map(f => {
+        if (f.id === POMALCA_ID || (f.nombre && f.nombre.toUpperCase().includes('POMALCA'))) {
+          return {
+            ...f,
+            zona: 'norte',
+            departamento: f.departamento || 'Lambayeque'
+          };
+        }
+        return f;
+      });
     }
-    const z = f.zona || 'otros';
-    if (!acc[z]) acc[z] = [];
-    acc[z].push(f);
-    return acc;
-  }, {});
+    return list;
+  }, [fraternidades]);
+
+  const grouped = useMemo(() => {
+    const res = allFraternidadesWithPomalca.reduce((acc, f) => {
+      const z = f.zona || 'otros';
+      if (!acc[z]) acc[z] = [];
+      acc[z].push(f);
+      return acc;
+    }, {});
+
+    // Asegurar que en Zona Norte, Pomalca aparezca primera
+    if (res.norte) {
+      res.norte.sort((a, b) => {
+        const aIsPomalca = a.id === POMALCA_ID || (a.nombre && a.nombre.toUpperCase().includes('POMALCA'));
+        const bIsPomalca = b.id === POMALCA_ID || (b.nombre && b.nombre.toUpperCase().includes('POMALCA'));
+        if (aIsPomalca) return -1;
+        if (bIsPomalca) return 1;
+        return (a.nombre || '').localeCompare(b.nombre || '');
+      });
+    }
+
+    return res;
+  }, [allFraternidadesWithPomalca]);
 
   const handleSelect = (id) => {
     changeFraternidad(id);
@@ -173,32 +210,7 @@ export default function FraternidadSelector({ user, isSidebar = true }) {
 
           {/* Lista de opciones */}
           <div style={{ overflowY: 'auto', padding: '6px', flex: 1 }}>
-            {/* 1. JUFRA Pomalca */}
-            {(!term || 'pomalca'.includes(term) || 'lambayeque'.includes(term)) && (
-              <div 
-                onClick={() => handleSelect(POMALCA_ID)}
-                style={{
-                  padding: '8px 10px',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  background: currentFratId === POMALCA_ID ? '#fff7ed' : 'transparent',
-                  borderLeft: currentFratId === POMALCA_ID ? '3px solid #ea580c' : '3px solid transparent',
-                  marginBottom: '2px',
-                  transition: 'background 0.1s ease'
-                }}
-                onMouseEnter={(e) => { if (currentFratId !== POMALCA_ID) e.currentTarget.style.background = '#f1f5f9'; }}
-                onMouseLeave={(e) => { if (currentFratId !== POMALCA_ID) e.currentTarget.style.background = 'transparent'; }}
-              >
-                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: currentFratId === POMALCA_ID ? '#c2410c' : '#0f172a' }}>
-                  📍 JUFRA Pomalca
-                </div>
-                <div style={{ fontSize: '0.68rem', color: '#64748b' }}>
-                  Lambayeque · Sede Principal
-                </div>
-              </div>
-            )}
-
-            {/* 2. Consolidado Nacional */}
+            {/* 1. Principal Nacional Arriba */}
             {(!term || 'peru'.includes(term) || 'todo'.includes(term) || 'nacional'.includes(term)) && (
               <div 
                 onClick={() => handleSelect('all-peru')}
@@ -223,7 +235,7 @@ export default function FraternidadSelector({ user, isSidebar = true }) {
               </div>
             )}
 
-            {/* 3. Fraternidades Agrupadas */}
+            {/* 2. Fraternidades Agrupadas por Región/Zona */}
             {Object.entries(grouped).map(([zonaKey, items]) => {
               const matchedItems = filterList(items);
               if (matchedItems.length === 0) return null;
@@ -245,6 +257,7 @@ export default function FraternidadSelector({ user, isSidebar = true }) {
                   </div>
                   {matchedItems.map((f) => {
                     const isSelected = currentFratId === f.id;
+                    const isPomalcaItem = f.id === POMALCA_ID || (f.nombre && f.nombre.toUpperCase().includes('POMALCA'));
                     return (
                       <div
                         key={f.id}
@@ -261,8 +274,8 @@ export default function FraternidadSelector({ user, isSidebar = true }) {
                         onMouseEnter={(e) => { if (!isSelected) e.currentTarget.style.background = '#f1f5f9'; }}
                         onMouseLeave={(e) => { if (!isSelected) e.currentTarget.style.background = 'transparent'; }}
                       >
-                        <div style={{ fontSize: '0.78rem', fontWeight: isSelected ? 700 : 500, color: isSelected ? '#c2410c' : '#1e293b' }}>
-                          {f.nombre}
+                        <div style={{ fontSize: '0.78rem', fontWeight: isSelected ? 700 : (isPomalcaItem ? 600 : 500), color: isSelected ? '#c2410c' : '#1e293b' }}>
+                          {isPomalcaItem ? `📍 ${f.nombre}` : f.nombre}
                         </div>
                         <div style={{ fontSize: '0.68rem', color: '#64748b' }}>
                           {f.departamento || f.zona || 'Local'}

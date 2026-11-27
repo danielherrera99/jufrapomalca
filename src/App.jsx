@@ -44,7 +44,7 @@ import FinanzasView from './components/views/FinanzasView';
 import RegistrosMascotasAdminView from './components/views/RegistrosMascotasAdminView';
 import InventarioView from './components/views/InventarioView';
 import MantenimientoView from './components/views/MantenimientoView';
-import { FraternidadProvider, useFraternidad } from './context/FraternidadContext';
+import { FraternidadProvider, useFraternidad, POMALCA_ID } from './context/FraternidadContext';
 import FraternidadSelector from './components/FraternidadSelector';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -1189,6 +1189,10 @@ const Dashboard = ({ user, onLogout }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const isPomalca = (selectedFraternidadId === POMALCA_ID) || 
+    (!selectedFraternidadId && user?.fraternidadId === POMALCA_ID) ||
+    (activeFraternidad?.nombre && activeFraternidad.nombre.toUpperCase().includes('POMALCA'));
+
   const esAdmin = ['admin', 'superadmin', 'admin_nacional'].includes(user?.rol);
   const esConsejo = ['admin', 'superadmin', 'admin_nacional', 'consejo'].includes(user?.rol);
 
@@ -1311,7 +1315,11 @@ const Dashboard = ({ user, onLogout }) => {
           {esConsejo && (
             <>
               <div className="nav-section-title" style={{ marginTop: '1.5rem' }}>GESTIÓN WEB</div>
-              {modules.filter(m => ['Solicitudes', 'Redes', 'GaleriaWeb', 'QuienesSomos', 'WebConfig', 'Campanas', 'RegistrosMascotas', 'OfsConfig', 'OfsFraternidades', 'Fraternidades'].includes(m.id)).map((mod) => (
+              {modules.filter(m => {
+                // Redes sociales actualmente exclusivas de JUFRA Pomalca
+                if (m.id === 'Redes' && !isPomalca) return false;
+                return ['Solicitudes', 'Redes', 'GaleriaWeb', 'QuienesSomos', 'WebConfig', 'Campanas', 'RegistrosMascotas', 'OfsConfig', 'OfsFraternidades', 'Fraternidades'].includes(m.id);
+              }).map((mod) => (
                  <a key={mod.id} href="#" onClick={(e) => { e.preventDefault(); setActiveTab(mod.id); setIsSidebarOpen(false); }}
                   className={`nav-link ${activeTab === mod.id ? 'active' : ''}`}
                 >
