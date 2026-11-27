@@ -1558,6 +1558,7 @@ function App() {
           <Route path="/celebraciones" element={<CelebracionesView />} />
           <Route path="/jufra-peru" element={<JufraPeruView />} />
           <Route path="/jufra-peru/:slug" element={<FraternidadDetailView />} />
+          <Route path="/f/:slug" element={<FraternidadDetailView />} />
           
           {/* Panel de Administración (Privado) */}
           <Route path="/admin" element={!user ? <Login onLogin={setUser} /> : <Navigate to="/dashboard" replace />} />
