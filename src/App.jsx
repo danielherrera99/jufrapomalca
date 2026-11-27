@@ -309,7 +309,8 @@ const Login = ({ onLogin }) => {
       if (err.code === 'ECONNABORTED' || err.message?.includes('timeout') || err.message?.includes('Network Error')) {
         setError('El servidor se está despertando (puede tomar hasta 1 min). Vuelve a intentar en unos segundos.');
       } else {
-        setError(err.response?.data?.message || 'Credenciales inválidas o cuenta no aprobada.');
+        const errorMsg = err.response?.data?.message || err.response?.data?.error || 'Credenciales inválidas o cuenta no aprobada.';
+        setError(errorMsg);
       }
     } finally {
       setIsLoading(false);
