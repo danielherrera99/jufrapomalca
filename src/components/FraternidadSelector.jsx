@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useFraternidad, POMALCA_ID } from '../context/FraternidadContext';
 
 export default function FraternidadSelector({ user, isSidebar = true }) {
