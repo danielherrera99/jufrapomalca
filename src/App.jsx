@@ -344,7 +344,7 @@ const Login = ({ onLogin }) => {
         setRecoverStep(2);
       }
     } catch (err) {
-      setRecoverError(err.response?.data?.message || 'No se pudo enviar el código. Verifica que el usuario o correo exista.');
+      setRecoverError(err.response?.data?.message || err.response?.data?.error || 'No se pudo enviar el código. Verifica que el usuario o correo exista.');
     } finally {
       setRecoverLoading(false);
     }
@@ -369,7 +369,7 @@ const Login = ({ onLogin }) => {
         setRecoverStep(3);
       }
     } catch (err) {
-      setRecoverError(err.response?.data?.message || 'Código incorrecto o expirado.');
+      setRecoverError(err.response?.data?.message || err.response?.data?.error || 'Código incorrecto o expirado.');
     } finally {
       setRecoverLoading(false);
     }
@@ -411,7 +411,7 @@ const Login = ({ onLogin }) => {
         setConfirmPassword('');
       }
     } catch (err) {
-      setRecoverError(err.response?.data?.message || 'Error al restablecer la contraseña.');
+      setRecoverError(err.response?.data?.message || err.response?.data?.error || 'Error al restablecer la contraseña.');
     } finally {
       setRecoverLoading(false);
     }
