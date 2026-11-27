@@ -1,4 +1,5 @@
 import React from 'react';
+import NacionalCheckbox from './NacionalCheckbox';
 
 const ServiciosNewModal = ({ newItem, setNewItem, MapPicker }) => {
   return (
@@ -85,6 +86,7 @@ const ServiciosNewModal = ({ newItem, setNewItem, MapPicker }) => {
             onChange={(lat, lng) => setNewItem({...newItem, lat, lng})} 
          />
       </div>
+      <NacionalCheckbox checked={newItem.esNacional} onChange={val => setNewItem({...newItem, esNacional: val})} />
     </>
   );
 };

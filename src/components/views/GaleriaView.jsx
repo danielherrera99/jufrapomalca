@@ -64,6 +64,7 @@ const GaleriaView = () => {
       formData.append('titulo', newItem.titulo || '');
       formData.append('descripcion', newItem.descripcion || '');
       formData.append('fecha', newItem.fecha || new Date().toISOString());
+      if (newItem.esNacional) formData.append('esNacional', 'true');
       if (newItem.archivoFile) formData.append('archivo', newItem.archivoFile);
 
       await api.post('/galeria', formData);

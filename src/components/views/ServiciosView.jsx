@@ -71,6 +71,7 @@ const ServiciosView = () => {
       formData.append('cupoMaximo', newItem.cupoMaximo || 0);
       if (newItem.lat) formData.append('lat', newItem.lat);
       if (newItem.lng) formData.append('lng', newItem.lng);
+      if (newItem.esNacional) formData.append('esNacional', 'true');
       if (newItem.imagenFile) formData.append('imagen', newItem.imagenFile);
 
       await api.post('/servicios', formData);

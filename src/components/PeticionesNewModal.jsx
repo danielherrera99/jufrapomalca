@@ -1,4 +1,5 @@
 import React from 'react';
+import NacionalCheckbox from './NacionalCheckbox';
 
 const PeticionesNewModal = ({ newItem, setNewItem }) => {
   return (
@@ -23,6 +24,7 @@ const PeticionesNewModal = ({ newItem, setNewItem }) => {
         />
         <label htmlFor="anonCheckNew" style={{ margin: 0, cursor: 'pointer' }}>Mantenerme Anónimo 🤫</label>
       </div>
+      <NacionalCheckbox checked={newItem.esNacional} onChange={val => setNewItem({...newItem, esNacional: val})} />
     </>
   );
 };

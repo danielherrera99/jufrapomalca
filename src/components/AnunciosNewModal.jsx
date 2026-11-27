@@ -1,4 +1,5 @@
 import React from 'react';
+import NacionalCheckbox from './NacionalCheckbox';
 
 const AnunciosNewModal = ({ newItem, setNewItem, MapPicker }) => {
   return (
@@ -104,6 +105,7 @@ const AnunciosNewModal = ({ newItem, setNewItem, MapPicker }) => {
           <input type="number" step="any" value={newItem.lng || ''} onChange={e => setNewItem({...newItem, lng: e.target.value})} />
         </div>
       </div>
+      <NacionalCheckbox checked={newItem.esNacional} onChange={val => setNewItem({...newItem, esNacional: val})} />
     </>
   );
 };

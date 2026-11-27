@@ -57,6 +57,7 @@ const FormacionView = () => {
       formData.append('contenido', newItem.contenido || '');
       const etiqArray = (newItem.etiquetas || '').split(',').map(e => e.trim()).filter(e => e);
       etiqArray.forEach(e => formData.append('etiquetas', e));
+      if (newItem.esNacional) formData.append('esNacional', 'true');
       if (newItem.archivoFile) formData.append('archivo', newItem.archivoFile);
 
       await api.post('/formacion', formData);
@@ -80,6 +81,7 @@ const FormacionView = () => {
         ? selectedItem.etiquetas.split(',').map(e => e.trim()).filter(e => e)
         : (Array.isArray(selectedItem.etiquetas) ? selectedItem.etiquetas : []);
       etiqList.forEach(e => formData.append('etiquetas', e));
+      formData.append('esNacional', selectedItem.esNacional ? 'true' : 'false');
 
       if (selectedItem.nuevaImagenFile) formData.append('archivo', selectedItem.nuevaImagenFile);
 

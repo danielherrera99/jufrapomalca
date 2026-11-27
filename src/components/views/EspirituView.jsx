@@ -59,7 +59,7 @@ const EspirituView = () => {
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
-      await api.post('/espiritualidad', { titulo: newItem.titulo, contenido: newItem.contenido, tipo: newItem.tipo || 'oracion', categoria: newItem.categoria || '' });
+      await api.post('/espiritualidad', { titulo: newItem.titulo, contenido: newItem.contenido, tipo: newItem.tipo || 'oracion', categoria: newItem.categoria || '', esNacional: Boolean(newItem.esNacional) });
       setIsModalOpen(false);
       setNewItem({ titulo: '', contenido: '', tipo: 'oracion', categoria: '' });
       fetchData();
@@ -72,7 +72,7 @@ const EspirituView = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      await api.put(`/espiritualidad/${selectedItem._id}`, { titulo: selectedItem.titulo, contenido: selectedItem.contenido, tipo: selectedItem.tipo || 'oracion', categoria: selectedItem.categoria || '' });
+      await api.put(`/espiritualidad/${selectedItem._id}`, { titulo: selectedItem.titulo, contenido: selectedItem.contenido, tipo: selectedItem.tipo || 'oracion', categoria: selectedItem.categoria || '', esNacional: Boolean(selectedItem.esNacional) });
       setIsEditModalOpen(false);
       fetchData();
       Swal.fire({ icon: 'success', title: '¡Actualizado!', timer: 1800, showConfirmButton: false });

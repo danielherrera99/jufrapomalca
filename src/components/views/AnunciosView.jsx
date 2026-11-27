@@ -84,6 +84,7 @@ const AnunciosView = () => {
       formData.append('prioridad', newItem.prioridad || 'normal');
       formData.append('destinatarios', newItem.destinatarios || 'todos');
       formData.append('destacado', newItem.destacado ? 'true' : 'false');
+      if (newItem.esNacional) formData.append('esNacional', 'true');
 
       if (newItem.archivoFile) {
         formData.append('imagen', newItem.archivoFile);

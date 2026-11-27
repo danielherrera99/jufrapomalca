@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import NacionalCheckbox from './NacionalCheckbox';
 
 const EventosNewModal = ({ newItem, setNewItem, MapPicker }) => {
   const handleMapChange = useCallback((lat, lng) => {
@@ -134,6 +135,7 @@ const EventosNewModal = ({ newItem, setNewItem, MapPicker }) => {
             onChange={handleMapChange} 
          />
       </div>
+      <NacionalCheckbox checked={newItem.esNacional} onChange={val => setNewItem({...newItem, esNacional: val})} />
     </>
   );
 };

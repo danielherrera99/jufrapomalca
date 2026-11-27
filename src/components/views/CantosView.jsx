@@ -78,6 +78,7 @@ const CantosView = () => {
       formData.append('letra', newItem.letra || newItem.contenido || '');
       formData.append('autor', newItem.artista || '');
       formData.append('categoria', newItem.categoria || 'otro');
+      if (newItem.esNacional) formData.append('esNacional', 'true');
       if (newItem.archivoFile) formData.append('archivo', newItem.archivoFile);
 
       await api.post('/cantos', formData);
@@ -110,6 +111,7 @@ const CantosView = () => {
       formData.append('letra', selectedItem.letra || selectedItem.contenido || '');
       formData.append('autor', selectedItem.autor || selectedItem.artista || '');
       formData.append('categoria', selectedItem.categoria || 'otro');
+      formData.append('esNacional', selectedItem.esNacional ? 'true' : 'false');
       if (selectedItem.nuevaImagenFile) formData.append('archivo', selectedItem.nuevaImagenFile);
 
       await api.put(`/cantos/${selectedItem._id}`, formData);

@@ -90,6 +90,7 @@ const EventosView = ({ formatSafeDate, SafeImage, ActivityIndicator }) => {
       formData.append('lat', newItem.lat || -6.745);
       formData.append('lng', newItem.lng || -79.824);
       formData.append('publicar_web', newItem.publicar_web ? 'true' : 'false');
+      if (newItem.esNacional) formData.append('esNacional', 'true');
       if (newItem.imagenFile) formData.append('imagen', newItem.imagenFile);
 
       await api.post('/eventos', formData);

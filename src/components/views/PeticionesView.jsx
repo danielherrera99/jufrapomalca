@@ -59,7 +59,8 @@ const PeticionesView = () => {
     try {
       await api.post('/peticiones', { 
         contenido: newItem.contenido, 
-        anonimo: newItem.anonimo || false 
+        anonimo: newItem.anonimo || false,
+        esNacional: Boolean(newItem.esNacional)
       });
       setIsModalOpen(false);
       setNewItem({ contenido: '', anonimo: false });

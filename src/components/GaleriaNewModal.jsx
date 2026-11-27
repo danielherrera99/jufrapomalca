@@ -1,4 +1,5 @@
 import React from 'react';
+import NacionalCheckbox from './NacionalCheckbox';
 
 const GaleriaNewModal = ({ newItem, setNewItem }) => {
   return (
@@ -61,6 +62,7 @@ const GaleriaNewModal = ({ newItem, setNewItem }) => {
         />
         <p style={{ margin: '5px 0 0 0', fontSize: '0.75rem', color: 'var(--text-muted)' }}>Límite sugerido: 50MB para videos.</p>
       </div>
+      <NacionalCheckbox checked={newItem.esNacional} onChange={val => setNewItem({...newItem, esNacional: val})} />
     </>
   );
 };

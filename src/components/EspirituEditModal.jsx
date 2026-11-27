@@ -1,4 +1,5 @@
 import React from 'react';
+import NacionalCheckbox from './NacionalCheckbox';
 
 const EspirituEditModal = ({ selectedItem, setSelectedItem }) => {
   return (
@@ -44,6 +45,7 @@ const EspirituEditModal = ({ selectedItem, setSelectedItem }) => {
           style={{ fontFamily: 'inherit', lineHeight: '1.6' }}
         />
       </div>
+      <NacionalCheckbox checked={selectedItem.esNacional} onChange={val => setSelectedItem({...selectedItem, esNacional: val})} />
     </>
   );
 };

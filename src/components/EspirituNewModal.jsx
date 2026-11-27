@@ -1,4 +1,5 @@
 import React from 'react';
+import NacionalCheckbox from './NacionalCheckbox';
 
 const EspirituNewModal = ({ newItem, setNewItem }) => {
   return (
@@ -45,6 +46,7 @@ const EspirituNewModal = ({ newItem, setNewItem }) => {
           style={{ fontFamily: 'inherit' }}
         ></textarea>
       </div>
+      <NacionalCheckbox checked={newItem.esNacional} onChange={val => setNewItem({...newItem, esNacional: val})} />
     </>
   );
 };

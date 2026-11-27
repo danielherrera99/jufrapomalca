@@ -1,4 +1,5 @@
 import React from 'react';
+import NacionalCheckbox from './NacionalCheckbox';
 
 const CantosEditModal = ({ selectedItem, setSelectedItem }) => {
   return (
@@ -65,6 +66,7 @@ const CantosEditModal = ({ selectedItem, setSelectedItem }) => {
           </div>
         )}
       </div>
+      <NacionalCheckbox checked={selectedItem.esNacional} onChange={val => setSelectedItem({...selectedItem, esNacional: val})} />
     </>
   );
 };

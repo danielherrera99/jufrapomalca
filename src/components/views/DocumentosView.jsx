@@ -56,6 +56,7 @@ const DocumentosView = () => {
       formData.append('descripcion', newItem.descripcion || '');
       formData.append('tipo', newItem.tipo || 'otro');
       formData.append('contenido', newItem.contenido || '');
+      if (newItem.esNacional) formData.append('esNacional', 'true');
       if (newItem.archivoFile) formData.append('archivo', newItem.archivoFile);
 
       await api.post('/documentos', formData);
@@ -75,6 +76,7 @@ const DocumentosView = () => {
       formData.append('descripcion', selectedItem.descripcion || '');
       formData.append('tipo', selectedItem.tipo || 'otro');
       formData.append('contenido', selectedItem.contenido || '');
+      formData.append('esNacional', selectedItem.esNacional ? 'true' : 'false');
       if (selectedItem.nuevaImagenFile) formData.append('archivo', selectedItem.nuevaImagenFile);
 
       await api.put(`/documentos/${selectedItem._id}`, formData);
