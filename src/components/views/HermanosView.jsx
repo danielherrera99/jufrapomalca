@@ -21,7 +21,17 @@ const HermanosView = ({ handleApprove, user }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
-  const { selectedFraternidadId } = useFraternidad();
+  const { selectedFraternidadId, fraternidades } = useFraternidad();
+
+  // Diccionario rápido de fraternidades por ID
+  const fratMap = useMemo(() => {
+    const map = {};
+    (fraternidades || []).forEach(f => {
+      map[f.id] = f.nombre;
+    });
+    map['00000000-6a0f-b53a-d327-e42a6db2faf7'] = 'JUFRA Pomalca';
+    return map;
+  }, [fraternidades]);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -66,7 +76,8 @@ const HermanosView = ({ handleApprove, user }) => {
     
     return filtered.filter(item => {
       if (!item) return false;
-      const fallback = normalize(`${item.nombreCompleto||''} ${item.nombre||''} ${item.email||''} ${item.username||''}`);
+      const fratName = fratMap[item.fraternidadId || item.fraternidad_id] || '';
+      const fallback = normalize(`${item.nombreCompleto||''} ${item.nombre||''} ${item.apellido||''} ${item.email||''} ${item.username||''} ${item.cargo||''} ${fratName}`);
       return fallback.includes(term);
     });
   }, [data, searchTerm, hermanosFilter]);
@@ -189,6 +200,22 @@ const HermanosView = ({ handleApprove, user }) => {
                     🛡️ {item.cargo}
                   </span>
                 )}
+                {/* Badge de Fraternidad Local */}
+                <span style={{ 
+                  fontSize: '0.73rem', 
+                  padding: '0.2rem 0.6rem', 
+                  borderRadius: '12px', 
+                  background: '#f8fafc', 
+                  color: '#334155', 
+                  border: '1px solid #cbd5e1',
+                  fontWeight: '600',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}>
+                  <span>🏛️</span>
+                  <span>{fratMap[item.fraternidadId || item.fraternidad_id] || 'JUFRA Pomalca'}</span>
+                </span>
                 {!item.activo && esConsejo && (
                   <button 
                     onClick={(e) => localHandleApprove(item._id, e)}

@@ -1,7 +1,9 @@
 import React from 'react';
 import { resolveEtapa } from './views/DashboardView';
+import { useFraternidad } from '../context/FraternidadContext';
 
 const HermanosEditModal = ({ selectedItem, setSelectedItem }) => {
+  const { fraternidades, isSuperAdmin } = useFraternidad();
   return (
     <>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
@@ -133,6 +135,39 @@ const HermanosEditModal = ({ selectedItem, setSelectedItem }) => {
           <option value="en_formacion">En Formación</option>
           <option value="promesado">Promesado</option>
         </select>
+      </div>
+
+      {/* Fraternidad Local */}
+      <div className="input-group">
+        <label style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <span>🏛️ Fraternidad Local</span>
+          {isSuperAdmin && <span style={{ fontSize: '0.65rem', color: '#0284c7', background: '#e0f2fe', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>Superadmin puede reasignar</span>}
+        </label>
+        {isSuperAdmin ? (
+          <select 
+            className="form-select" 
+            style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid var(--border)', width: '100%' }} 
+            value={selectedItem.fraternidadId || selectedItem.fraternidad_id || '00000000-6a0f-b53a-d327-e42a6db2faf7'} 
+            onChange={e => setSelectedItem({
+              ...selectedItem, 
+              fraternidadId: e.target.value, 
+              fraternidad_id: e.target.value 
+            })}
+          >
+            {fraternidades && fraternidades.map(f => (
+              <option key={f.id} value={f.id}>
+                {f.nombre} ({f.departamento || f.zona || 'Local'})
+              </option>
+            ))}
+          </select>
+        ) : (
+          <input 
+            type="text" 
+            disabled 
+            value={fraternidades?.find(f => f.id === (selectedItem.fraternidadId || selectedItem.fraternidad_id))?.nombre || 'JUFRA Pomalca'} 
+            style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid var(--border)', width: '100%', background: '#f8fafc', color: '#64748b', cursor: 'not-allowed' }}
+          />
+        )}
       </div>
 
       <div className="input-group" style={{ flexDirection: 'row', alignItems: 'center', gap: '0.5rem', marginTop: '1rem' }}>
